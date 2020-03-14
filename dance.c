@@ -6,7 +6,7 @@
  * 1 if duplicate
  * -1 if failed
  */
-int addDoubly(Dance *d, int irow, int icol)
+int initDoubly(Dance *d, int irow, int icol)
 {
    Doubly *hrow, *hcol, *new;
    assert(d != NULL);
@@ -35,20 +35,16 @@ int addDoubly(Dance *d, int irow, int icol)
    new = malloc(sizeof(Doubly));
    new->drow = irow;
    new->dcol = icol;
+
    new->right = hrow->right;
    new->left = hrow;
    hrow->right->left = new;
    hrow->right = new;
+
    new->down = hcol->down;
    new->up = hcol;
    hcol->down->up = new;
    hcol->down = new;
-
-   printf("new: [%d %d],", new->drow, new->dcol);
-   printf(" up: [%d %d],", new->up->drow, new->up->dcol);
-   printf(" down: [%d %d],", new->down->drow, new->down->dcol);
-   printf(" left: [%d %d],", new->left->drow, new->left->dcol);
-   printf(" right: [%d %d]\n", new->right->drow, new->right->dcol);
 
    return 0;
 }
@@ -118,27 +114,86 @@ int initRoot(Dance *d)
 
    initHeaders(d);
    printMatrix(d);
-   addDoubly(d, 3, 4);
-   addDoubly(d, 5, 2);
-   addDoubly(d, 7, 12);
-   addDoubly(d, 1, 8);
-   addDoubly(d, 3, 2);
-   addDoubly(d, RMAX-1, 0);
-   addDoubly(d, 0, CMAX-1);
-   addDoubly(d, RMAX-1, CMAX-1);
+
+   /*testAddAllDoubly(d);*/
+   initDoubly(d, 3, 4);
+   initDoubly(d, 5, 2);
+   initDoubly(d, 7, 12);
+   initDoubly(d, 1, 8);
+   initDoubly(d, 3, 2);
+   initDoubly(d, RMAX-1, 0);
+   initDoubly(d, 0, CMAX-1);
+   initDoubly(d, RMAX-1, CMAX-1);
    printMatrix(d);
 
-   /*freeDance(d);*/
-   printMatrix(d);
-
+   freeDance(d);
    free(d->root);
    return 0;
 }
 
+/*frees all nodes in matrix expect for the root node */
+void freeDance(Dance *d)
+{
+   Doubly *col, *temp;
+
+   col = d->root->right;
+   while(col != d->root)
+   {
+      freeColumn(col);
+      temp = col;
+      col = col->right;
+      coverDoubly(temp);
+      free(temp);
+   }
+   freeColumn(col);
+}
+
+/* frees all nodes in selected column expect for the input node */
+void freeColumn(Doubly *col)
+{
+   Doubly *row, *temp;
+
+   row = col->down;
+   while(row != col)
+   {
+      temp = row;
+      row = row->down;
+      coverDoubly(temp);
+      free(temp);
+   }
+}
+
+void coverDoubly(Doubly *temp)
+{
+   temp->left->right = temp->right;
+   temp->right->left = temp->left;
+   temp->down->up = temp->up;
+   temp->up->down = temp->down;
+}
+
+void testAddAllDoubly(Dance *d)
+{
+   int r, c;
+
+   for(r = 0; r < RMAX; r++)
+   {
+      for(c = 0; c < CMAX; c++)
+         printf("%d ", initDoubly(d, r, c));
+      printf("\n");
+   }
+}
+
+/* won't work if there aren't any headers */
 void printMatrix(Dance *d)
 {
    int prow, pcol;
    Doubly *xrow = d->root->down, *current;
+
+   assert(d->root != d->root->down && d->root != d->root->right);
+   printf("\n   ");
+   for(pcol = 0; pcol < CMAX; pcol++)
+      printf("%3d", pcol);
+   printf("\n");
 
    for(prow = 0; prow < RMAX; prow++)
    {
@@ -148,18 +203,11 @@ void printMatrix(Dance *d)
       {
          if(current->dcol == pcol && current->drow == prow)
          {
-            printf("X");
+            printf("  X");
             current = current->right;
          }
-         else if((current->right->dcol == pcol && current->right->dcol == pcol)
-            || (current->left->dcol == pcol && current->left->dcol == pcol)
-            || (current->up->dcol == pcol && current->up->dcol == pcol)
-            || (current->down->dcol == pcol && current->down->dcol == pcol))
-         {
-            printf("O");
-         }
          else
-            printf("_");
+            printf("  _");
       }
       xrow = xrow->down;
       printf("\n");
@@ -167,28 +215,12 @@ void printMatrix(Dance *d)
    printf("\n");
 }
 
-void freeDance(Dance *d)
+void printNodeInfo(Doubly *node)
 {
-   Doubly *row, *col, *temp;
-
-   for(col = d->root; col != col->right;)
-   {
-      printf("%d %d\n", col->dcol, col->drow);
-      for(row = col; row != row->down;)
-      {
-         temp = row;
-         printf("\t%d %d\t", row->dcol, row->drow);
-         temp->down->up = temp->up;
-         temp->up->down = temp->down;
-         row = row->down;
-         printf("%d %d\n", row->dcol, row->drow);
-         free(temp);
-      }
-      temp = col;
-      temp->right->left = temp->left;
-      temp->left->right = temp->right;
-      col = temp->right;
-      /*free(temp);*/
-   }
+   printf("node: [%d %d],", node->drow, node->dcol);
+   printf(" up: [%d %d],", node->up->drow, node->up->dcol);
+   printf(" down: [%d %d],", node->down->drow, node->down->dcol);
+   printf(" left: [%d %d],", node->left->drow, node->left->dcol);
+   printf(" right: [%d %d]\n", node->right->drow, node->right->dcol);
 }
 

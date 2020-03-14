@@ -40,15 +40,18 @@ typedef struct doubly
 typedef struct
 {
    Doubly *root;
-   FreeList *rowHeader, *colHeader, *matrix;
 } Dance;
 
 int initDance(Sudoku *s);
 int initRoot(Dance *d);
 int initHeaders(Dance *d);
-int addDoubly(Dance *d, int drow, int dcol);
-
-void printMatrix(Dance *d);
+int initDoubly(Dance *d, int drow, int dcol);
 void freeDance(Dance *d);
+void freeColumn(Doubly *col);
+void coverDoubly(Doubly *temp);
+
+void testAddAllDoubly(Dance *d);
+void printMatrix(Dance *d);
+void printNodeInfo(Doubly *node);
 
 #endif
