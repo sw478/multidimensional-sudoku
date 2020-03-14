@@ -17,4 +17,8 @@ scoring is based on how many conditions (row/col/box) are broken.
 exact cover / dancing links:
 since sudoku can be reduced to an exact cover problem, I created a generalized
 dancing links structure that could be used for other exact cover problems, such
-as pentominos. Currently in the works.
+as pentominos.
+
+	en.wikipedia.org/wiki/Exact_cover
+
+

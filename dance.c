@@ -1,5 +1,75 @@
 #include "dance.h"
 
+int initDance(Sudoku *s)
+{
+   Doubly *test;
+   Dance *d = malloc(sizeof(Dance));
+   d->rmax = 30;
+   d->cmax = 30;
+
+   initRoot(d);
+
+   testAddAllDoubly(d);
+   printMatrix(d);
+
+   test = heuristic(d);
+   printf("col: %d num: %d\n", test->dcol, test->drow - d->rmax);
+
+   freeDance(d);
+   free(d->root);
+   free(d);
+   return 0;
+}
+
+int initSudokuMatrix(Dance *d)
+{
+   return 0;
+}
+
+/* returns pointer to column header with lowest #'s of ones */
+Doubly *heuristic(Dance *d)
+{
+   Doubly *result, *xcol = d->root->right;
+
+   result = xcol;
+   for(; xcol != d->root; xcol = xcol->right)
+   {
+      if(xcol->drow < result->drow)
+         result = xcol;
+   }
+
+   return result;
+}
+
+void testAddAllDoubly(Dance *d)
+{
+   int r, c;
+
+   srand(time(NULL));
+   for(r = 0; r < d->rmax; r++)
+   {
+      for(c = 0; c < d->cmax; c++)
+      {
+         if((rand() % 100) < 15)
+            initDoubly(d, r, c);
+      }
+   }
+}
+
+int initRoot(Dance *d)
+{
+   assert(d != NULL);
+
+   d->root = malloc(sizeof(Doubly));
+   d->root->drow = d->rmax;
+   d->root->dcol = d->cmax;
+   d->root->up = d->root->down = d->root->left = d->root->right = d->root;
+
+   initHeaders(d);
+
+   return 0;
+}
+
 /*
  * returns:
  * 0 on sucess
@@ -8,14 +78,14 @@
  */
 int initDoubly(Dance *d, int irow, int icol)
 {
-   Doubly *hrow, *hcol, *new;
+   Doubly *hrow, *hcol, *xcol, *new;
    assert(d != NULL);
    assert(d->root != NULL);
 
    hrow = d->root->down;
-   while(hrow->drow != irow && hrow->drow != RMAX)
+   while(hrow->drow != irow && hrow->drow != d->rmax)
       hrow = hrow->down;
-   if(hrow->drow == RMAX)
+   if(hrow->drow == d->rmax)
       return -1;
    while(hrow->right->dcol <= icol)
       hrow = hrow->right;
@@ -23,10 +93,11 @@ int initDoubly(Dance *d, int irow, int icol)
       return 1;
 
    hcol = d->root->right;
-   while(hcol->dcol != icol && hcol->dcol != CMAX)
+   while(hcol->dcol != icol && hcol->dcol != d->cmax)
       hcol = hcol->right;
-   if(hcol->dcol == CMAX)
+   if(hcol->dcol == d->cmax)
       return -1;
+   xcol = hcol;
    while(hcol->down->drow <= irow)
       hcol = hcol->down;
    if(hcol->drow == irow)
@@ -35,14 +106,14 @@ int initDoubly(Dance *d, int irow, int icol)
    new = malloc(sizeof(Doubly));
    new->drow = irow;
    new->dcol = icol;
-
    new->right = hrow->right;
    new->left = hrow;
-   hrow->right->left = new;
-   hrow->right = new;
-
    new->down = hcol->down;
    new->up = hcol;
+   xcol->drow++;
+
+   hrow->right->left = new;
+   hrow->right = new;
    hcol->down->up = new;
    hcol->down = new;
 
@@ -57,12 +128,12 @@ int initHeaders(Dance *d)
    assert(d->root != NULL);
 
    current = d->root;
-   for(drow = 0; drow < RMAX; drow++)
+   for(drow = 0; drow < d->rmax; drow++)
    {
       /* adds Doubly below current Doubly */
       new = malloc(sizeof(Doubly));
       new->drow = drow;
-      new->dcol = CMAX;
+      new->dcol = d->cmax;
 
       new->left = new->right = new;
       new->down = current->down;
@@ -74,11 +145,11 @@ int initHeaders(Dance *d)
    }
 
    current = d->root;
-   for(dcol = 0; dcol < CMAX; dcol++)
+   for(dcol = 0; dcol < d->cmax; dcol++)
    {
       /* adds Doubly to the right of current Doubly */
       new = malloc(sizeof(Doubly));
-      new->drow = RMAX;
+      new->drow = d->rmax;
       new->dcol = dcol;
 
       new->up = new->down = new;
@@ -90,44 +161,6 @@ int initHeaders(Dance *d)
       current = new;
    }
 
-   return 0;
-}
-
-int initDance(Sudoku *s)
-{
-   Dance *d = malloc(sizeof(Dance));
-
-   initRoot(d);
-
-   free(d);
-   return 0;
-}
-
-int initRoot(Dance *d)
-{
-   assert(d != NULL);
-
-   d->root = malloc(sizeof(Doubly));
-   d->root->drow = RMAX;
-   d->root->dcol = CMAX;
-   d->root->up = d->root->down = d->root->left = d->root->right = d->root;
-
-   initHeaders(d);
-   printMatrix(d);
-
-   /*testAddAllDoubly(d);*/
-   initDoubly(d, 3, 4);
-   initDoubly(d, 5, 2);
-   initDoubly(d, 7, 12);
-   initDoubly(d, 1, 8);
-   initDoubly(d, 3, 2);
-   initDoubly(d, RMAX-1, 0);
-   initDoubly(d, 0, CMAX-1);
-   initDoubly(d, RMAX-1, CMAX-1);
-   printMatrix(d);
-
-   freeDance(d);
-   free(d->root);
    return 0;
 }
 
@@ -163,43 +196,34 @@ void freeColumn(Doubly *col)
    }
 }
 
-void coverDoubly(Doubly *temp)
+void coverDoubly(Doubly *node)
 {
-   temp->left->right = temp->right;
-   temp->right->left = temp->left;
-   temp->down->up = temp->up;
-   temp->up->down = temp->down;
-}
-
-void testAddAllDoubly(Dance *d)
-{
-   int r, c;
-
-   for(r = 0; r < RMAX; r++)
-   {
-      for(c = 0; c < CMAX; c++)
-         printf("%d ", initDoubly(d, r, c));
-      printf("\n");
-   }
+   node->left->right = node->right;
+   node->right->left = node->left;
+   node->down->up = node->up;
+   node->up->down = node->down;
 }
 
 /* won't work if there aren't any headers */
 void printMatrix(Dance *d)
 {
    int prow, pcol;
-   Doubly *xrow = d->root->down, *current;
-
+   Doubly *xcol = d->root->right, *xrow = d->root->down, *current;
    assert(d->root != d->root->down && d->root != d->root->right);
-   printf("\n   ");
-   for(pcol = 0; pcol < CMAX; pcol++)
+
+   printf("\n1's:");
+   for(; xcol != d->root; xcol = xcol->right)
+      printf("%3d", xcol->drow - d->rmax);
+   printf("\n\n    ");
+   for(pcol = 0; pcol < d->cmax; pcol++)
       printf("%3d", pcol);
    printf("\n");
 
-   for(prow = 0; prow < RMAX; prow++)
+   for(prow = 0; prow < d->rmax; prow++)
    {
-      printf("%d: ", prow);
       current = xrow->right;
-      for(pcol = 0; pcol < CMAX; pcol++)
+      printf("%2d: ", prow);
+      for(pcol = 0; pcol < d->cmax; pcol++)
       {
          if(current->dcol == pcol && current->drow == prow)
          {
