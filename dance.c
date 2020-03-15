@@ -2,22 +2,115 @@
 
 int initDance(Sudoku *s)
 {
-   Doubly *test;
+   int res, i;
    Dance *d = malloc(sizeof(Dance));
-   d->rmax = 30;
-   d->cmax = 30;
+   d->rmax = 10;
+   d->cmax = 10;
+   d->isol = 0;
+   d->sol = malloc(d->rmax*sizeof(int));
 
    initRoot(d);
 
    testAddAllDoubly(d);
+   freeColumn(d->root);
    printMatrix(d);
 
-   test = heuristic(d);
-   printf("col: %d num: %d\n", test->dcol, test->drow - d->rmax);
+   res = algorithmX(d);
+   printf("result: %d\n", res);
+
+   for(i = 0; i < d->isol; i++)
+      printf("%d ", d->sol[i]);
+   printf("\n");
 
    freeDance(d);
    free(d->root);
+   free(d->sol);
    free(d);
+   return 0;
+}
+
+int algorithmX(Dance *d)
+{
+   Doubly *hcol;
+   int x;
+
+   printMatrix(d);
+   while(d->root != d->root->right)
+   {
+      hcol = heuristic(d);
+      if(hcol->drow == d->rmax)
+         return 1;
+      cover(d, hcol);
+      x = algorithmX(d);
+      uncover(d, hcol);
+      if(x == 0)
+      {
+         storeSol(d, hcol);
+         printMatrix(d);
+         return 0;
+      }
+   }
+   return 0;
+}
+
+void storeSol(Dance *d, Doubly *hcol)
+{
+   Doubly *xcol;
+
+   for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
+   {
+      d->sol[d->isol] = xcol->drow;
+      d->isol++;
+   }
+}
+
+int cover(Dance *d, Doubly *hcol)
+{
+   Doubly *xrow, *xcol = hcol;
+   assert(hcol->drow >= d->rmax);
+
+   hcol->right->left = hcol->left;
+   hcol->left->right = hcol->right;
+
+   for(xcol = xcol->down; xcol != hcol; xcol = xcol->down)
+   {
+      for(xrow = xcol->right; xrow != xcol; xrow = xrow->right)
+      {
+         xrow->up->down = xrow->down;
+         xrow->down->up = xrow->up;
+         xrow->hcol->drow--;
+         if(xrow->hcol->drow == d->rmax)
+         {
+            xrow->hcol->right->left = xrow->hcol->left;
+            xrow->hcol->left->right = xrow->hcol->right;
+         }
+      }
+   }
+   return 0;
+}
+
+int uncover(Dance *d, Doubly *hcol)
+{
+   Doubly *xrow, *xcol = hcol;
+
+   hcol->right->left = hcol;
+   hcol->left->right = hcol;
+
+   for(xcol = xcol->down; xcol != hcol; xcol = xcol->down)
+   {
+      for(xrow = xcol->right; xrow != xcol; xrow = xrow->right)
+      {
+         xrow->up->down = xrow;
+         xrow->down->up = xrow;
+         if(xrow->hcol->drow == d->rmax)
+         {
+            xrow->hcol->right->left = xrow->hcol;
+            xrow->hcol->left->right = xrow->hcol;
+         }
+         xrow->hcol->drow++;
+      }
+   }
+
    return 0;
 }
 
@@ -29,7 +122,7 @@ int initSudokuMatrix(Dance *d)
 /* returns pointer to column header with lowest #'s of ones */
 Doubly *heuristic(Dance *d)
 {
-   Doubly *result, *xcol = d->root->right;
+   Doubly *xcol = d->root->right, *result;
 
    result = xcol;
    for(; xcol != d->root; xcol = xcol->right)
@@ -50,7 +143,7 @@ void testAddAllDoubly(Dance *d)
    {
       for(c = 0; c < d->cmax; c++)
       {
-         if((rand() % 100) < 15)
+         if((rand() % 100) < 80)
             initDoubly(d, r, c);
       }
    }
@@ -110,6 +203,7 @@ int initDoubly(Dance *d, int irow, int icol)
    new->left = hrow;
    new->down = hcol->down;
    new->up = hcol;
+   new->hcol = xcol;
    xcol->drow++;
 
    hrow->right->left = new;
@@ -204,39 +298,38 @@ void coverDoubly(Doubly *node)
    node->up->down = node->down;
 }
 
-/* won't work if there aren't any headers */
 void printMatrix(Dance *d)
 {
-   int prow, pcol;
-   Doubly *xcol = d->root->right, *xrow = d->root->down, *current;
-   assert(d->root != d->root->down && d->root != d->root->right);
+   int prow, pcol, matrix[100][100];
+   Doubly *xcol = d->root->right, *xrow = d->root->down;
 
-   printf("\n1's:");
-   for(; xcol != d->root; xcol = xcol->right)
-      printf("%3d", xcol->drow - d->rmax);
+   memset(matrix, 0, sizeof(matrix));
+   for(xcol = d->root->right; xcol != d->root; xcol = xcol->right)
+   {
+      for(xrow = xcol->down; xrow != xcol; xrow = xrow->down)
+         matrix[xcol->dcol][xrow->drow] = 1;
+      matrix[xrow->dcol][0] = xrow->drow - d->rmax;
+   }
+
+   printf("\n\n1's:");
+   for(pcol = 0; pcol < d->cmax; pcol++)
+      printf("%3d", matrix[pcol][0]);
    printf("\n\n    ");
    for(pcol = 0; pcol < d->cmax; pcol++)
       printf("%3d", pcol);
-   printf("\n");
 
-   for(prow = 0; prow < d->rmax; prow++)
+   for(prow = 1; prow < d->rmax; prow++)
    {
-      current = xrow->right;
-      printf("%2d: ", prow);
+      printf("\n%2d: ", prow);
       for(pcol = 0; pcol < d->cmax; pcol++)
       {
-         if(current->dcol == pcol && current->drow == prow)
-         {
+         if(matrix[pcol][prow] == 1)
             printf("  X");
-            current = current->right;
-         }
          else
             printf("  _");
       }
-      xrow = xrow->down;
-      printf("\n");
    }
-   printf("\n");
+   printf("\n\n");
 }
 
 void printNodeInfo(Doubly *node)

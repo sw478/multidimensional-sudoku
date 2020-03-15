@@ -24,18 +24,27 @@ typedef struct doubly
  */
 
    int drow, dcol;
-   struct doubly *up, *down, *left, *right;
+
+/* pointers to nodes adjacent to node, and to the node's column header node */
+   struct doubly *up, *down, *left, *right, *hcol;
 } Doubly;
 
 typedef struct
 {
-   int rmax, cmax;
+   int rmax, cmax, *sol, isol;
    Doubly *root;
 } Dance;
 
 int initSudokuMatrix(Dance *d);
-Doubly *heuristic(Dance *d);
 
+/* basic operations */
+Doubly *heuristic(Dance *d);
+int cover(Dance *d, Doubly *hcol);
+int uncover(Dance *d, Doubly *hcol);
+int algorithmX(Dance *d);
+void storeSol(Dance *d, Doubly *hcol);
+
+/* setup and end */
 int initDance(Sudoku *s);
 int initRoot(Dance *d);
 int initHeaders(Dance *d);
@@ -44,6 +53,7 @@ void freeDance(Dance *d);
 void freeColumn(Doubly *col);
 void coverDoubly(Doubly *node);
 
+/* testing */
 void testAddAllDoubly(Dance *d);
 void printMatrix(Dance *d);
 void printNodeInfo(Doubly *node);
