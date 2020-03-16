@@ -4,8 +4,8 @@
 int initDance(Sudoku *s)
 {
    Dance *d = malloc(sizeof(Dance));
-   d->rmax = 20;
-   d->cmax = 10;
+   d->rmax = 100;
+   d->cmax = 20;
 
    testX(d);
 

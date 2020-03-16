@@ -35,10 +35,6 @@ int coverRow(Dance *d, Doubly *node)
 {
    Doubly *xrow;
 
-   //hcol = node->hcol;
-   //hcol->right->left = hcol->left;
-   //hcol->left->right = hcol->right;
-
    for(xrow = node->right; xrow != node; xrow = xrow->right)
       coverCol(d, xrow);
    coverCol(d, xrow);
@@ -70,10 +66,6 @@ int coverCol(Dance *d, Doubly *xrow)
 int uncoverRow(Dance *d, Doubly *node)
 {
    Doubly *xrow;
-
-   //hcol = node->hcol;
-   //hcol->right->left = hcol;
-   //hcol->left->right = hcol;
 
    for(xrow = node->left; xrow != node; xrow = xrow->left)
       uncoverCol(d, xrow);

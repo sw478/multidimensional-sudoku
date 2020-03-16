@@ -8,7 +8,7 @@ void testAddAllDoubly(Dance *d)
    {
       for(c = 0; c < d->cmax; c++)
       {
-         if((rand() % 100) < 30)
+         if((rand() % 100) < 10)
             initDoubly(d, r, c);
       }
    }
@@ -19,7 +19,7 @@ void testX(Dance *d)
    int x, tests;
    srand(time(NULL));
 
-   for(tests = 0; tests < 3; tests++)
+   for(tests = 0; tests < 1; tests++)
    {
       d->sol = malloc(d->rmax*sizeof(int));
       memset(d->sol, 0, d->rmax*sizeof(int));
@@ -28,11 +28,12 @@ void testX(Dance *d)
       testAddAllDoubly(d);
       freeColumn(d->root);
  
-      //printMatrix(d);
+      printMatrix(d);
       x = algorithmX(d);
       if(x == 0)
          printSolution(d);
-      printf("x: %d\n", x);
+      else
+         printf("no solution\n");
 
       free(d->sol);
       freeDance(d);
@@ -79,7 +80,7 @@ void printMatrix(Dance *d)
       matrix[xrow->dcol][d->rmax] = xrow->drow - d->rmax;
    }
 
-   printf("\n\n1's:");
+   printf("\n\nX's:");
    for(pcol = 0; pcol < d->cmax; pcol++)
       printf("%3d", matrix[pcol][d->rmax]);
    printf("\n\n    ");
@@ -88,7 +89,7 @@ void printMatrix(Dance *d)
 
    for(prow = 0; prow < d->rmax; prow++)
    {
-      printf("\n%2d: ", prow);
+      printf("\n%3d:", prow);
       for(pcol = 0; pcol < d->cmax; pcol++)
       {
          if(matrix[pcol][prow] == 1)
@@ -98,6 +99,11 @@ void printMatrix(Dance *d)
       }
    }
    printf("\n\n");
+}
+
+int cmp_int(const void* a, const void* b)
+{
+   return *(int*)a - *(int*)b;
 }
 
 void printSolution(Dance *d)
@@ -118,6 +124,7 @@ void printSolution(Dance *d)
       printf("%3d", pcol);
    printf("\n");
 
+   qsort(d->sol, d->isol, sizeof(int), cmp_int); 
    for(i = 0; i < d->isol; i++)
    {
       prow = d->sol[i];
@@ -127,7 +134,7 @@ void printSolution(Dance *d)
          if(matrix[pcol][prow] == 1)
             printf("  X");
          else
-            printf("   ");
+            printf("  |");
       }
    }
    printf("\n\n");
