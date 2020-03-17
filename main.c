@@ -18,9 +18,9 @@ int main(int argc, char *argv[])
    readIn(org, in);
    org->steps = 0;
 
-   /*printBoard(org);*/
+   printBoard(org);
 
-   /*memcpy(s, org, sizeof(Sudoku));*/
+   memcpy(s, org, sizeof(Sudoku));
    /*dfs(s);*/
    /*printBoard(s);*/
 

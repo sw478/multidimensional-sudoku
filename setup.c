@@ -4,10 +4,8 @@
 int initDance(Sudoku *s)
 {
    Dance *d = malloc(sizeof(Dance));
-   d->rmax = 100;
-   d->cmax = 20;
 
-   testX(d);
+   testX(d, s);
 
    free(d);
    return 0;
@@ -31,30 +29,22 @@ int initRoot(Dance *d)
  * returns:
  * 0 on sucess
  * 1 if duplicate
- * -1 if failed
  */
 int initDoubly(Dance *d, int irow, int icol)
 {
    Doubly *hrow, *hcol, *xcol, *new;
    assert(d != NULL);
    assert(d->root != NULL);
+   assert(irow < d->rmax && icol < d->cmax);
 
-   hrow = d->root->down;
-   while(hrow->drow != irow && hrow->drow != d->rmax)
-      hrow = hrow->down;
-   if(hrow->drow == d->rmax)
-      return -1;
+   hrow = getHRow(d, irow);
+   xcol = hcol = getHCol(d, icol);
+
    while(hrow->right->dcol <= icol)
       hrow = hrow->right;
    if(hrow->dcol == icol)
       return 1;
 
-   hcol = d->root->right;
-   while(hcol->dcol != icol && hcol->dcol != d->cmax)
-      hcol = hcol->right;
-   if(hcol->dcol == d->cmax)
-      return -1;
-   xcol = hcol;
    while(hcol->down->drow <= irow)
       hcol = hcol->down;
    if(hcol->drow == irow)
@@ -76,6 +66,22 @@ int initDoubly(Dance *d, int irow, int icol)
    hcol->down = new;
 
    return 0;
+}
+
+Doubly *getHRow(Dance *d, int irow)
+{
+   Doubly *hrow = d->root->down;
+   while(hrow->drow != irow && hrow->drow != d->rmax)
+      hrow = hrow->down;
+   return hrow;
+}
+
+Doubly *getHCol(Dance *d, int icol)
+{
+   Doubly *hcol = d->root->right;
+   while(hcol->dcol != icol && hcol->dcol != d->cmax)
+      hcol = hcol->right;
+   return hcol;
 }
 
 int initHeaders(Dance *d)
@@ -133,8 +139,7 @@ void freeDance(Dance *d)
       freeColumn(col);
       temp = col;
       col = col->right;
-      coverDoubly(temp);
-      free(temp);
+      freeDoubly(temp);
    }
    freeColumn(col);
 }
@@ -147,15 +152,16 @@ void freeColumn(Doubly *col)
    {
       temp = row;
       row = row->down;
-      coverDoubly(temp);
-      free(temp);
+      freeDoubly(temp);
    }
 }
 
-void coverDoubly(Doubly *node)
+void freeDoubly(Doubly *node)
 {
    node->left->right = node->right;
    node->right->left = node->left;
    node->down->up = node->up;
    node->up->down = node->down;
+   node->hcol--;
+   free(node);
 }

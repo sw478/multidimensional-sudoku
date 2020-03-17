@@ -14,10 +14,13 @@ void testAddAllDoubly(Dance *d)
    }
 }
 
-void testX(Dance *d)
+void testX(Dance *d, Sudoku *s)
 {
    int x, tests;
    srand(time(NULL));
+
+   d->rmax = 729;
+   d->cmax = 324;
 
    for(tests = 0; tests < 1; tests++)
    {
@@ -25,13 +28,13 @@ void testX(Dance *d)
       memset(d->sol, 0, d->rmax*sizeof(int));
       d->isol = 0;
       initRoot(d);
-      testAddAllDoubly(d);
+      initSudokuMatrix(d, s);
       freeColumn(d->root);
  
-      printMatrix(d);
+      //printMatrix(d);
       x = algorithmX(d);
       if(x == 0)
-         printSolution(d);
+         ;//printSolution(d);
       else
          printf("no solution\n");
 
@@ -80,12 +83,12 @@ void printMatrix(Dance *d)
       matrix[xrow->dcol][d->rmax] = xrow->drow - d->rmax;
    }
 
-   printf("\n\nX's:");
-   for(pcol = 0; pcol < d->cmax; pcol++)
-      printf("%3d", matrix[pcol][d->rmax]);
-   printf("\n\n    ");
-   for(pcol = 0; pcol < d->cmax; pcol++)
-      printf("%3d", pcol);
+   //printf("\n\nX's:");
+   for(pcol = 0; pcol < d->cmax; pcol++);
+      //printf("%3d", matrix[pcol][d->rmax]);
+   //printf("\n\n    ");
+   for(pcol = 0; pcol < d->cmax; pcol++);
+      //printf("%3d", pcol);
 
    for(prow = 0; prow < d->rmax; prow++)
    {
@@ -93,9 +96,9 @@ void printMatrix(Dance *d)
       for(pcol = 0; pcol < d->cmax; pcol++)
       {
          if(matrix[pcol][prow] == 1)
-            printf("  X");
+            printf("X");
          else
-            printf("  _");
+            printf("_");
       }
    }
    printf("\n\n");
@@ -128,11 +131,11 @@ void printSolution(Dance *d)
    for(i = 0; i < d->isol; i++)
    {
       prow = d->sol[i];
-      printf("\n%2d: ", prow);
+      printf("\n%3d: ", prow);
       for(pcol = 0; pcol < d->cmax; pcol++)
       {
          if(matrix[pcol][prow] == 1)
-            printf("  X");
+            printf("  O");
          else
             printf("  |");
       }

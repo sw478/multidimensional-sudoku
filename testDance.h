@@ -2,7 +2,7 @@
 #define TESTDANCE_H
 #include "dance.h"
 
-void testX(Dance *d);
+void testX(Dance *d, Sudoku *s);
 void testAddAllDoubly(Dance *d);
 void testAddWiki(Dance *d);
 void printMatrix(Dance *d);

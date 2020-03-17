@@ -30,7 +30,8 @@ typedef struct
 } Dance;
 
 /* sudoku specific functions */
-int initSudokuMatrix(Dance *d);
+int initSudokuMatrix(Dance *d, Sudoku *s);
+void initSudokuMatrixRow(Dance *d, int inum, int igrid, int sr, int sc, int sb);
 
 /* basic operations */
 Doubly *heuristic(Dance *d);

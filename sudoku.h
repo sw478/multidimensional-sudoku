@@ -22,12 +22,6 @@ typedef struct
    int *best, size, saved, numGens;
 } Genetic;
 
-typedef struct
-{
-   int i, size;
-   void *(*list);
-} FreeList;
-
 int initDance(Sudoku *s);
 
 int dfs(Sudoku *s);
