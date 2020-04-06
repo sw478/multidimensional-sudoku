@@ -21,14 +21,15 @@ int main(int argc, char *argv[])
    printBoard(org);
 
    memcpy(s, org, sizeof(Sudoku));
-   /*dfs(s);*/
-   /*printBoard(s);*/
+   dfs(s);
+   printBoard(s);
 
-   /*memcpy(s, org, sizeof(Sudoku));*/
+   memcpy(s, org, sizeof(Sudoku));
    /*genetic(s, 100, 0, 0.1);*/
    /*printBoard(s);*/
 
    initDance(s);
+   printBoard(s);
 
    fclose(in);
    free(s);

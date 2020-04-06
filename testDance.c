@@ -34,7 +34,7 @@ void testX(Dance *d, Sudoku *s)
       //printMatrix(d);
       x = algorithmX(d);
       if(x == 0)
-         ;//printSolution(d);
+         saveSolution(d, s);//printSolution(d);
       else
          printf("no solution\n");
 
