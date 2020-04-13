@@ -9,19 +9,19 @@ int dfs(Sudoku *s)
    int r, c, i;
    Sudoku *branch = malloc(sizeof(Sudoku));
 
-   for(r = 0; r < s->n2; r++)
+   for(r = 0; r < s->xy; r++)
    {
-      for(c = 0; c < s->n2; c++)
+      for(c = 0; c < s->xy; c++)
       {
-         if(s->grid[r*s->n2+c] != 0)
+         if(s->grid[r*s->xy + c] != 0)
             continue;
-         for(i = 1; i <= s->n2; i++)
+         for(i = 1; i <= s->xy; i++)
          {
             s->steps++;
             if(checkBoard(s, r, c, i))
                continue;
             memcpy(branch, s, sizeof(Sudoku));
-            branch->grid[r*s->n2+c] = i;
+            branch->grid[r*s->xy + c] = i;
             branch->elements++;
             if(0 == dfs(branch))
             {

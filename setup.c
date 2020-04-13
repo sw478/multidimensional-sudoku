@@ -26,6 +26,8 @@ int initRoot(Dance *d)
 }
 
 /*
+ * O(2*rmax + 2*cmax) worst case time complexity
+ *
  * returns:
  * 0 on sucess
  * 1 if duplicate

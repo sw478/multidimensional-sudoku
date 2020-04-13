@@ -19,8 +19,8 @@ void testX(Dance *d, Sudoku *s)
    int x, tests;
    srand(time(NULL));
 
-   d->rmax = 729;
-   d->cmax = 324;
+   d->rmax = s->xy*s->xy*s->xy;
+   d->cmax = s->xy*s->xy*4;
 
    for(tests = 0; tests < 1; tests++)
    {

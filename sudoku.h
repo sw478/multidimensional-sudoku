@@ -9,11 +9,12 @@
 #include <assert.h>
 #include <time.h>
 
-#define SIZE 9
+#define BUFSIZE 5
 
 typedef struct
 {
-   int grid[SIZE*SIZE], n, n2, elements, steps, fit, visited;
+   int *grid, x, y, xy, z, gridSize;
+   int elements, steps, fit, visited;
 } Sudoku;
 
 typedef struct
@@ -25,6 +26,8 @@ typedef struct
 int initDance(Sudoku *s);
 
 int dfs(Sudoku *s);
+
+void run(Sudoku *org, int (*solve)(Sudoku *s));
 
 void init(Genetic *g, Sudoku *s, int size, int seed, double factor);
 void end(Genetic *g);

@@ -1,13 +1,15 @@
 #include "sudoku.h"
 
 /*
- * reads in text file containing numbers 0-9, 0 denoting an unknown
+ * reads in text file containing positive integers, 0 denoting an unknown
  * space
  *
  * If a textfile contains less characters than required, a message will
  * display. Any extra characters will be ignored
  *
- * this is the first iteration so only 9x9 will be considered
+ * currently transitioning from 3x3 boards to other variants, such
+ * as 2x2 or 3x4 boards
+ *
  */
 int main(int argc, char *argv[])
 {
@@ -17,40 +19,37 @@ int main(int argc, char *argv[])
    checkArgs(org, argc, argv, &in);
    readIn(org, in);
    org->steps = 0;
-
    printBoard(org);
 
-   memcpy(s, org, sizeof(Sudoku));
-   dfs(s);
-   printBoard(s);
-
-   memcpy(s, org, sizeof(Sudoku));
-   /*genetic(s, 100, 0, 0.1);*/
-   /*printBoard(s);*/
-
-   initDance(s);
-   printBoard(s);
+   /*run(org, dfs);*/
+   run(org, initDance);
 
    fclose(in);
+   free(org->grid);
    free(s);
    free(org);
    return 0;
 }
 
-int place(Sudoku *s, int row, int col, int value)
+void run(Sudoku *org, int(*solve)(Sudoku *s))
 {
-   if(checkBoard(s, row, col, value))
-      return 1;
-   s->grid[row*s->n2+col] = value;
-   s->elements++;
-   return 0;
+   Sudoku *s = malloc(sizeof(Sudoku));
+
+   memcpy(s, org, sizeof(Sudoku));
+   s->grid = malloc(org->gridSize*sizeof(int));
+   memcpy(s->grid, org->grid, org->gridSize*sizeof(int));
+   solve(s);
+   printBoard(s);
+
+   free(s->grid);
+   free(s);
 }
 
 int checkBoard(Sudoku *s, int row, int col, int value)
 {
-   if(s->grid[row*s->n2+col] != 0)
+   if(s->grid[row*s->xy + col] != 0)
       return 1;
-   if(value < 1 || value > s->n2)
+   if(value < 1 || value > s->xy)
       return 1;
    return checkRow(s, row, col, value) ||
       checkCol(s, row, col, value) || checkBox(s, row, col, value);
@@ -65,9 +64,9 @@ int checkRow(Sudoku *s, int row, int col, int value)
 {
    int i;
 
-   for(i = 0; i < s->n2; i++)
+   for(i = 0; i < s->xy; i++)
    {
-      if(s->grid[row*s->n2+i] == value && i != col)
+      if(s->grid[row*s->xy + i] == value && i != col)
          return 1;
    }
    return 0;
@@ -77,9 +76,9 @@ int checkCol(Sudoku *s, int row, int col, int value)
 {
    int i;
 
-   for(i = 0; i < s->n2; i++)
+   for(i = 0; i < s->xy; i++)
    {
-      if(s->grid[i*s->n2+col] == value && i != row)
+      if(s->grid[i*s->xy + col] == value && i != row)
          return 1;
    }
    return 0;
@@ -87,13 +86,14 @@ int checkCol(Sudoku *s, int row, int col, int value)
 
 int checkBox(Sudoku *s, int row, int col, int value)
 {
-   int i, j, r = row - row % s->n, c = col - col % s->n;
+   int i, j;
+   int r = row - row % s->x, c = col - col % s->y;
 
-   for(i = r; i < r + s->n; i++)
+   for(i = r; i < r + s->y; i++)
    {
-      for(j = c; j < c + s->n; j++)
+      for(j = c; j < c + s->x; j++)
       {
-         if(s->grid[i*s->n2+j] == value && i != row && j != col)
+         if(s->grid[i*s->xy + j] == value && i != row && j != col)
             return 1;
       }
    }
@@ -108,45 +108,50 @@ void printBoard(Sudoku *s)
    int row, col;
 
    printf("\n");
-   for(row = 0; row < s->n2; row++)
+   for(row = 0; row < s->xy; row++)
    {
-      if(row != 0 && row % s->n == 0)
-         printf("------|-------|------\n");
-      for(col = 0; col < s->n2; col++)
+      if(row % s->y == 0)
+         printf("\n");
+      for(col = 0; col < s->xy; col++)
       {
-         if(col != 0)
+         if(col % s->x == 0)
             printf(" ");
-         if(col != 0 && col % s->n == 0)
-            printf("| ");
-         if(s->grid[row*s->n2+col] != 0)
-            printf("%d", s->grid[row*s->n2+col]);
+         if(s->grid[row*s->xy + col] != 0)
+            printf(" %2d", s->grid[row*s->xy + col]);
          else
-            printf("_");
+            printf(" __");
       }
       printf("\n");
    }
-   printf("elements: %d\n", s->elements);
-   printf("steps: %d\n", s->steps);
 }
 
 void readIn(Sudoku *s, FILE *in)
 {
-   int row, col;
-   int c, elements = 0;
+   int x, y, length, gridSize;
+   int i, c, test;
+   char buf[BUFSIZE];
 
-   for(row = 0; row < s->n2; row++)
+   fgets(buf, BUFSIZE, in);
+   test = sscanf(buf, "%d %d", &s->y, &s->x);
+   if(test != 2)
+      invalidInput();
+   x = s->x;
+   y = s->y;
+   s->xy = length = x*y;
+   s->gridSize = gridSize = length*length;
+   s->grid = malloc(gridSize*sizeof(int));
+
+   for(i = 0; i < gridSize; i++)
    {
-      for(col = 0; col < s->n2; col++)
-      {
-         c = (int)fgetc(in) - 48;
-         if((int)c < 0 || (int)c > s->n2)
-            invalidInput();
-         s->grid[row*s->n2+col] = (int)c;
-         if((int)c != 0)
-            elements++;
-      }
+      fgets(buf, BUFSIZE, in);
+      test = sscanf(buf, "%d", &c);
+      if(test < 1)
+         invalidInput();
+printf("%d: %d\n", i, c);
+      if(c < 0 || c > length)
+         invalidInput();
+      s->grid[i] = c;
    }
-   s->elements = elements;
 }
 
 void checkArgs(Sudoku *s, int argc, char *argv[], FILE **in)
@@ -156,8 +161,6 @@ void checkArgs(Sudoku *s, int argc, char *argv[], FILE **in)
    *in = fopen(argv[1], "r");
    if(!*in)
       fileError(argv[1]);
-   s->n = (int)sqrt(SIZE);
-   s->n2 = SIZE;
 }
 
 void invalidInput()
