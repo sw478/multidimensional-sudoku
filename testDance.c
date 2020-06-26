@@ -19,28 +19,13 @@ void testX(Dance *d, Sudoku *s)
    int x, tests;
    srand(time(NULL));
 
-   d->rmax = s->xy*s->xy*s->xy;
-   d->cmax = s->xy*s->xy*4;
-
    for(tests = 0; tests < 1; tests++)
    {
-      d->sol = malloc(d->rmax*sizeof(int));
-      memset(d->sol, 0, d->rmax*sizeof(int));
-      d->isol = 0;
-      initRoot(d);
-      initSudokuMatrix(d, s);
-      freeColumn(d->root);
- 
-      //printMatrix(d);
       x = algorithmX(d);
       if(x == 0)
-         saveSolution(d, s);//printSolution(d);
+         ;//printSol(d->solRoot->child);
       else
          printf("no solution\n");
-
-      free(d->sol);
-      freeDance(d);
-      free(d->root);
    }
 }
 
@@ -72,75 +57,69 @@ void testAddWiki(Dance *d)
 
 void printMatrix(Dance *d)
 {
-   int prow, pcol, matrix[325][730];
-   Doubly *xcol = d->root->right, *xrow = d->root->down;
+   int pcol = 0;
+   Doubly *xcol, *xrow;
 
-   memset(matrix, 0, sizeof(matrix));
-   for(xcol = d->root->right; xcol != d->root; xcol = xcol->right)
+   printf("\nX's: ");
+
+   pcol = 0;
+   for(xcol = d->root->right; xcol != d->root; xcol = xcol->right, pcol++)
    {
-      for(xrow = xcol->down; xrow != xcol; xrow = xrow->down)
-         matrix[xcol->dcol][xrow->drow] = 1;
-      matrix[xrow->dcol][d->rmax] = xrow->drow - d->rmax;
+      for(; pcol < xcol->dcol; pcol++, printf("0"));
+      printf("%d", xcol->drow - d->rmax);
    }
+   for(; pcol < xcol->dcol; pcol++, printf("0"));
 
-   //printf("\n\nX's:");
-   for(pcol = 0; pcol < d->cmax; pcol++);
-      //printf("%3d", matrix[pcol][d->rmax]);
-   //printf("\n\n    ");
-   for(pcol = 0; pcol < d->cmax; pcol++);
-      //printf("%3d", pcol);
-
-   for(prow = 0; prow < d->rmax; prow++)
+   for(xrow = d->root->down; xrow != d->root; xrow = xrow->down)
    {
-      printf("\n%3d:", prow);
-      for(pcol = 0; pcol < d->cmax; pcol++)
+      if(xrow->right->left != xrow)
+         continue;
+      printf("\n%3d: ", xrow->drow);
+      pcol = 0;
+      for(xcol = xrow->right; xcol != xrow; xcol = xcol->right, pcol++)
       {
-         if(matrix[pcol][prow] == 1)
-            printf("X");
-         else
-            printf("_");
+         for(; pcol < xcol->dcol; pcol++, printf("_"));
+         printf("X");
       }
+      for(; pcol < xcol->dcol; pcol++, printf("_"));
    }
-   printf("\n\n");
-}
-
-int cmp_int(const void* a, const void* b)
-{
-   return *(int*)a - *(int*)b;
+   printf("\n");
 }
 
 void printSolution(Dance *d)
 {
-   int prow, pcol, matrix[325][730], i;
-   Doubly *xcol = d->root->right, *xrow = d->root->down;
+   int i;
 
-   memset(matrix, 0, sizeof(matrix));
-   for(xcol = d->root->right; xcol != d->root; xcol = xcol->right)
-   {
-      for(xrow = xcol->down; xrow != xcol; xrow = xrow->down)
-         matrix[xcol->dcol][xrow->drow] = 1;
-      matrix[xrow->dcol][d->rmax] = xrow->drow - d->rmax;
-   }
-
-   printf("\n\n    ");
-   for(pcol = 0; pcol < d->cmax; pcol++)
-      printf("%3d", pcol);
    printf("\n");
-
-   qsort(d->sol, d->isol, sizeof(int), cmp_int); 
-   for(i = 0; i < d->isol; i++)
+   for(i = 0; i < d->numSols; i++)
    {
-      prow = d->sol[i];
-      printf("\n%3d: ", prow);
-      for(pcol = 0; pcol < d->cmax; pcol++)
-      {
-         if(matrix[pcol][prow] == 1)
-            printf("  O");
-         else
-            printf("  |");
-      }
+      printf("\n\nsol %d: ", i + 1);
+      printSingleSol(d->sols[i]);
    }
    printf("\n\n");
+}
+
+void printSingleSol(SolTrie *sol)
+{
+   SolTrie *cur;
+   Doubly *xcol;
+   int pcol, cmax = ((Doubly*)(sol->row))->hcol->dcol;
+
+   printf("\n     ");
+   for(pcol = 0; pcol < cmax; pcol++, printf("%d", pcol % 10));
+   for(cur = sol; cur->parent != cur; cur = cur->parent)
+   {
+      printf("\n%3d: ", ((Doubly*)(cur->row))->drow);
+      pcol = 0;
+      xcol = ((Doubly*)(cur->row))->right;
+      for(; xcol != ((Doubly*)(cur->row)); xcol = xcol->right, pcol++)
+      {
+         for(; pcol < xcol->dcol; pcol++, printf("."));
+         printf("X");
+      }
+      for(; pcol < xcol->dcol; pcol++, printf("."));
+   }
+   printf("\n");
 }
 
 void printNodeInfo(Doubly *node)

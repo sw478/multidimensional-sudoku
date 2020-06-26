@@ -1,0 +1,9 @@
+short term goals:
+-redesign how dancing links are initialized and reset, currently very slow for larger boards
+-improve user interface
+-add boards for higher dimensions, ex. 2x2x2, 2x3x4, 3x3x3x3
+-figure out an efficient way to generate boards
+-display all solutions for a board
+
+long term goals:
+-design an app/web app for this program

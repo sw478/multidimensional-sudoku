@@ -9,7 +9,7 @@
 #include <assert.h>
 #include <time.h>
 
-#define BUFSIZE 5
+#define BUFSIZE 100
 
 typedef struct
 {

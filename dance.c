@@ -3,32 +3,37 @@
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *xrow;
-   int x = 1;
+   int x = 1, ret;
+   SolTrie *sol;
 
    if(d->root == d->root->right)
+   {
+      //printf("\t%3d", ((Doubly*)(d->csol->row))->drow);
+      addLeaf(&d->sols, d->csol, &d->solCap, &d->numSols);
+      printSingleSol(d->csol);
       return 0;
+   }
+   //hcol = randHCol(d);
    hcol = heuristic(d);
    if(hcol->drow == d->rmax)
       return 1;
    for(xrow = hcol->down; xrow != hcol; xrow = xrow->down)
    {
+      sol = initTrie((void*)(xrow->hrow));
+      addChild(d->csol, sol);
+      d->csol = sol;
       coverRow(d, xrow);
       //printMatrix(d);
-      x = algorithmX(d);
+      if(0 == (ret = algorithmX(d)))
+         x = 0;
       uncoverRow(d, xrow);
       //printMatrix(d);
-      if(x == 0)
-         return storeSol(d, xrow);
+      d->csol = d->csol->parent;
+      if(ret == 1)
+         deleteChild(d->csol, (void*)(xrow->hrow));
    }
 
-   return 1;
-}
-
-int storeSol(Dance *d, Doubly *xrow)
-{
-   d->sol[d->isol] = xrow->drow;
-   d->isol++;
-   return 0;
+   return x;
 }
 
 int coverRow(Dance *d, Doubly *node)
@@ -36,7 +41,11 @@ int coverRow(Dance *d, Doubly *node)
    Doubly *xrow;
 
    for(xrow = node->right; xrow != node; xrow = xrow->right)
+   {
+      if(xrow->hcol == d->root)
+         continue;
       coverCol(d, xrow);
+   }
    coverCol(d, xrow);
 
    return 0;
@@ -49,6 +58,7 @@ int coverCol(Dance *d, Doubly *xrow)
    hcol = xrow->hcol;
    hcol->right->left = hcol->left;
    hcol->left->right = hcol->right;
+   //d->root->dcol--;
 
    for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
    {
@@ -67,9 +77,13 @@ int uncoverRow(Dance *d, Doubly *node)
 {
    Doubly *xrow;
 
+   uncoverCol(d, node);
    for(xrow = node->left; xrow != node; xrow = xrow->left)
+   {
+      if(xrow->hcol == d->root)
+         continue;
       uncoverCol(d, xrow);
-   uncoverCol(d, xrow);
+   }
 
    return 0;
 }
@@ -81,6 +95,7 @@ int uncoverCol(Dance *d, Doubly *xrow)
    hcol = xrow->hcol;
    hcol->right->left = hcol;
    hcol->left->right = hcol;
+   //d->root->dcol++;
 
    for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
    {
@@ -97,14 +112,30 @@ int uncoverCol(Dance *d, Doubly *xrow)
 
 Doubly *heuristic(Dance *d)
 {
-   Doubly *hcol = d->root->right, *result;
+   Doubly *hcol, *minXs;
 
-   result = hcol;
-   for(; hcol != d->root; hcol = hcol->right)
+   for(hcol = minXs = d->root->right; hcol != d->root; hcol = hcol->right)
    {
-      if(hcol->drow < result->drow)
-         result = hcol;
+      if(hcol->drow < minXs->drow)
+         minXs = hcol;
    }
 
-   return result;
+   return minXs;
 }
+
+Doubly *randHCol(Dance *d)
+{
+   Doubly *hcol;
+
+   for(hcol = d->root->right; 1; hcol = hcol->right)
+   {
+      if(hcol == d->root)
+         continue;
+      if(rand() % d->root->dcol == 0)
+         return hcol;
+   }
+   assert(hcol != d->root);
+
+   return hcol;
+}
+

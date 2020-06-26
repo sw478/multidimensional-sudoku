@@ -1,12 +1,21 @@
 # sudoku
 
+	version 1.1
+
+reconfigured dancing links algorithm to handle boards of different sizes and
+dimensions and added appropriate tests
+
+added todo.txt that lists short term and long term goals for this project
+
+	version 1.0
+
 reads in a text file containing 81 digits 0-9 representing a classic 9x9
 sudoku board
 
 currently solves boards using 3 approaches:
 
 backtracking:
-uses dfs to fill in digits, and when a contradiction appears, the
+uses depth first search to fill in digits, and when a contradiction appears, the
 algorithm backtracks to the last valid cell placement.
 
 genetic algorithm:
@@ -20,5 +29,3 @@ dancing links structure that could be used for other exact cover problems, such
 as pentominos.
 
 	en.wikipedia.org/wiki/Exact_cover
-
-

@@ -1,4 +1,6 @@
 #include "sudoku.h"
+#include "dance.h"
+#include "setup.h"
 
 /*
  * reads in text file containing positive integers, 0 denoting an unknown
@@ -18,16 +20,16 @@ int main(int argc, char *argv[])
 
    checkArgs(org, argc, argv, &in);
    readIn(org, in);
-   org->steps = 0;
+
    printBoard(org);
 
-   /*run(org, dfs);*/
-   run(org, initDance);
+   run(org, initDanceSudoku);
 
    fclose(in);
    free(org->grid);
    free(s);
    free(org);
+
    return 0;
 }
 
@@ -131,7 +133,7 @@ void readIn(Sudoku *s, FILE *in)
    int i, c, test;
    char buf[BUFSIZE];
 
-   fgets(buf, BUFSIZE, in);
+   fgets(buf, sizeof(buf), in);
    test = sscanf(buf, "%d %d", &s->y, &s->x);
    if(test != 2)
       invalidInput();
@@ -147,7 +149,6 @@ void readIn(Sudoku *s, FILE *in)
       test = sscanf(buf, "%d", &c);
       if(test < 1)
          invalidInput();
-printf("%d: %d\n", i, c);
       if(c < 0 || c > length)
          invalidInput();
       s->grid[i] = c;
