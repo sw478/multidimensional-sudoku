@@ -1,28 +1,19 @@
 #include "dance.h"
 #include "setup.h"
 
-/*
- * run for each file
- */
 int initDanceSudoku(Sudoku *s)
 {
    Dance *d = malloc(sizeof(Dance));
-   clock_t start, end;
-   double time;
-   //testSolTrie();
 
    initMatrixFileSudoku(d, s->x, s->y);
    initMatrix(d);
-   //initSudokuMatrix(d, s);
-   //printMatrix(d);
-   start = clock();
-   testX(d, s);
-   end = clock();
-   time = ((double)(end - start)) / CLOCKS_PER_SEC;
-   printf("time: %f\n", time);
-   //recoverHiddenRows(d);
-   //d->sols = getLeaves(&d->sols, d->solRoot, &d->numSols);
-   //printSolution(d);
+   initSudokuMatrix(d, s);
+
+   if(algorithmX(d))
+      printf("no solutions\n");
+
+   recoverHiddenRows(d);
+   //printSolutions(d);
    saveSolution(d, s);
 
    free(d->sols);
@@ -30,7 +21,7 @@ int initDanceSudoku(Sudoku *s)
    return 0;
 }
 
-int initRoot(Dance *d)
+int initDance(Dance *d)
 {
    assert(d != NULL);
 
@@ -59,7 +50,8 @@ int initDoubly(Dance *d, int irow, int icol)
    assert(d->root != NULL);
    assert(irow < d->rmax && icol < d->cmax);
 
-   for(hcol = d->root->right; hcol != d->root && hcol->dcol < icol; hcol = hcol->right);
+   hcol = d->root->right;
+   for(; hcol != d->root && hcol->dcol < icol; hcol = hcol->right);
    if(hcol->dcol != icol)
    {
       temp = malloc(sizeof(Doubly));
@@ -75,11 +67,13 @@ int initDoubly(Dance *d, int irow, int icol)
    }
    xhcol = hcol;
 
-   for(hcol=hcol->down; hcol->drow != d->rmax && hcol->drow < irow; hcol = hcol->down);
+   hcol = hcol->down;
+   for(; hcol->drow != d->rmax && hcol->drow < irow; hcol = hcol->down);
    if(hcol->drow == irow)
       return 1;
 
-   for(hrow = d->root->down; hrow != d->root && hrow->drow < irow; hrow = hrow->down);
+   hrow = d->root->down;
+   for(; hrow != d->root && hrow->drow < irow; hrow = hrow->down);
    if(hrow->drow != irow)
    {
       temp = malloc(sizeof(Doubly));
@@ -95,7 +89,8 @@ int initDoubly(Dance *d, int irow, int icol)
    }
    xhrow = hrow;
 
-   for(hrow=hrow->right; hrow->dcol != d->cmax && hrow->dcol < icol; hrow = hrow->right);
+   hrow = hrow->right;
+   for(; hrow->dcol != d->cmax && hrow->dcol < icol; hrow = hrow->right);
    if(hrow->dcol == icol)
       return 2;
 
@@ -153,10 +148,6 @@ void freeColumn(Doubly *col)
 
 void freeDoubly(Doubly *node)
 {
-   assert(node->left->right == node);
-   assert(node->right->left == node);
-   assert(node->down->up == node);
-   assert(node->up->down == node);
    node->left->right = node->right;
    node->right->left = node->left;
    node->down->up = node->up;

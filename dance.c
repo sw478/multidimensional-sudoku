@@ -8,9 +8,8 @@ int algorithmX(Dance *d)
 
    if(d->root == d->root->right)
    {
-      //printf("\t%3d", ((Doubly*)(d->csol->row))->drow);
       addLeaf(&d->sols, d->csol, &d->solCap, &d->numSols);
-      printSingleSol(d->csol);
+      //printSingleSol(d->csol);
       return 0;
    }
    //hcol = randHCol(d);
@@ -31,6 +30,8 @@ int algorithmX(Dance *d)
       d->csol = d->csol->parent;
       if(ret == 1)
          deleteChild(d->csol, (void*)(xrow->hrow));
+      if(x == 0)
+         return 0;
    }
 
    return x;
@@ -58,7 +59,7 @@ int coverCol(Dance *d, Doubly *xrow)
    hcol = xrow->hcol;
    hcol->right->left = hcol->left;
    hcol->left->right = hcol->right;
-   //d->root->dcol--;
+   d->root->dcol--;
 
    for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
    {
@@ -95,7 +96,7 @@ int uncoverCol(Dance *d, Doubly *xrow)
    hcol = xrow->hcol;
    hcol->right->left = hcol;
    hcol->left->right = hcol;
-   //d->root->dcol++;
+   d->root->dcol++;
 
    for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
    {
@@ -125,16 +126,10 @@ Doubly *heuristic(Dance *d)
 
 Doubly *randHCol(Dance *d)
 {
+   int i, randInt = rand() % d->root->dcol;
    Doubly *hcol;
 
-   for(hcol = d->root->right; 1; hcol = hcol->right)
-   {
-      if(hcol == d->root)
-         continue;
-      if(rand() % d->root->dcol == 0)
-         return hcol;
-   }
-   assert(hcol != d->root);
+   for(i = 0, hcol = d->root->right; i < randInt; i++, hcol = hcol->right);
 
    return hcol;
 }

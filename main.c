@@ -3,108 +3,41 @@
 #include "setup.h"
 
 /*
- * reads in text file containing positive integers, 0 denoting an unknown
- * space
+ * argument format: a.out [mode: 1 for gen, 2 for solve] [file: empty to be
+ * filled with only dimensions if generating, filled if solving]
+ *
+ * right now generate option generates full boards, will change to have
+ * empty slot to be solvable
+ *
+ * a filled text file should only contain positive integers, 0 denoting an
+ * unknown space
  *
  * If a textfile contains less characters than required, a message will
  * display. Any extra characters will be ignored
  *
- * currently transitioning from 3x3 boards to other variants, such
- * as 2x2 or 3x4 boards
- *
  */
 int main(int argc, char *argv[])
 {
-   Sudoku *org = malloc(sizeof(Sudoku)), *s = malloc(sizeof(Sudoku));
-   FILE *in;
-
-   checkArgs(org, argc, argv, &in);
-   readIn(org, in);
-
-   printBoard(org);
-
-   run(org, initDanceSudoku);
-
-   fclose(in);
-   free(org->grid);
-   free(s);
-   free(org);
-
-   return 0;
-}
-
-void run(Sudoku *org, int(*solve)(Sudoku *s))
-{
    Sudoku *s = malloc(sizeof(Sudoku));
+   FILE *in;
+   srand(time(NULL));
 
-   memcpy(s, org, sizeof(Sudoku));
-   s->grid = malloc(org->gridSize*sizeof(int));
-   memcpy(s->grid, org->grid, org->gridSize*sizeof(int));
-   solve(s);
+   checkArgs(s, argc, argv, &in);
+   readIn(s, in);
+
+   if(s->mode == 1)
+      printBoard(s);
+   initDanceSudoku(s);
    printBoard(s);
 
+   fclose(in);
    free(s->grid);
    free(s);
-}
 
-int checkBoard(Sudoku *s, int row, int col, int value)
-{
-   if(s->grid[row*s->xy + col] != 0)
-      return 1;
-   if(value < 1 || value > s->xy)
-      return 1;
-   return checkRow(s, row, col, value) ||
-      checkCol(s, row, col, value) || checkBox(s, row, col, value);
-}
-
-/*
- * checks the row containing the cell with (row, col) for validity
- * valid if unique element in row
- * returns 1 if invalid, 0 if valid
- */
-int checkRow(Sudoku *s, int row, int col, int value)
-{
-   int i;
-
-   for(i = 0; i < s->xy; i++)
-   {
-      if(s->grid[row*s->xy + i] == value && i != col)
-         return 1;
-   }
    return 0;
 }
 
-int checkCol(Sudoku *s, int row, int col, int value)
-{
-   int i;
-
-   for(i = 0; i < s->xy; i++)
-   {
-      if(s->grid[i*s->xy + col] == value && i != row)
-         return 1;
-   }
-   return 0;
-}
-
-int checkBox(Sudoku *s, int row, int col, int value)
-{
-   int i, j;
-   int r = row - row % s->x, c = col - col % s->y;
-
-   for(i = r; i < r + s->y; i++)
-   {
-      for(j = c; j < c + s->x; j++)
-      {
-         if(s->grid[i*s->xy + j] == value && i != row && j != col)
-            return 1;
-      }
-   }
-   return 0;
-}
-
-/*
- * for obvious debugging purposes
- */
+//for obvious debugging purposes
 void printBoard(Sudoku *s)
 {
    int row, col;
@@ -141,8 +74,10 @@ void readIn(Sudoku *s, FILE *in)
    y = s->y;
    s->xy = length = x*y;
    s->gridSize = gridSize = length*length;
-   s->grid = malloc(gridSize*sizeof(int));
+   s->grid = calloc(gridSize, sizeof(int));
 
+   if(s->mode == 2)
+      return;
    for(i = 0; i < gridSize; i++)
    {
       fgets(buf, BUFSIZE, in);
@@ -157,11 +92,17 @@ void readIn(Sudoku *s, FILE *in)
 
 void checkArgs(Sudoku *s, int argc, char *argv[], FILE **in)
 {
-   if(argc != 2)
+   if(argc != 3)
+      numArgError();
+   if(!strcmp(argv[1], "1")) // solve
+      s->mode = 1;
+   else if(!strcmp(argv[1], "2")) // generate
+      s->mode = 2;
+   else
       usage();
-   *in = fopen(argv[1], "r");
+   *in = fopen(argv[2], "r");
    if(!*in)
-      fileError(argv[1]);
+      fileError(argv[2]);
 }
 
 void invalidInput()
@@ -179,7 +120,13 @@ void fileError(char *fileName)
 
 void usage()
 {
-   fprintf(stderr, "Usage: ./a.out [sudoku file]\n");
+   fprintf(stderr, "Usage: ./a.out [mode: 1 to solve or 2 to generate] [sudoku file]\n");
+   exit(EXIT_FAILURE);
+}
+
+void numArgError()
+{
+   fprintf(stderr, "Num Arg Error");
    exit(EXIT_FAILURE);
 }
 

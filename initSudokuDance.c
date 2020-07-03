@@ -65,7 +65,7 @@ int initMatrix(Dance *d)
    assert(fseek(d->init, 0, SEEK_SET) == 0);
    assert(!feof(d->init));
 
-   initRoot(d);
+   initDance(d);
    while(1)
    {
       fgets(buf, sizeof(buf), d->init);

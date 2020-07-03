@@ -1,5 +1,5 @@
 #!/bin/bash
-USAGE="usage: [ b:basic | q:quit | t:time | s:style | c:complexity | v:valgrind | g:gprof]"
+USAGE="usage: [ b:basic | m:make | q:quit | t:time]"
 
 while true; do
 
@@ -20,32 +20,6 @@ elif [ "$type" = "c" ]; then
 elif [ "$type" = "s" ]; then
    ~kmammen-grader/bin/styleCheckC *.c
 
-elif [ "$type" = "t" ]; then
-   time ./a.out tests/s1.in
-
-elif [ "$type" = "v" ]; then
-   echo "dimension? \"row col\""
-   read row col
-   valgrind --leak-check=full --error-exitcode=13 ./a.out tests/s${row}x${col}.in
-
-elif [ "$type" = "b" ]; then
-   ./a.out tests/s1.in
-
-elif [ "$type" = "2x3" ]; then
-   ./a.out tests/s2x3.in
-
-elif [ "$type" = "2x2" ]; then
-   ./a.out tests/s2x2n1.in
-   ./a.out tests/s2x2n2.in
-   ./a.out tests/s2x2n3.in
-   ./a.out tests/s2x2n4.in
-
-elif [ "$type" = "3x4" ]; then
-   ./a.out tests/s3x4.in
-
-elif [ "$type" = "4x4" ]; then
-   ./a.out tests/s4x4.in
-
 elif [ "$type" = "g" ]; then
    make clean
    gcc -pg -Wall -std=c89 -pedantic *.c 
@@ -53,6 +27,22 @@ elif [ "$type" = "g" ]; then
    gprof a.out gmon.out | head -20
    make clean
    make
+
+elif [ "$type" = "t" ] || [ "$type" = "v" ] || [ "$type" = "b" ]; then
+   echo "mode? 1 to solve, 2 to generate"
+   read mode
+   echo "dimension? \"row col\""
+   read row col
+
+if [ "$type" = "t" ]; then
+   time ./a.out ${mode} tests/s${row}x${col}.in
+
+elif [ "$type" = "v" ]; then
+   valgrind --leak-check=full --error-exitcode=13 ./a.out ${mode} tests/s${row}x${col}.in
+
+elif [ "$type" = "b" ]; then
+   ./a.out ${mode} tests/s${row}x${col}.in
+fi
 
 fi
 

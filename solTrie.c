@@ -1,54 +1,5 @@
 #include "solTrie.h"
 
-void testSolTrie()
-{
-   SolTrie *root = initTrie(NULL);
-   SolTrie *sol1 = initTrie((void *)1);
-   SolTrie *sol2 = initTrie((void *)2);
-   SolTrie *sol3 = initTrie((void *)3);
-   SolTrie *sol4 = initTrie((void *)4);
-   SolTrie *sol5 = initTrie((void *)5);
-//   SolTrie **leaves;
-//   long int size = 0;
-
-   addChild(root, sol1);
-   addChild(root, sol2);
-   addChild(root, sol3);
-   addChild(sol1, sol4);
-   addChild(sol1, sol5);
-//   leaves = getLeaves(root, &size);
-
-//   free(leaves);
-   freeSol(root);
-}
-
-/*
- * leaves must be allocated at least to size > 0
- */
-SolTrie** getLeaves(SolTrie ***leaves, SolTrie *sol, long int *size)
-{
-   long int index = 0;
-
-   getLeavesRecur(leaves, sol, size, &index);
-   leaves = realloc(leaves, index*sizeof(SolTrie));
-
-   *size = index;
-   return *leaves;
-}
-
-void getLeavesRecur(SolTrie ***leaves, SolTrie *sol, long int *cap, long int *index)
-{
-   int i;
-
-   for(i = 0; i < sol->num; i++)
-   {
-      if(sol->child[i]->num == 0)
-         addLeaf(leaves, sol->child[i], cap, index);
-      else
-         getLeavesRecur(leaves, sol->child[i], cap, index);
-   }
-}
-
 void addLeaf(SolTrie ***leaves, SolTrie *sol, long int *cap, long int *index)
 {
    if(*index >= *cap)

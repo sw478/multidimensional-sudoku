@@ -1,6 +1,6 @@
 #include "testDance.h"
 
-void testAddAllDoubly(Dance *d)
+void testAddRandom(Dance *d)
 {
    int r, c;
 
@@ -11,21 +11,6 @@ void testAddAllDoubly(Dance *d)
          if((rand() % 100) < 10)
             initDoubly(d, r, c);
       }
-   }
-}
-
-void testX(Dance *d, Sudoku *s)
-{
-   int x, tests;
-   srand(time(NULL));
-
-   for(tests = 0; tests < 1; tests++)
-   {
-      x = algorithmX(d);
-      if(x == 0)
-         ;//printSol(d->solRoot->child);
-      else
-         printf("no solution\n");
    }
 }
 
@@ -86,7 +71,7 @@ void printMatrix(Dance *d)
    printf("\n");
 }
 
-void printSolution(Dance *d)
+void printSolutions(Dance *d)
 {
    int i;
 

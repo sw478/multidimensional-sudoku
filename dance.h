@@ -33,7 +33,7 @@ typedef struct hide
 
 typedef struct
 {
-   int rmax, cmax;
+   int rmax, cmax, mode;
    long int numSols, solCap;
    Doubly *root;
    SolTrie *solRoot, *csol, **sols;
