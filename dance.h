@@ -33,7 +33,7 @@ typedef struct hide
 
 typedef struct
 {
-   int rmax, cmax, mode;
+   int rmax, cmax, mode, x, y;
    long int numSols, solCap;
    Doubly *root;
    SolTrie *solRoot, *csol, **sols;
@@ -49,7 +49,7 @@ typedef struct
 /* sudoku specific functions */
 int initMatrixFileSudoku(Dance *d, int x, int y);
 int initMatrix(Dance *d);
-int initSudokuMatrix(Dance *d, Sudoku *s);
+int hideRows(Dance *d, Sudoku *s);
 int hideRow(Dance *d, Doubly *row);
 int recoverHiddenRows(Dance *d);
 int saveSolution(Dance *d, Sudoku *s);

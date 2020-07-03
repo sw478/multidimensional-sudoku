@@ -79,12 +79,12 @@ void printSolutions(Dance *d)
    for(i = 0; i < d->numSols; i++)
    {
       printf("\n\nsol %d: ", i + 1);
-      printSingleSol(d->sols[i]);
+      printSingleSol2(d, d->sols[i]);
    }
    printf("\n\n");
 }
 
-void printSingleSol(SolTrie *sol)
+void printSingleSol(Dance *d, SolTrie *sol)
 {
    SolTrie *cur;
    Doubly *xcol;
@@ -107,11 +107,20 @@ void printSingleSol(SolTrie *sol)
    printf("\n");
 }
 
-void printNodeInfo(Doubly *node)
+void printSingleSol2(Dance *d, SolTrie *sol)
 {
-   printf("node: [%d %d],", node->drow, node->dcol);
-   printf(" up: [%d %d],", node->up->drow, node->up->dcol);
-   printf(" down: [%d %d],", node->down->drow, node->down->dcol);
-   printf(" left: [%d %d],", node->left->drow, node->left->dcol);
-   printf(" right: [%d %d]\n", node->right->drow, node->right->dcol);
+   SolTrie *cur;
+   int drow, num, igrid, xy = d->x*d->y;
+   int cmax = ((Doubly*)(sol->row))->hcol->dcol;
+   int *grid = malloc(cmax*sizeof(int));
+
+   for(cur = sol; cur->parent != cur; cur = cur->parent)
+   {
+      drow = ((Doubly*)cur->row)->drow;
+      num = drow % xy;
+      igrid = drow / xy;
+      grid[igrid] = num + 1;
+   }
+   printBoard(grid, d->x, d->y);
+   free(grid);
 }

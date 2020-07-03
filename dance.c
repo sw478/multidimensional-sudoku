@@ -9,7 +9,7 @@ int algorithmX(Dance *d)
    if(d->root == d->root->right)
    {
       addLeaf(&d->sols, d->csol, &d->solCap, &d->numSols);
-      //printSingleSol(d->csol);
+      //printSingleSol(d, d->csol);
       return 0;
    }
    //hcol = randHCol(d);

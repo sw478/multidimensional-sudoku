@@ -25,10 +25,7 @@ int main(int argc, char *argv[])
    checkArgs(s, argc, argv, &in);
    readIn(s, in);
 
-   if(s->mode == 1)
-      printBoard(s);
    initDanceSudoku(s);
-   printBoard(s);
 
    fclose(in);
    free(s->grid);
@@ -38,21 +35,21 @@ int main(int argc, char *argv[])
 }
 
 //for obvious debugging purposes
-void printBoard(Sudoku *s)
+void printBoard(int *grid, int x, int y)
 {
-   int row, col;
+   int row, col, xy = x*y;
 
    printf("\n");
-   for(row = 0; row < s->xy; row++)
+   for(row = 0; row < xy; row++)
    {
-      if(row % s->y == 0)
+      if(row % y == 0)
          printf("\n");
-      for(col = 0; col < s->xy; col++)
+      for(col = 0; col < xy; col++)
       {
-         if(col % s->x == 0)
+         if(col % x == 0)
             printf(" ");
-         if(s->grid[row*s->xy + col] != 0)
-            printf(" %2d", s->grid[row*s->xy + col]);
+         if(grid[row*xy + col] != 0)
+            printf(" %2d", grid[row*xy + col]);
          else
             printf(" __");
       }

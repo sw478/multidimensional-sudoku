@@ -83,7 +83,7 @@ int initMatrix(Dance *d)
  * hides necessary rows and stores them in hideList
  * requires row headers
  */
-int initSudokuMatrix(Dance *d, Sudoku *s)
+int hideRows(Dance *d, Sudoku *s)
 {
    Doubly *row = d->root->down;
    int igrid, num;

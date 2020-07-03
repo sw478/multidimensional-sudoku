@@ -17,7 +17,7 @@ typedef struct
    int elements, steps, fit, visited, mode;
 } Sudoku;
 
-void printBoard(Sudoku *s);
+void printBoard(int *grid, int x, int y);
 void readIn(Sudoku *s, FILE *in);
 void checkArgs(Sudoku *s, int argc, char *argv[], FILE **in);
 

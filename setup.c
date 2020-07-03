@@ -4,16 +4,18 @@
 int initDanceSudoku(Sudoku *s)
 {
    Dance *d = malloc(sizeof(Dance));
+   d->x = s->x;
+   d->y = s->y;
 
    initMatrixFileSudoku(d, s->x, s->y);
    initMatrix(d);
-   initSudokuMatrix(d, s);
+   hideRows(d, s);
 
    if(algorithmX(d))
       printf("no solutions\n");
 
    recoverHiddenRows(d);
-   //printSolutions(d);
+   printSolutions(d);
    saveSolution(d, s);
 
    free(d->sols);

@@ -1,5 +1,12 @@
 # sudoku
 
+	version 1.2
+
+removed dfs and genetic, cleaned up in general.
+adding sudoku generator
+can display all solutions in matrix format or normal format
+(printSingleSol and printSingleSol2)
+
 	version 1.1
 
 reconfigured dancing links algorithm to handle boards of different sizes and
