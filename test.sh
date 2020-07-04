@@ -23,25 +23,29 @@ elif [ "$type" = "s" ]; then
 elif [ "$type" = "g" ]; then
    make clean
    gcc -pg -Wall -std=c89 -pedantic *.c 
-   ./a.out tests/s1.in
+   echo "mode? s to solve, g to generate"
+   read mode
+   echo "dimension? \"row col\""
+   read row col
+   ./a.out ${mode} tests/${mode}${row}x${col}.in
    gprof a.out gmon.out | head -20
    make clean
    make
 
 elif [ "$type" = "t" ] || [ "$type" = "v" ] || [ "$type" = "b" ]; then
-   echo "mode? 1 to solve, 2 to generate"
+   echo "mode? s to solve, g to generate"
    read mode
    echo "dimension? \"row col\""
    read row col
 
 if [ "$type" = "t" ]; then
-   time ./a.out ${mode} tests/s${row}x${col}.in
+   time ./a.out ${mode} tests/${mode}${row}x${col}.in
 
 elif [ "$type" = "v" ]; then
-   valgrind --leak-check=full --error-exitcode=13 ./a.out ${mode} tests/s${row}x${col}.in
+   valgrind --leak-check=full --error-exitcode=13 ./a.out ${mode} tests/${mode}${row}x${col}.in
 
 elif [ "$type" = "b" ]; then
-   ./a.out ${mode} tests/s${row}x${col}.in
+   ./a.out ${mode} tests/${mode}${row}x${col}.in
 fi
 
 fi

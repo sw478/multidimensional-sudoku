@@ -4,27 +4,30 @@
 #include <unistd.h>
 #include "solTrie.h"
 
-typedef struct doubly
-{
 /* 
- * drow = row * 81 + col * 9 + num
- * dcol = constraint * 81 + row * 9 + col
- * constraint #: 1: row-col, 2: row-num, 3: col-num, 4: box-num
- *
+ * columns describe the constraints
  * if Doubly is a root, drow = d->root->rmax, dcol = d->root->cmax
  * 
- * IMPORTANT: for space saving purposes, if doubly is not header:
- * (drow < d->root->rmax && drow >= 0)
- * if a header: (drow >= d->root->rmax)
- * drow will instead represent: (number of 1's in that column + d->root->rmax)
+ * to reduce redundancy, if doubly is not header:
+ * 0 < drow < d->root->rmax and
+ * 0 < dcol < d->root->cmax
+ * if a header:
+ * drow >= d->root->rmax
+ * dcol >= d->root->cmax
+ * drow/dcol for headers will represent number of elements in their row or col
  */
-
+typedef struct doubly
+{
    int drow, dcol;
 
-/* pointers to nodes adjacent to node, and to the node's column header node */
+/* pointers to adjacent nodes and to header nodes */
    struct doubly *up, *down, *left, *right, *hcol, *hrow;
 } Doubly;
 
+/*
+ * in the future when you might want to run multiple boards using a single
+ * dancing link structure, this would allow you to not have to recreate one
+ */
 typedef struct hide
 {
    Doubly *xrow;
@@ -54,7 +57,7 @@ int hideRow(Dance *d, Doubly *row);
 int recoverHiddenRows(Dance *d);
 int saveSolution(Dance *d, Sudoku *s);
 
-/* basic operations */
+/* basic dance moves */
 Doubly *heuristic(Dance *d);
 Doubly *randHCol(Dance *d);
 int coverRow(Dance *d, Doubly *node);
@@ -65,9 +68,6 @@ int algorithmX(Dance *d);
 int storeSol(Dance *d, Doubly *hcol);
 int coverRowHeaders(Dance *d);
 int uncoverRowHeaders(Dance *d);
-
-/* Universal operations */
-int danceListIndex(int x, int y);
 
 #include "setup.h"
 #include "testDance.h"

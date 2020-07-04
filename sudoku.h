@@ -9,17 +9,18 @@
 #include <assert.h>
 #include <time.h>
 
-#define BUFSIZE 100
+#define BUFSIZE 1000
 
 typedef struct
 {
    int *grid, x, y, xy, z, gridSize;
    int elements, steps, fit, visited, mode;
+   FILE *in;
 } Sudoku;
 
 void printBoard(int *grid, int x, int y);
-void readIn(Sudoku *s, FILE *in);
-void checkArgs(Sudoku *s, int argc, char *argv[], FILE **in);
+void readIn(Sudoku *s);
+void parseArgs(Sudoku *s, int argc, char *argv[]);
 
 void invalidInput();
 void fileError(char *fileName);

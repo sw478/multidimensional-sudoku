@@ -9,10 +9,10 @@ int algorithmX(Dance *d)
    if(d->root == d->root->right)
    {
       addLeaf(&d->sols, d->csol, &d->solCap, &d->numSols);
-      //printSingleSol(d, d->csol);
+      /*printSingleSol(d, d->csol);*/
       return 0;
    }
-   //hcol = randHCol(d);
+   /*hcol = (d->mode == 2) ? randHCol(d) : heuristic(d);*/
    hcol = heuristic(d);
    if(hcol->drow == d->rmax)
       return 1;
@@ -22,15 +22,15 @@ int algorithmX(Dance *d)
       addChild(d->csol, sol);
       d->csol = sol;
       coverRow(d, xrow);
-      //printMatrix(d);
+      /*printMatrix(d);*/
       if(0 == (ret = algorithmX(d)))
          x = 0;
       uncoverRow(d, xrow);
-      //printMatrix(d);
+      /*printMatrix(d);*/
       d->csol = d->csol->parent;
       if(ret == 1)
          deleteChild(d->csol, (void*)(xrow->hrow));
-      if(x == 0)
+      if(x == 0 && d->mode == 2)
          return 0;
    }
 
@@ -130,6 +130,8 @@ Doubly *randHCol(Dance *d)
    Doubly *hcol;
 
    for(i = 0, hcol = d->root->right; i < randInt; i++, hcol = hcol->right);
+   if(hcol == d->root)
+      hcol = hcol->right;
 
    return hcol;
 }

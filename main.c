@@ -3,7 +3,7 @@
 #include "setup.h"
 
 /*
- * argument format: a.out [mode: 1 for gen, 2 for solve] [file: empty to be
+ * argument format: a.out [mode: 1 for solve, 2 for gen] [file: empty to be
  * filled with only dimensions if generating, filled if solving]
  *
  * right now generate option generates full boards, will change to have
@@ -19,22 +19,24 @@
 int main(int argc, char *argv[])
 {
    Sudoku *s = malloc(sizeof(Sudoku));
-   FILE *in;
    srand(time(NULL));
 
-   checkArgs(s, argc, argv, &in);
-   readIn(s, in);
+   parseArgs(s, argc, argv);
 
+   if(s->mode == 1)
+      printBoard(s->grid, s->x, s->y);
    initDanceSudoku(s);
 
-   fclose(in);
+   fclose(s->in);
    free(s->grid);
    free(s);
 
    return 0;
 }
 
-//for obvious debugging purposes
+/*
+ * for obvious debugging purposes
+ */
 void printBoard(int *grid, int x, int y)
 {
    int row, col, xy = x*y;
@@ -57,49 +59,50 @@ void printBoard(int *grid, int x, int y)
    }
 }
 
-void readIn(Sudoku *s, FILE *in)
+void parseArgs(Sudoku *s, int argc, char *argv[])
 {
-   int x, y, length, gridSize;
    int i, c, test;
-   char buf[BUFSIZE];
+   char *buf = malloc(BUFSIZE*sizeof(char)), temp;
 
-   fgets(buf, sizeof(buf), in);
-   test = sscanf(buf, "%d %d", &s->y, &s->x);
-   if(test != 2)
-      invalidInput();
-   x = s->x;
-   y = s->y;
-   s->xy = length = x*y;
-   s->gridSize = gridSize = length*length;
-   s->grid = calloc(gridSize, sizeof(int));
-
-   if(s->mode == 2)
-      return;
-   for(i = 0; i < gridSize; i++)
-   {
-      fgets(buf, BUFSIZE, in);
-      test = sscanf(buf, "%d", &c);
-      if(test < 1)
-         invalidInput();
-      if(c < 0 || c > length)
-         invalidInput();
-      s->grid[i] = c;
-   }
-}
-
-void checkArgs(Sudoku *s, int argc, char *argv[], FILE **in)
-{
+   memset(buf, 0, BUFSIZE*sizeof(char));
    if(argc != 3)
       numArgError();
-   if(!strcmp(argv[1], "1")) // solve
+   if(!strcmp(argv[1], "s")) /* solve */
       s->mode = 1;
-   else if(!strcmp(argv[1], "2")) // generate
+   else if(!strcmp(argv[1], "g")) /* generate */
       s->mode = 2;
    else
       usage();
-   *in = fopen(argv[2], "r");
-   if(!*in)
+   s->in = fopen(argv[2], "r+");
+   if(s->mode == 1 && !s->in)
       fileError(argv[2]);
+   if(s->mode == 2)
+      s->in = fopen(argv[2], "w+");
+
+   assert(3 == sscanf(argv[2], "tests/%c%dx%d.in", &temp, &s->x, &s->y));
+   s->xy = s->x*s->y;
+   s->gridSize = s->xy*s->xy;
+   s->grid = calloc(s->gridSize, sizeof(int));
+
+   assert(fseek(s->in, 0, SEEK_SET) == 0);
+   if(s->mode == 2)
+   {
+      sprintf(buf, "%d %d\n", s->x, s->y);
+      fwrite(buf, 1, BUFSIZE*sizeof(char), s->in);
+      free(buf);
+      return;
+   }
+
+   fgets(buf, BUFSIZE*sizeof(char), s->in);
+   for(i = 0; i < s->gridSize; i++)
+   {
+      fgets(buf, BUFSIZE, s->in);
+      test = sscanf(buf, "%d", &c);
+      if(test < 1 || c < 0 || c > s->xy)
+         invalidInput();
+      s->grid[i] = c;
+   }
+   free(buf);
 }
 
 void invalidInput()
@@ -117,7 +120,7 @@ void fileError(char *fileName)
 
 void usage()
 {
-   fprintf(stderr, "Usage: ./a.out [mode: 1 to solve or 2 to generate] [sudoku file]\n");
+   fprintf(stderr, "Usage: ./a.out [mode: s to solve or g to generate] [sudoku file]\n");
    exit(EXIT_FAILURE);
 }
 
