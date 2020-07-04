@@ -159,7 +159,7 @@ int saveSolution(Dance *d, Sudoku *s)
    if(d->numSols > 1)
    {
       printf("\n%lu solutions found\n", d->numSols);
-      /*return d->numSols;*/
+      return d->numSols;
    }
 
    for(cur = d->sols[0]; cur->parent != cur; cur = cur->parent)

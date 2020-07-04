@@ -3,7 +3,7 @@
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *xrow;
-   int x = 1, ret;
+   int x = 1, ret, listSize, *hitList;
    SolTrie *sol;
 
    if(d->root == d->root->right)
@@ -12,13 +12,14 @@ int algorithmX(Dance *d)
       /*printSingleSol2(d, d->csol);*/
       return 0;
    }
-   /*hcol = (d->mode == 2) ? randHCol(d) : heuristic(d);*/
    hcol = heuristic(d);
    if(hcol->drow == d->rmax)
       return 1;
-   int num = hcol->drow - d->rmax;
-   int *hitList = calloc(num, sizeof(int));
-   for(xrow = nextRow(hcol, &num, &hitList); xrow != hcol; xrow = nextRow(hcol, &num, &hitList))
+
+   listSize = hcol->drow - d->rmax;
+   hitList = calloc(listSize, sizeof(int));
+   xrow = nextRow(hcol, &listSize, &hitList);
+   for(; xrow != hcol; xrow = nextRow(hcol, &listSize, &hitList))
    {
       sol = initTrie((void*)(xrow->hrow));
       addChild(d->csol, sol);
@@ -44,10 +45,11 @@ int algorithmX(Dance *d)
 Doubly *nextRow(Doubly *hcol, int *num, int **hitList)
 {
    Doubly *row;
+   int i, j, randInt;
    if(*num == 0)
       return hcol;
-   int i = 0, j = 0, randInt = rand() % *num;
 
+   randInt = rand() % *num;
    for(row = hcol->down, i = 0; i < randInt; i++, row = row->down);
    for(j = i; (*hitList)[j] == 1; j++, row = row->down)
    {
@@ -146,16 +148,3 @@ Doubly *heuristic(Dance *d)
 
    return minXs;
 }
-
-Doubly *randHCol(Dance *d)
-{
-   int i, randInt = rand() % d->root->dcol;
-   Doubly *hcol;
-
-   for(i = 0, hcol = d->root->right; i < randInt; i++, hcol = hcol->right);
-   if(hcol == d->root)
-      hcol = hcol->right;
-
-   return hcol;
-}
-

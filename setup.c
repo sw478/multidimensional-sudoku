@@ -9,8 +9,9 @@ int initDanceSudoku(Sudoku *s)
    initMatrixFileSudoku(d, s->x, s->y);
    initDance(d, s->x, s->y);
    initMatrix(d);
+   printf("finished initializing structure\n");
    hideRows(d, s);
-//printMatrix(d);
+
    if(algorithmX(d))
       printf("no solutions\n");
 

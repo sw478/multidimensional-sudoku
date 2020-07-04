@@ -1,5 +1,18 @@
 # sudoku
 
+	use the bash script
+
+estimated time to create a random fully populated board of varying sizes:
+3x3: 0.05 sec
+4x4: 0.66 sec
+5x5: 9 sec
+6x6: 2-4mins
+
+	version 1.3
+added ability to generate fully populated boards
+current bottleneck is the initial creation of the dancing link structure
+pratically, the structure would only be created once and used many times
+
 	version 1.2
 
 removed dfs and genetic, cleaned up in general.

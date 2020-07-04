@@ -109,11 +109,11 @@ void printSingleSol(Dance *d, SolTrie *sol)
 void printSingleSol2(Dance *d, SolTrie *sol)
 {
    SolTrie *cur;
-   int drow, num, igrid, xy = d->x*d->y;
+   int drow, num, igrid, xy = d->x*d->y, cmax, *grid;
    if(!sol->row)
       return;
-   int cmax = ((Doubly*)(sol->row))->hcol->dcol;
-   int *grid = malloc(cmax*sizeof(int));
+   cmax = ((Doubly*)(sol->row))->hcol->dcol;
+   grid = malloc(cmax*sizeof(int));
 
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {
