@@ -73,9 +73,12 @@ void parseArgs(Sudoku *s, int argc, char *argv[])
       s->mode = 2;
    else
       usage();
-   s->in = fopen(argv[2], "r+");
-   if(s->mode == 1 && !s->in)
-      fileError(argv[2]);
+   if(s->mode == 1)
+   {
+      s->in = fopen(argv[2], "r+");
+      if(!s->in)
+         fileError(argv[2]);
+   }
    if(s->mode == 2)
       s->in = fopen(argv[2], "w+");
 

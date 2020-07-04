@@ -75,7 +75,6 @@ void printSolutions(Dance *d)
 {
    int i;
 
-   printf("\n");
    for(i = 0; i < d->numSols; i++)
    {
       printf("\n\nsol %d: ", i + 1);
@@ -111,6 +110,8 @@ void printSingleSol2(Dance *d, SolTrie *sol)
 {
    SolTrie *cur;
    int drow, num, igrid, xy = d->x*d->y;
+   if(!sol->row)
+      return;
    int cmax = ((Doubly*)(sol->row))->hcol->dcol;
    int *grid = malloc(cmax*sizeof(int));
 

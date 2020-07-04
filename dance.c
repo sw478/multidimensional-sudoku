@@ -9,14 +9,16 @@ int algorithmX(Dance *d)
    if(d->root == d->root->right)
    {
       addLeaf(&d->sols, d->csol, &d->solCap, &d->numSols);
-      /*printSingleSol(d, d->csol);*/
+      /*printSingleSol2(d, d->csol);*/
       return 0;
    }
    /*hcol = (d->mode == 2) ? randHCol(d) : heuristic(d);*/
    hcol = heuristic(d);
    if(hcol->drow == d->rmax)
       return 1;
-   for(xrow = hcol->down; xrow != hcol; xrow = xrow->down)
+   int num = hcol->drow - d->rmax;
+   int *hitList = calloc(num, sizeof(int));
+   for(xrow = nextRow(hcol, &num, &hitList); xrow != hcol; xrow = nextRow(hcol, &num, &hitList))
    {
       sol = initTrie((void*)(xrow->hrow));
       addChild(d->csol, sol);
@@ -30,11 +32,32 @@ int algorithmX(Dance *d)
       d->csol = d->csol->parent;
       if(ret == 1)
          deleteChild(d->csol, (void*)(xrow->hrow));
-      if(x == 0 && d->mode == 2)
+      if(x == 0 && d->mode == 2){
+         free(hitList);
          return 0;
+      }
+   }
+   free(hitList);
+   return x;
+}
+
+Doubly *nextRow(Doubly *hcol, int *num, int **hitList)
+{
+   Doubly *row;
+   if(*num == 0)
+      return hcol;
+   int i = 0, j = 0, randInt = rand() % *num;
+
+   for(row = hcol->down, i = 0; i < randInt; i++, row = row->down);
+   for(j = i; (*hitList)[j] == 1; j++, row = row->down)
+   {
+      if(row == hcol)
+         row = row->down;
    }
 
-   return x;
+   (*num)--;
+   (*hitList)[j] = 1;
+   return row;
 }
 
 int coverRow(Dance *d, Doubly *node)

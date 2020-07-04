@@ -38,7 +38,7 @@ typedef struct
 {
    int rmax, cmax, mode, x, y;
    long int numSols, solCap;
-   Doubly *root;
+   Doubly *root, *xrow, *xcol;
    SolTrie *solRoot, *csol, **sols;
    Hide *hideRoot;
    FILE *init;
@@ -65,6 +65,7 @@ int coverCol(Dance *d, Doubly *xrow);
 int uncoverRow(Dance *d, Doubly *node);
 int uncoverCol(Dance *d, Doubly *xrow);
 int algorithmX(Dance *d);
+Doubly *nextRow(Doubly *xrow, int *num, int **hitList);
 int storeSol(Dance *d, Doubly *hcol);
 int coverRowHeaders(Dance *d);
 int uncoverRowHeaders(Dance *d);

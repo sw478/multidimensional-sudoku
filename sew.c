@@ -16,16 +16,87 @@ int initMatrix(Dance *d)
    {
       fgets(buf, BUFSIZE*sizeof(char), d->init);
       assert(2 == sscanf(buf, "%d %d\n", &irow, &icol));
-      initDoubly(d, irow, icol);
-      /* change later to sort by row/col and col/row to group and order */
+      initDoubly2(d, irow, icol);
    }
+
    fclose(d->init);
    free(buf);
 
    return 0;
 }
 
+/*
+ * relies on having no gaps in rows and cols are strictly increasing
+ * within rows when called
+ */
 int initDoubly(Dance *d, int irow, int icol)
+{
+   Doubly *xrow, *xcol, *temp;
+
+   xrow = d->xrow;
+   if(xrow->drow != irow)
+   {
+      /* adds new row header after current */
+      d->xcol = d->root->right;
+      temp = malloc(sizeof(Doubly));
+      temp->drow = irow;
+      temp->dcol = d->cmax;
+      temp->right = temp->left = temp;
+      temp->up = xrow;
+      temp->down = xrow->down;
+      temp->hrow = xrow;
+      temp->hcol = d->root;
+      xrow->down->up = temp;
+      xrow->down = temp;
+      xrow = temp;
+      d->xrow = xrow;
+   }
+
+   if(xrow->left->dcol == icol)
+      return 1;
+
+   for(xcol = d->xcol; xcol->dcol < icol; xcol = xcol->right);
+   if(xcol->dcol != icol)
+   {
+      /* adds new col header before current */
+      temp = malloc(sizeof(Doubly));
+      temp->dcol = icol;
+      temp->drow = d->rmax;
+      temp->up = temp->down = temp;
+      temp->left = xcol->left;
+      temp->right = xcol;
+      temp->hrow = d->root;
+      temp->hcol = xcol;
+      xcol->left->right = temp;
+      xcol->left = temp;
+      xcol = temp;
+   }
+   d->xcol = xcol;
+
+   if(xcol->up->drow == irow)
+      return 1;
+
+   temp = malloc(sizeof(Doubly));
+   temp->dcol = icol;
+   temp->drow = irow;
+
+   temp->right = xrow;
+   temp->left = xrow->left;
+   temp->down = xcol;
+   temp->up = xcol->up;
+   temp->hcol = d->xcol;
+   temp->hrow = d->xrow;
+   temp->hcol->drow++;
+
+   xrow->left->right = temp;
+   xrow->left = temp;
+   xcol->up->down = temp;
+   xcol->up = temp;
+
+   return 0;
+}
+
+int initDoubly2(Dance *d, int irow, int icol)
 {
    Doubly *hrow, *hcol, *xhrow, *xhcol, *temp, *new;
    assert(d != NULL);
@@ -46,6 +117,7 @@ int initDoubly(Dance *d, int irow, int icol)
       hcol->left = temp;
       hcol = temp;
       hcol->hcol = hcol;
+      hcol->hrow = d->root;
    }
    xhcol = hcol;
 
@@ -67,6 +139,7 @@ int initDoubly(Dance *d, int irow, int icol)
       hrow->up->down= temp;
       hrow->up = temp;
       hrow = temp;
+      hrow->hrow = hrow;
       hrow->hcol = d->root;
    }
    xhrow = hrow;
