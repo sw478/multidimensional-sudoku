@@ -35,7 +35,7 @@ void printMatrix(Dance *d)
       for(; pcol < xcol->dcol; pcol++, printf("0"));
       printf("%d", xcol->drow - d->rmax);
    }
-   for(; pcol < xcol->dcol; pcol++, printf("0"));
+   for(; pcol < d->cmax; pcol++, printf("0"));
 
    for(xrow = d->root->down; xrow != d->root; xrow = xrow->down)
    {
@@ -48,7 +48,7 @@ void printMatrix(Dance *d)
          for(; pcol < xcol->dcol; pcol++, printf("_"));
          printf("X");
       }
-      for(; pcol < xcol->dcol; pcol++, printf("_"));
+      for(; pcol < d->cmax; pcol++, printf("_"));
    }
    printf("\n");
 }

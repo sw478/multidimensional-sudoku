@@ -6,15 +6,10 @@
 #define STARTING_CAP 1
 #include "struct.h"
 
-SolTrie* initTrie(void *row);
-void addChild(SolTrie *sol, SolTrie *child);
-int deleteChild(SolTrie *sol, void *row);
-int freeSol(SolTrie *sol);
-void testSolTrie();
-
 void addLeaf(Dance *d);
-void updateTotalChildren(SolTrie *sol, int num);
-SolTrie** getLeaves(SolTrie ***leaves, SolTrie *sol, long int *cap);
-void getLeavesRecur(SolTrie ***leaves, SolTrie *sol, long int *cap, long int *index);
+SolTrie* initTrie(Doubly *row);
+void addChild(SolTrie *sol, SolTrie *child);
+void freeSol(SolTrie *sol);
+void incNumSols(SolTrie *sol);
 
 #endif

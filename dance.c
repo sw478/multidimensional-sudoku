@@ -1,5 +1,6 @@
 #include "dance.h"
 #include "solTrie.h"
+#include "aux.h"
 
 int algorithmX(Dance *d)
 {
@@ -24,20 +25,23 @@ int algorithmX(Dance *d)
    for(; xrow != hcol; xrow = xrow->down)/*nextRow(hcol, &listSize, &hitList))*/
    {
       coverRow(d, xrow);
-      sol = initTrie((void*)(xrow->hrow));
-
+printMatrix(d);
+      sol = initTrie(xrow->hrow);
+      /*sol->minCol = (hcol->drow <= d->csol->minCol->drow) ?
+         hcol : d->csol->minCol;
+       */
       addChild(d->csol, sol);
       d->csol = sol;
-      /*printMatrix(d);*/
       if(0 == (ret = algorithmX(d)))
          x = 0;
       uncoverRow(d, xrow);
-      /*printMatrix(d);*/
+printMatrix(d);
       d->csol = d->csol->parent;
-
       if(ret == 1)
-         deleteChild(d->csol, (void*)(xrow->hrow));
-
+      {
+         d->csol->ichild--;
+         freeSol(sol);
+      }
       if(x == 0 && d->mode == 2){
          /*free(hitList);*/
          return 0;

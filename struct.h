@@ -38,8 +38,7 @@ typedef struct hide
 
 typedef struct solTrie
 {
-   void *row;
-   Doubly *minCol;
+   Doubly *row, *minCol;
    struct solTrie **child, *parent;
    int ichild, cap, numSols;
 } SolTrie;
@@ -50,7 +49,7 @@ typedef struct
    long int numSols, solCap;
    Doubly *root, *xrow, *xcol, **initList;
    SolTrie *solRoot, *csol, **sols;
-   Doubly *curRow, *minCol;
+   Doubly *curRow;
    Hide *hideRoot;
    FILE *init;
 } Dance;

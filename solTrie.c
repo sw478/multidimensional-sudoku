@@ -12,7 +12,7 @@ void addLeaf(Dance *d)
    d->numSols++;
 }
 
-SolTrie* initTrie(void *row)
+SolTrie* initTrie(Doubly *row)
 {
    SolTrie *new = malloc(sizeof(SolTrie));
    new->row = row;
@@ -46,42 +46,13 @@ void incNumSols(SolTrie *sol)
    temp->numSols++;
 }
 
-/* 
- * finds the child with the given row, removes and frees the solTrie,
- * and shifts all the solTries behind it forward
- * returns number of solTries found and deleted
- * (0 if not found, 1 if found, 2+ if duplicate was found)
- * if duplicates found, duplicates will also be freed and removed
- */
-int deleteChild(SolTrie *sol, void *row)
+void freeSol(SolTrie *sol)
 {
-   int i, found = 0;
+   int i;
 
    for(i = 0; i < sol->ichild; i++)
-   {
-      if(found > 0)
-         sol->child[i - found] = sol->child[i];
-      if(sol->child[i]->row == row)
-      {
-         found++;
-         freeSol(sol->child[i]);
-      }
-   }
-   sol->child[i] = NULL;
-   sol->ichild -= found;
-
-   return found;
-}
-
-int freeSol(SolTrie *sol)
-{
-   int i, total = 0;
-
-   for(i = 0; i < sol->ichild; i++)
-      total += freeSol(sol->child[i]);
+      freeSol(sol->child[i]);
 
    free(sol->child);
    free(sol);
-
-   return total;
 }

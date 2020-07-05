@@ -22,6 +22,7 @@ int initDance(Dance *d, int x, int y)
 
    d->solRoot = initTrie(NULL);
    d->csol = d->solRoot->parent = d->solRoot;
+   d->csol->minCol = d->root;
    d->numSols = 0;
    d->solCap = 1;
    d->sols = malloc(sizeof(SolTrie));
