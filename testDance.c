@@ -1,43 +1,25 @@
 #include "testDance.h"
 
-void testAddRandom(Dance *d)
+void printBoard(int *grid, int x, int y)
 {
-   int r, c;
+   int row, col, xy = x*y;
 
-   for(r = 0; r < d->rmax; r++)
+   printf("\n");
+   for(row = 0; row < xy; row++)
    {
-      for(c = 0; c < d->cmax; c++)
+      if(row % y == 0)
+         printf("\n");
+      for(col = 0; col < xy; col++)
       {
-         if((rand() % 100) < 10)
-            initDoubly(d, r, c);
+         if(col % x == 0)
+            printf(" ");
+         if(grid[row*xy + col] != 0)
+            printf(" %2d", grid[row*xy + col]);
+         else
+            printf(" __");
       }
+      printf("\n");
    }
-}
-
-void testAddWiki(Dance *d)
-{
-   initDoubly(d, 0, 0);
-   initDoubly(d, 0, 3);
-   initDoubly(d, 0, 6);
-
-   initDoubly(d, 1, 0);
-   initDoubly(d, 1, 3);
-
-   initDoubly(d, 2, 3);
-   initDoubly(d, 2, 4);
-   initDoubly(d, 2, 6);
-
-   initDoubly(d, 3, 2);
-   initDoubly(d, 3, 4);
-   initDoubly(d, 3, 5);
-
-   initDoubly(d, 4, 1);
-   initDoubly(d, 4, 2);
-   initDoubly(d, 4, 5);
-   initDoubly(d, 4, 6);
-
-   initDoubly(d, 5, 1);
-   initDoubly(d, 5, 6);
 }
 
 void printMatrix(Dance *d)

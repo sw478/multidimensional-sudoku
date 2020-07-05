@@ -1,7 +1,6 @@
 #include "dance.h"
 #include "setup.h"
 
-/*frees all nodes in matrix and hideList*/
 void freeDance(Dance *d)
 {
    Doubly *col, *temp;
@@ -18,6 +17,7 @@ void freeDance(Dance *d)
 
    freeSol(d->solRoot);
    free(d->hideRoot);
+   free(d->initList);
    free(d);
 }
 

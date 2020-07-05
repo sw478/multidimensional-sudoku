@@ -12,8 +12,10 @@
 
 /*
  * for sudoku boards:
- * each board size is defined by x an y, where total board size is gridSize = (x*y)^2
- * each row describes a specific position on the board filled with a specific number (0 < num < x*y)
+ * each board size is defined by x an y, where total board size is
+ * gridSize = (x*y)^2
+ * each row describes a specific position on the board filled with
+ * a specific number (0 < num < x*y)
  * drow = (sudoku rows) * (sudoku cols * max num) + col * (max num) + num
  * dcol = constraint * (sudoku rows * sudoku cols) + row * (sudoku cols) + col
  *

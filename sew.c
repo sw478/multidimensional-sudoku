@@ -8,6 +8,7 @@ int initMatrix(Dance *d)
 {
    char *buf = malloc(BUFSIZE*sizeof(char));
    int irow, icol;
+   Doubly *new;
    memset(buf, 0, BUFSIZE*sizeof(char));
 
    assert(fseek(d->init, 0, SEEK_SET) == 0);
@@ -15,9 +16,24 @@ int initMatrix(Dance *d)
    while(!feof(d->init))
    {
       fgets(buf, BUFSIZE*sizeof(char), d->init);
+      if(feof(d->init))
+         break;
       assert(2 == sscanf(buf, "%d %d\n", &irow, &icol));
-      initDoubly2(d, irow, icol);
+      new = malloc(sizeof(Doubly));
+      new->drow = irow;
+      new->dcol = icol;
+      if(d->ilist >= d->initListCap)
+      {
+         d->initListCap *= 2;
+         d->initList = realloc(d->initList, d->initListCap*sizeof(Doubly*));
+      }
+      d->initList[d->ilist] = new;
+      d->ilist++;
    }
+   d->initList = realloc(d->initList, d->ilist*sizeof(Doubly*));
+
+   connectRows(d);
+   connectCols(d);
 
    fclose(d->init);
    free(buf);
@@ -25,146 +41,90 @@ int initMatrix(Dance *d)
    return 0;
 }
 
-/*
- * relies on having no gaps in rows and cols are strictly increasing
- * within rows when called
- */
-int initDoubly(Dance *d, int irow, int icol)
+int compareRows(const void *a, const void *b)
 {
-   Doubly *xrow, *xcol, *temp;
+   Doubly *ax = *(Doubly**)a, *bx = *(Doubly**)b;
+   int arow = ax->drow, brow = bx->drow;
 
-   xrow = d->xrow;
-   if(xrow->drow != irow)
+   return arow == brow ? ax->dcol - bx->dcol : arow - brow;
+}
+
+int compareCols(const void *a, const void *b)
+{
+   Doubly *ax = *(Doubly**)a, *bx = *(Doubly**)b;
+   int acol = ax->dcol, bcol = bx->dcol;
+
+   return acol == bcol ? ax->drow - bx->drow : acol - bcol;
+}
+
+int connectRows(Dance *d)
+{
+   Doubly *hrow = d->root, *cur, *hnew;
+   int irow, i, prev = -1;
+   /* coordinates should already be sorted so you don't need this */
+   qsort(d->initList, d->ilist, sizeof(Doubly*), compareRows);
+
+   for(i = 0; i < d->ilist; i++)
    {
-      /* adds new row header after current */
-      d->xcol = d->root->right;
-      temp = malloc(sizeof(Doubly));
-      temp->drow = irow;
-      temp->dcol = d->cmax;
-      temp->right = temp->left = temp;
-      temp->up = xrow;
-      temp->down = xrow->down;
-      temp->hrow = xrow;
-      temp->hcol = d->root;
-      xrow->down->up = temp;
-      xrow->down = temp;
-      xrow = temp;
-      d->xrow = xrow;
+      cur = d->initList[i];
+      irow = cur->drow;
+      if(irow != prev)
+      {
+         hnew = malloc(sizeof(Doubly));
+         hnew->drow = irow;
+         hnew->dcol = d->cmax;
+         hnew->right = hnew->left = hnew;
+         hnew->down = hrow->down;
+         hnew->up = hrow;
+         hnew->hcol = d->root;
+         hnew->hrow = hnew;
+         hrow->down->up = hnew;
+         hrow->down = hnew;
+         hrow = hnew;
+      }
+      cur->right = hrow;
+      cur->left = hrow->left;
+      cur->hrow = hrow;
+      hrow->left->right = cur;
+      hrow->left = cur;
+      prev = irow;
    }
-
-   if(xrow->left->dcol == icol)
-      return 1;
-
-   for(xcol = d->xcol; xcol->dcol < icol; xcol = xcol->right);
-   if(xcol->dcol != icol)
-   {
-      /* adds new col header before current */
-      temp = malloc(sizeof(Doubly));
-      temp->dcol = icol;
-      temp->drow = d->rmax;
-      temp->up = temp->down = temp;
-      temp->left = xcol->left;
-      temp->right = xcol;
-      temp->hrow = d->root;
-      temp->hcol = xcol;
-      xcol->left->right = temp;
-      xcol->left = temp;
-      xcol = temp;
-   }
-   d->xcol = xcol;
-
-   if(xcol->up->drow == irow)
-      return 1;
-
-   temp = malloc(sizeof(Doubly));
-   temp->dcol = icol;
-   temp->drow = irow;
-
-   temp->right = xrow;
-   temp->left = xrow->left;
-   temp->down = xcol;
-   temp->up = xcol->up;
-   temp->hcol = d->xcol;
-   temp->hrow = d->xrow;
-   temp->hcol->drow++;
-
-   xrow->left->right = temp;
-   xrow->left = temp;
-   xcol->up->down = temp;
-   xcol->up = temp;
 
    return 0;
 }
 
-int initDoubly2(Dance *d, int irow, int icol)
+int connectCols(Dance *d)
 {
-   Doubly *hrow, *hcol, *xhrow, *xhcol, *temp, *new;
-   assert(d != NULL);
-   assert(d->root != NULL);
-   assert(irow < d->rmax && icol < d->cmax);
+   Doubly *hcol = d->root, *cur, *hnew;
+   int icol, i, prev = -1;
+   qsort(d->initList, d->ilist, sizeof(Doubly*), compareCols);
 
-   hcol = d->root->right;
-   for(; hcol != d->root && hcol->dcol < icol; hcol = hcol->right);
-   if(hcol->dcol != icol)
+   for(i = 0; i < d->ilist; i++)
    {
-      temp = malloc(sizeof(Doubly));
-      temp->dcol = icol;
-      temp->drow = d->rmax;
-      temp->up = temp->down = temp;
-      temp->left = hcol->left;
-      temp->right = hcol;
-      hcol->left->right = temp;
-      hcol->left = temp;
-      hcol = temp;
-      hcol->hcol = hcol;
-      hcol->hrow = d->root;
+      cur = d->initList[i];
+      icol = cur->dcol;
+      if(icol != prev)
+      {
+         hnew = malloc(sizeof(Doubly));
+         hnew->drow = d->rmax;
+         hnew->dcol = icol;
+         hnew->down = hnew->up = hnew;
+         hnew->right = hcol->right;
+         hnew->left = hcol;
+         hnew->hcol = hnew;
+         hnew->hrow = d->root;
+         hcol->right->left = hnew;
+         hcol->right = hnew;
+         hcol = hnew;
+      }
+      cur->down = hcol;
+      cur->up = hcol->up;
+      cur->hcol = hcol;
+      hcol->drow++;
+      hcol->up->down = cur;
+      hcol->up = cur;
+      prev = icol;
    }
-   xhcol = hcol;
-
-   hcol = hcol->down;
-   for(; hcol->drow != d->rmax && hcol->drow < irow; hcol = hcol->down);
-   if(hcol->drow == irow)
-      return 1;
-
-   hrow = d->root->down;
-   for(; hrow != d->root && hrow->drow < irow; hrow = hrow->down);
-   if(hrow->drow != irow)
-   {
-      temp = malloc(sizeof(Doubly));
-      temp->dcol = d->cmax;
-      temp->drow = irow;
-      temp->left = temp->right = temp;
-      temp->down = hrow;
-      temp->up = hrow->up;
-      hrow->up->down= temp;
-      hrow->up = temp;
-      hrow = temp;
-      hrow->hrow = hrow;
-      hrow->hcol = d->root;
-   }
-   xhrow = hrow;
-
-   hrow = hrow->right;
-   for(; hrow->dcol != d->cmax && hrow->dcol < icol; hrow = hrow->right);
-   if(hrow->dcol == icol)
-      return 2;
-
-   new = malloc(sizeof(Doubly));
-   new->dcol = icol;
-   new->drow = irow;
-
-   new->right = hrow;
-   new->left = hrow->left;
-   new->down = hcol;
-   new->up = hcol->up;
-   new->hcol = xhcol;
-   new->hrow = xhrow;
-   new->hcol->drow++;
-
-   hrow->left->right = new;
-   hrow->left = new;
-   hcol->up->down = new;
-   hcol->up = new;
 
    return 0;
 }

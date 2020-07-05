@@ -1,21 +1,22 @@
 #include "solTrie.h"
+#include "dance.h"
 
-void addLeaf(SolTrie ***leaves, SolTrie *sol, long int *cap, long int *index)
+void addLeaf(Dance *d)
 {
-   if(*index >= *cap)
+   if(d->numSols >= d->solCap)
    {
-      *cap *= 2;
-      *leaves = realloc(*leaves, (*cap)*sizeof(SolTrie));
+      d->solCap *= 2;
+      d->sols = realloc(d->sols, (d->solCap)*sizeof(SolTrie));
    }
-   (*leaves)[*index] = sol;
-   (*index)++;
+   d->sols[d->numSols] = d->csol;
+   d->numSols++;
 }
 
 SolTrie* initTrie(void *row)
 {
    SolTrie *new = malloc(sizeof(SolTrie));
    new->row = row;
-   new->num = new->totalChildren = 0;
+   new->ichild = new->numSols = 0;
    new->cap = STARTING_CAP;
    new->child = malloc(new->cap*sizeof(SolTrie));
    new->parent = new;
@@ -25,21 +26,24 @@ SolTrie* initTrie(void *row)
 
 void addChild(SolTrie *sol, SolTrie *new)
 {
-   SolTrie *temp;
-
-   if(sol->num >= sol->cap)
+   if(sol->ichild >= sol->cap)
    {
       sol->cap *= 2;
       sol->child = realloc(sol->child, sol->cap*sizeof(SolTrie));
    }
 
-   sol->child[sol->num] = new;
-   sol->num++;
+   sol->child[sol->ichild] = new;
+   sol->ichild++;
 
    new->parent = sol;
+}
+
+void incNumSols(SolTrie *sol)
+{
+   SolTrie *temp;
    for(temp = sol; temp->parent != temp; temp = temp->parent)
-      temp->totalChildren++;
-   temp->totalChildren++;
+      temp->numSols++;
+   temp->numSols++;
 }
 
 /* 
@@ -53,10 +57,10 @@ int deleteChild(SolTrie *sol, void *row)
 {
    int i, found = 0;
 
-   for(i = 0; i < sol->num; i++)
+   for(i = 0; i < sol->ichild; i++)
    {
       if(found > 0)
-         sol->child[i-found] = sol->child[i];
+         sol->child[i - found] = sol->child[i];
       if(sol->child[i]->row == row)
       {
          found++;
@@ -64,7 +68,7 @@ int deleteChild(SolTrie *sol, void *row)
       }
    }
    sol->child[i] = NULL;
-   sol->num -= found;
+   sol->ichild -= found;
 
    return found;
 }
@@ -73,7 +77,7 @@ int freeSol(SolTrie *sol)
 {
    int i, total = 0;
 
-   for(i = 0; i < sol->num; i++)
+   for(i = 0; i < sol->ichild; i++)
       total += freeSol(sol->child[i]);
 
    free(sol->child);

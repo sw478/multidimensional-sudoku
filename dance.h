@@ -36,18 +36,14 @@ typedef struct hide
 
 typedef struct
 {
-   int rmax, cmax, mode, x, y;
+   int rmax, cmax, mode, x, y, ilist, initListCap;
    long int numSols, solCap;
-   Doubly *root, *xrow, *xcol;
+   Doubly *root, *xrow, *xcol, **initList;
    SolTrie *solRoot, *csol, **sols;
+   Doubly *curRow;
    Hide *hideRoot;
    FILE *init;
 } Dance;
-
-typedef struct
-{
-   Dance **danceList;
-} Universal;
 
 /* sudoku specific functions */
 int initMatrixFileSudoku(Dance *d, int x, int y);
@@ -69,6 +65,7 @@ Doubly *nextRow(Doubly *xrow, int *num, int **hitList);
 int storeSol(Dance *d, Doubly *hcol);
 int coverRowHeaders(Dance *d);
 int uncoverRowHeaders(Dance *d);
+void addLeaf(Dance *d);
 
 #include "setup.h"
 #include "testDance.h"

@@ -30,6 +30,9 @@ int initDance(Dance *d, int x, int y)
 
    d->x = x;
    d->y = y;
+   d->ilist = 0;
+   d->initListCap = 1;
+   d->initList = malloc(sizeof(Doubly*));
 
    d->root = malloc(sizeof(Doubly));
    d->root->drow = d->rmax;

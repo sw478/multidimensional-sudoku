@@ -34,31 +34,6 @@ int main(int argc, char *argv[])
    return 0;
 }
 
-/*
- * for obvious debugging purposes
- */
-void printBoard(int *grid, int x, int y)
-{
-   int row, col, xy = x*y;
-
-   printf("\n");
-   for(row = 0; row < xy; row++)
-   {
-      if(row % y == 0)
-         printf("\n");
-      for(col = 0; col < xy; col++)
-      {
-         if(col % x == 0)
-            printf(" ");
-         if(grid[row*xy + col] != 0)
-            printf(" %2d", grid[row*xy + col]);
-         else
-            printf(" __");
-      }
-      printf("\n");
-   }
-}
-
 void parseArgs(Sudoku *s, int argc, char *argv[])
 {
    int i, c, test;
@@ -123,7 +98,8 @@ void fileError(char *fileName)
 
 void usage()
 {
-   fprintf(stderr, "Usage: ./a.out [mode: s to solve or g to generate] [sudoku file]\n");
+   fprintf(stderr,
+      "Usage: ./a.out [mode: s to solve or g to generate] [sudoku file]\n");
    exit(EXIT_FAILURE);
 }
 

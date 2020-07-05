@@ -42,7 +42,7 @@ if [ "$type" = "t" ]; then
    time ./a.out ${mode} tests/${mode}${row}x${col}.in
 
 elif [ "$type" = "v" ]; then
-   valgrind --leak-check=full --error-exitcode=13 ./a.out ${mode} tests/${mode}${row}x${col}.in
+   valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${mode} tests/${mode}${row}x${col}.in
 
 elif [ "$type" = "b" ]; then
    ./a.out ${mode} tests/${mode}${row}x${col}.in

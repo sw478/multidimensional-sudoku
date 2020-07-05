@@ -8,7 +8,7 @@ int algorithmX(Dance *d)
 
    if(d->root == d->root->right)
    {
-      addLeaf(&d->sols, d->csol, &d->solCap, &d->numSols);
+      addLeaf(d);
       /*printSingleSol2(d, d->csol);*/
       return 0;
    }
@@ -24,20 +24,28 @@ int algorithmX(Dance *d)
       sol = initTrie((void*)(xrow->hrow));
       addChild(d->csol, sol);
       d->csol = sol;
+
       coverRow(d, xrow);
       /*printMatrix(d);*/
       if(0 == (ret = algorithmX(d)))
          x = 0;
       uncoverRow(d, xrow);
       /*printMatrix(d);*/
+
       d->csol = d->csol->parent;
+      if(0 && ret == 0)
+      {
+         addChild(sol, d->csol);
+      }
       if(ret == 1)
          deleteChild(d->csol, (void*)(xrow->hrow));
+
       if(x == 0 && d->mode == 2){
          free(hitList);
          return 0;
       }
    }
+
    free(hitList);
    return x;
 }

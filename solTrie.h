@@ -9,7 +9,7 @@ typedef struct solTrie
 {
    void *row;
    struct solTrie **child, *parent;
-   int num, cap, totalChildren;
+   int ichild, cap, numSols;
 } SolTrie;
 
 SolTrie* initTrie(void *row);
@@ -18,8 +18,8 @@ int deleteChild(SolTrie *sol, void *row);
 int freeSol(SolTrie *sol);
 void testSolTrie();
 
+void updateTotalChildren(SolTrie *sol, int num);
 SolTrie** getLeaves(SolTrie ***leaves, SolTrie *sol, long int *cap);
 void getLeavesRecur(SolTrie ***leaves, SolTrie *sol, long int *cap, long int *index);
-void addLeaf(SolTrie ***leaves, SolTrie *sol, long int *cap, long int *index);
 
 #endif
