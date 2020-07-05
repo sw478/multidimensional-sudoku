@@ -1,4 +1,4 @@
-#include "testDance.h"
+#include "aux.h"
 
 void printBoard(int *grid, int x, int y)
 {
@@ -106,4 +106,26 @@ void printSingleSol2(Dance *d, SolTrie *sol)
    }
    printBoard(grid, d->x, d->y);
    free(grid);
+}
+
+int saveSolution(Dance *d, Sudoku *s)
+{
+   SolTrie *cur;
+   int num, igrid, rowNum;
+
+   if(d->numSols > 1)
+   {
+      printf("\n%lu solutions found\n", d->numSols);
+      return d->numSols;
+   }
+
+   for(cur = d->sols[0]; cur->parent != cur; cur = cur->parent)
+   {
+      rowNum = ((Doubly*)(cur->row))->drow;
+      num = rowNum % s->xy;
+      igrid = rowNum / s->xy;
+      s->grid[igrid] = num + 1;
+   }
+
+   return 0;
 }

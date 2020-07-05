@@ -1,4 +1,4 @@
-#include "dance.h"
+#include "sew.h"
 
 /*
  * general matrix creator that reads in a text file of coordinates

@@ -1,9 +1,10 @@
 #include "dance.h"
+#include "solTrie.h"
 
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *xrow;
-   int x = 1, ret, listSize, *hitList;
+   int x = 1, ret; /*, listSize, *hitList;*/
    SolTrie *sol;
 
    if(d->root == d->root->right)
@@ -16,15 +17,17 @@ int algorithmX(Dance *d)
    if(hcol->drow == d->rmax)
       return 1;
 
-   listSize = hcol->drow - d->rmax;
-   hitList = calloc(listSize, sizeof(int));
-   xrow = nextRow(hcol, &listSize, &hitList);
-   for(; xrow != hcol; xrow = nextRow(hcol, &listSize, &hitList))
+/* listSize = hcol->drow - d->rmax;
+ * hitList = calloc(listSize, sizeof(int));
+ */
+   xrow = hcol->down; /*nextRow(hcol, &listSize, &hitList);*/
+   for(; xrow != hcol; xrow = xrow->down)/*nextRow(hcol, &listSize, &hitList))*/
    {
+      coverRow(d, xrow);
       sol = initTrie((void*)(xrow->hrow));
+
       addChild(d->csol, sol);
       d->csol = sol;
-      coverRow(d, xrow);
       /*printMatrix(d);*/
       if(0 == (ret = algorithmX(d)))
          x = 0;
@@ -36,12 +39,12 @@ int algorithmX(Dance *d)
          deleteChild(d->csol, (void*)(xrow->hrow));
 
       if(x == 0 && d->mode == 2){
-         free(hitList);
+         /*free(hitList);*/
          return 0;
       }
    }
 
-   free(hitList);
+   /*free(hitList);*/
    return x;
 }
 

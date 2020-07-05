@@ -1,6 +1,9 @@
-#include "sudoku.h"
-#include "dance.h"
+#include "main.h"
+#include "aux.h"
 #include "setup.h"
+#include "sew.h"
+#include "end.h"
+#include "error.h"
 
 /*
  * argument format: a.out [mode: 1 for solve, 2 for gen] [file: empty to be
@@ -19,13 +22,30 @@
 int main(int argc, char *argv[])
 {
    Sudoku *s = malloc(sizeof(Sudoku));
+   Dance *d = malloc(sizeof(Dance));
    srand(time(NULL));
 
    parseArgs(s, argc, argv);
 
    if(s->mode == 1)
       printBoard(s->grid, s->x, s->y);
-   initDanceSudoku(s);
+   d->mode = s->mode;
+
+   initMatrixFileSudoku(d, s->x, s->y);
+   initDance(d, s->x, s->y);
+   initMatrix(d);
+   printf("finished initializing structure\n");
+   hideRows(d, s);
+
+   if(algorithmX(d))
+      printf("no solutions\n");
+
+   recoverHiddenRows(d);
+   printSolutions(d);
+   saveSolution(d, s);
+
+   free(d->sols);
+   freeDance(d);
 
    fclose(s->in);
    free(s->grid);
@@ -81,36 +101,4 @@ void parseArgs(Sudoku *s, int argc, char *argv[])
       s->grid[i] = c;
    }
    free(buf);
-}
-
-void invalidInput()
-{
-   fprintf(stderr, "Input file contains invalid game board\n");
-   exit(EXIT_FAILURE);
-}
-
-void fileError(char *fileName)
-{
-   fprintf(stderr, "FileError: ");
-   perror(fileName);
-   exit(EXIT_FAILURE);
-}
-
-void usage()
-{
-   fprintf(stderr,
-      "Usage: ./a.out [mode: s to solve or g to generate] [sudoku file]\n");
-   exit(EXIT_FAILURE);
-}
-
-void numArgError()
-{
-   fprintf(stderr, "Num Arg Error");
-   exit(EXIT_FAILURE);
-}
-
-void error()
-{
-   perror(NULL);
-   exit(EXIT_FAILURE);
 }

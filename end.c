@@ -1,5 +1,5 @@
-#include "dance.h"
-#include "setup.h"
+#include "end.h"
+#include "solTrie.h"
 
 void freeDance(Dance *d)
 {

@@ -22,7 +22,11 @@ time to create a canonical fully populated board of varying sizes:
 6x7: 1.2 sec
 7x7: 2.5 sec
 7x8: 12 sec
-8x8: more than 10 mins 
+
+1x64: 3 sec
+2x32: 3 sec
+
+8x8: more than 10 mins
 
 	version 0.5
 
