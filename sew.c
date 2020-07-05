@@ -81,10 +81,12 @@ int connectRows(Dance *d)
          hrow->down->up = hnew;
          hrow->down = hnew;
          hrow = hnew;
+         d->root->dcol++;
       }
       cur->right = hrow;
       cur->left = hrow->left;
       cur->hrow = hrow;
+      hrow->dcol++;
       hrow->left->right = cur;
       hrow->left = cur;
       prev = irow;
@@ -116,6 +118,7 @@ int connectCols(Dance *d)
          hcol->right->left = hnew;
          hcol->right = hnew;
          hcol = hnew;
+         d->root->drow++;
       }
       cur->down = hcol;
       cur->up = hcol->up;

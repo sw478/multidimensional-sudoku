@@ -96,6 +96,7 @@ int coverCol(Dance *d, Doubly *xrow)
          xrow2->up->down = xrow2->down;
          xrow2->down->up = xrow2->up;
          xrow2->hcol->drow--;
+         xrow2->hrow->dcol--;
       }
    }
 
@@ -133,6 +134,7 @@ int uncoverCol(Dance *d, Doubly *xrow)
          xrow2->up->down = xrow2;
          xrow2->down->up = xrow2;
          xrow2->hcol->drow++;
+         xrow2->hrow->dcol++;
       }
    }
 
