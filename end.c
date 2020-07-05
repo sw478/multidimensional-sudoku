@@ -10,7 +10,7 @@ void freeDance(Dance *d)
       freeColumn(col);
       temp = col;
       col = col->right;
-      freeDoubly(temp);
+      free(temp);
    }
    freeColumn(col);
    free(d->root);
@@ -29,15 +29,7 @@ void freeColumn(Doubly *col)
    {
       temp = row;
       row = row->down;
-      freeDoubly(temp);
+      free(temp);
    }
 }
 
-void freeDoubly(Doubly *node)
-{
-   node->left->right = node->right;
-   node->right->left = node->left;
-   node->down->up = node->up;
-   node->up->down = node->down;
-   free(node);
-}

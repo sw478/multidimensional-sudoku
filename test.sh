@@ -28,7 +28,7 @@ elif [ "$type" = "g" ]; then
    echo "dimension? \"row col\""
    read row col
    ./a.out ${mode} tests/${mode}${row}x${col}.in
-   gprof a.out gmon.out | head -20
+   gprof a.out gmon.out | head -25
    make clean
    make
 

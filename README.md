@@ -24,6 +24,10 @@ time to create a canonical fully populated board of varying sizes:
 7x8: 12 sec
 8x8: more than 10 mins 
 
+	version 0.5
+
+got rid of freeDoubly
+
 	version 0.4
 
 deleted the recursive add number of children code, a costly mistake

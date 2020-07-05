@@ -24,19 +24,14 @@ int algorithmX(Dance *d)
       sol = initTrie((void*)(xrow->hrow));
       addChild(d->csol, sol);
       d->csol = sol;
-
       coverRow(d, xrow);
       /*printMatrix(d);*/
       if(0 == (ret = algorithmX(d)))
          x = 0;
       uncoverRow(d, xrow);
       /*printMatrix(d);*/
-
       d->csol = d->csol->parent;
-      if(0 && ret == 0)
-      {
-         addChild(sol, d->csol);
-      }
+
       if(ret == 1)
          deleteChild(d->csol, (void*)(xrow->hrow));
 
