@@ -46,13 +46,13 @@ typedef struct solTrie
 
 typedef struct
 {
-   int rmax, cmax, mode, x, y, ilist, initListCap;
+   int rmax, cmax, mode, x, y, ilist, initListCap, numCalls;
    long int numSols, solCap;
    Doubly *root, *xrow, *xcol, **initList;
    SolTrie *solRoot, *csol, **sols;
    Doubly *curRow;
    Hide *hideRoot;
-   FILE *init;
+   FILE *frows, *fcols;
 } Dance;
 
 typedef struct

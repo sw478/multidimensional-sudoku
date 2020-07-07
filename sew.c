@@ -11,12 +11,13 @@ int initMatrix(Dance *d)
    Doubly *new;
    memset(buf, 0, BUFSIZE*sizeof(char));
 
-   assert(fseek(d->init, 0, SEEK_SET) == 0);
+   assert(fseek(d->frows, 0, SEEK_SET) == 0);
+   /*assert(fseek(d->fcols, 0, SEEK_SET) == 0);*/
 
-   while(!feof(d->init))
+   while(!feof(d->frows))
    {
-      fgets(buf, BUFSIZE*sizeof(char), d->init);
-      if(feof(d->init))
+      fgets(buf, BUFSIZE*sizeof(char), d->frows);
+      if(feof(d->frows))
          break;
       assert(2 == sscanf(buf, "%d %d\n", &irow, &icol));
       new = malloc(sizeof(Doubly));
@@ -35,7 +36,8 @@ int initMatrix(Dance *d)
    connectRows(d);
    connectCols(d);
 
-   fclose(d->init);
+   fclose(d->frows);
+   /*fclose(d->fcols);*/
    free(buf);
 
    return 0;
@@ -81,7 +83,8 @@ int connectRows(Dance *d)
          hrow->down->up = hnew;
          hrow->down = hnew;
          hrow = hnew;
-         d->root->dcol++;
+         d->root->drow++;
+         prev = irow;
       }
       cur->right = hrow;
       cur->left = hrow->left;
@@ -89,7 +92,6 @@ int connectRows(Dance *d)
       hrow->dcol++;
       hrow->left->right = cur;
       hrow->left = cur;
-      prev = irow;
    }
 
    return 0;
@@ -118,7 +120,8 @@ int connectCols(Dance *d)
          hcol->right->left = hnew;
          hcol->right = hnew;
          hcol = hnew;
-         d->root->drow++;
+         d->root->dcol++;
+         prev = icol;
       }
       cur->down = hcol;
       cur->up = hcol->up;
@@ -126,7 +129,6 @@ int connectCols(Dance *d)
       hcol->drow++;
       hcol->up->down = cur;
       hcol->up = cur;
-      prev = icol;
    }
 
    return 0;

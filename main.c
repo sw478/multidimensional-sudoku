@@ -34,13 +34,20 @@ int main(int argc, char *argv[])
    initMatrixFileSudoku(d, s->x, s->y);
    initDance(d, s->x, s->y);
    initMatrix(d);
-   printf("finished initializing structure\n");
    hideRows(d, s);
    coverRowHeaders(d);
 
-   addMin(d->csol, heuristic(d));
+   printf("cmax: %d\n", d->cmax);
+   printf("ncol: %d\n", d->root->dcol);
+   printf("rmax: %d\n", d->rmax);
+   printf("nrow: %d\n", d->root->drow);
+   printf("finished initializing structure\n");
+   /*addMin(d->csol, heuristic(d));*/
    if(algorithmX(d))
       printf("no solutions\n");
+   printf("numCalls: %d\n", d->numCalls);
+   if(d->csol != d->solRoot)
+      addChild(d->solRoot, d->csol);
 
    uncoverRowHeaders(d);
    recoverHiddenRows(d);

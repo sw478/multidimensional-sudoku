@@ -2,50 +2,57 @@
 #include "solTrie.h"
 #include "aux.h"
 
+/*
+ * returns 0 if a solution was found (not leaf)
+ * 1 if no solution found
+ * 2 if solution was found and is a leaf
+ */
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *xrow;
-   int x = 1, ret; /*, listSize, *hitList;*/
+   int x = 1, ret, numSol = 0;
+   /*int listSize, *hitList;*/
    SolTrie *sol;
 
    if(d->root == d->root->right)
    {
-      addLeaf(d);
-      return 0;
+      d->csol = d->solRoot;
+      return 2;
    }
+   d->numCalls++;
 
+   /*hcol = d->root->right;*/
    hcol = heuristic(d);
-   printf("\nheu: %3d\tnum: %3d\n", hcol->dcol, hcol->drow - d->rmax);
-Doubly *temp = getMin(d, d->csol);
-   printf("min: %3d\tnum: %3d\n", temp->dcol, temp->drow-d->rmax);
-   printColHeaders(d);
+   /*printColHeaders(d);*/
 
-   if(hcol->drow == d->rmax)
-      return 1;
 /* 
  * listSize = hcol->drow - d->rmax;
  * hitList = calloc(listSize, sizeof(int));
  */
-   xrow = hcol->down; /*nextRow(hcol, &listSize, &hitList);*/
-   for(; xrow != hcol; xrow = xrow->down)/*nextRow(hcol, &listSize, &hitList))*/
+
+   xrow = hcol->down;
+   /*xrow = nextRow(hcol, &listSize, &hitList);*/
+   for(; xrow != hcol; xrow = xrow->down)
+   /*nextRow(hcol, &listSize, &hitList))*/
    {
-      sol = initTrie(xrow->hrow);
-      addMin(d->csol, d->root);
-      addChild(d->csol, sol);
-      d->csol = sol;
       coverRow(d, xrow);
-      if(0 == (ret = algorithmX(d)))
+      ret = algorithmX(d);
+      if(ret == 0 || ret == 2)
          x = 0;
       uncoverRow(d, xrow);
-      d->csol = d->csol->parent;
-      if(ret == 1)
+
+      if(x == 0)
       {
-         d->csol->ichild--;
-         freeSol(sol);
-      }
-      if(x == 0 && d->mode == 2){
-         /*free(hitList);*/
-         return 0;
+         if(numSol == 0)
+            sol = initTrie(xrow->hrow);
+         if(d->csol != d->solRoot)
+            addChild(sol, d->csol);
+         d->csol = sol;
+         numSol++;
+         if(ret == 2)
+            addLeaf(d);
+         if(d->mode == 2)
+            break;
       }
    }
 
@@ -101,14 +108,6 @@ int coverCol(Dance *d, Doubly *xrow)
          xrow2->down->up = xrow2->up;
          xrow2->hcol->drow--;
          xrow2->hrow->dcol--;
-
-         Doubly *temp = getMin(d, d->csol);//d->csol->minList[d->csol->minIndex];
-         if(xrow2->hcol->drow - d->rmax > 0 &&
-            xrow2->hcol->drow < temp->drow)
-         {
-            printf("%d\n", xrow2->dcol);
-            addMin(d->csol, xrow2->hcol);
-         }
       }
    }
 
@@ -135,9 +134,9 @@ int uncoverCol(Dance *d, Doubly *xrow)
    hcol->left->right = hcol;
    d->root->dcol++;
 
-   for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
+   for(xcol = hcol->up; xcol != hcol; xcol = xcol->up)
    {
-      for(xrow2 = xcol->right; xrow2 != xcol; xrow2 = xrow2->right)
+      for(xrow2 = xcol->left; xrow2 != xcol; xrow2 = xrow2->left)
       {
          xrow2->up->down = xrow2;
          xrow2->down->up = xrow2;

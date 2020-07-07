@@ -37,10 +37,10 @@ void printMatrix(Dance *d)
       irow = 0;
       for(xcol = xrow->right; irow < nrow; xcol = xcol->right, irow++, pcol++)
       {
-         for(; pcol < xcol->dcol; pcol++, printf("_"));
+         for(; pcol < xcol->dcol; pcol++, printf("."));
          printf("X");
       }
-      for(; pcol < d->cmax; pcol++, printf("_"));
+      for(; pcol < d->cmax; pcol++, printf("."));
    }
    printf("\n");
 }
@@ -79,21 +79,24 @@ void printSingleSol(Dance *d, SolTrie *sol)
 {
    SolTrie *cur;
    Doubly *xcol;
-   int pcol, cmax = ((Doubly*)(sol->row))->hcol->dcol;
+   int pcol, irow;
+   if(sol == d->solRoot)
+      return;
 
-   printf("\n     ");
-   for(pcol = 0; pcol < cmax; printf("%d", pcol % 10), pcol++);
+   printColHeaders(d);
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {
-      printf("\n%3d: ", ((Doubly*)(cur->row))->drow);
+      printf("%3d: ", cur->row->drow);
       pcol = 0;
-      xcol = ((Doubly*)(cur->row))->right;
-      for(; xcol != ((Doubly*)(cur->row)); xcol = xcol->right, pcol++)
+      irow = 0;
+      xcol = cur->row->right;
+      for(; pcol < cur->row->left->dcol; xcol = xcol->right, irow++, pcol++)
       {
          for(; pcol < xcol->dcol; pcol++, printf("."));
          printf("X");
       }
-      for(; pcol < xcol->dcol; pcol++, printf("."));
+      for(; pcol < d->cmax; pcol++, printf("."));
+      printf("\n");
    }
    printf("\n");
 }
@@ -138,4 +141,29 @@ int saveSolution(Dance *d, Sudoku *s)
    }
 
    return 0;
+}
+
+void checkMatrix(Dance *d)
+{
+   Doubly *hcol, *hrow, *doub;
+   for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
+   {
+      assert(hcol->left->right == hcol);
+      assert(hcol->right->left == hcol);
+      for(doub = hcol->down; doub != hcol; doub = doub->down)
+         checkDoubly(doub);
+   }
+   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
+   {
+      assert(hrow->up->down == hrow);
+      assert(hrow->down->up == hrow);
+   }
+}
+
+void checkDoubly(Doubly *doub)
+{
+   assert(doub->left->right == doub);
+   assert(doub->right->left == doub);
+   assert(doub->up->down == doub);
+   assert(doub->down->up == doub);
 }

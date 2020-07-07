@@ -27,28 +27,6 @@ SolTrie* initTrie(Doubly *row)
    return new;
 }
 
-void addMin(SolTrie *sol, Doubly *hcol)
-{
-   if(sol->minIndex >= sol->minSize)
-   {
-      sol->minSize *= 2;
-      sol->minList = realloc(sol->minList, sol->minSize*sizeof(Doubly));
-   }
-
-   sol->minList[sol->minIndex] = hcol;
-   sol->minIndex++;
-}
-
-Doubly *getMin(Dance *d, SolTrie *sol)
-{
-   int i = sol->minIndex-1;
-   if(i == -1)
-      return d->root;
-   for(; i > 0 && sol->minList[i]->drow - d->rmax == 0; i--);
-
-   return sol->minList[i];
-}
-
 void addChild(SolTrie *sol, SolTrie *new)
 {
    if(sol->ichild >= sol->cap)
