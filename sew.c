@@ -11,13 +11,12 @@ int initMatrix(Dance *d)
    Doubly *new;
    memset(buf, 0, BUFSIZE*sizeof(char));
 
-   assert(fseek(d->frows, 0, SEEK_SET) == 0);
-   /*assert(fseek(d->fcols, 0, SEEK_SET) == 0);*/
+   assert(fseek(d->init, 0, SEEK_SET) == 0);
 
-   while(!feof(d->frows))
+   while(!feof(d->init))
    {
-      fgets(buf, BUFSIZE*sizeof(char), d->frows);
-      if(feof(d->frows))
+      fgets(buf, BUFSIZE*sizeof(char), d->init);
+      if(feof(d->init))
          break;
       assert(2 == sscanf(buf, "%d %d\n", &irow, &icol));
       new = malloc(sizeof(Doubly));
@@ -36,8 +35,7 @@ int initMatrix(Dance *d)
    connectRows(d);
    connectCols(d);
 
-   fclose(d->frows);
-   /*fclose(d->fcols);*/
+   fclose(d->init);
    free(buf);
 
    return 0;
@@ -64,7 +62,7 @@ int connectRows(Dance *d)
    Doubly *hrow = d->root, *cur, *hnew;
    int irow, i, prev = -1;
    /* coordinates should already be sorted so you don't need this */
-   qsort(d->initList, d->ilist, sizeof(Doubly*), compareRows);
+   /*qsort(d->initList, d->ilist, sizeof(Doubly*), compareRows);*/
 
    for(i = 0; i < d->ilist; i++)
    {

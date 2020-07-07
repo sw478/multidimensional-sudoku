@@ -52,7 +52,7 @@ typedef struct
    SolTrie *solRoot, *csol, **sols;
    Doubly *curRow;
    Hide *hideRoot;
-   FILE *frows, *fcols;
+   FILE *init;
 } Dance;
 
 typedef struct

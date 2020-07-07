@@ -69,11 +69,11 @@ int initMatrixFileSudoku(Dance *d, int x, int y)
 
    if(access(fileName, F_OK) != -1)
    {
-      d->frows = fopen(fileName, "r+");
+      d->init = fopen(fileName, "r+");
       free(fileName);
       return 1;
    }
-   d->frows = fopen(fileName, "w+");
+   d->init = fopen(fileName, "w+");
 
    for(igrid = 0; igrid < gridSize; igrid++)
    {
@@ -90,7 +90,7 @@ int initMatrixFileSudoku(Dance *d, int x, int y)
          icol[3] = inum + sb*xy + gridSize * 3;
 
          for(i = 0; i < 4; i++)
-            fprintf(d->frows, "%d %d\n", irow, icol[i]);
+            fprintf(d->init, "%d %d\n", irow, icol[i]);
       }
    }
 
