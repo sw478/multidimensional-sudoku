@@ -11,31 +11,32 @@ int algorithmX(Dance *d)
    if(d->root == d->root->right)
    {
       addLeaf(d);
-      /*printSingleSol2(d, d->csol);*/
       return 0;
    }
+
    hcol = heuristic(d);
+   printf("\nheu: %3d\tnum: %3d\n", hcol->dcol, hcol->drow - d->rmax);
+Doubly *temp = getMin(d, d->csol);
+   printf("min: %3d\tnum: %3d\n", temp->dcol, temp->drow-d->rmax);
+   printColHeaders(d);
+
    if(hcol->drow == d->rmax)
       return 1;
-
-/* listSize = hcol->drow - d->rmax;
+/* 
+ * listSize = hcol->drow - d->rmax;
  * hitList = calloc(listSize, sizeof(int));
  */
    xrow = hcol->down; /*nextRow(hcol, &listSize, &hitList);*/
    for(; xrow != hcol; xrow = xrow->down)/*nextRow(hcol, &listSize, &hitList))*/
    {
-      coverRow(d, xrow);
-printMatrix(d);
       sol = initTrie(xrow->hrow);
-      /*sol->minCol = (hcol->drow <= d->csol->minCol->drow) ?
-         hcol : d->csol->minCol;
-       */
+      addMin(d->csol, d->root);
       addChild(d->csol, sol);
       d->csol = sol;
+      coverRow(d, xrow);
       if(0 == (ret = algorithmX(d)))
          x = 0;
       uncoverRow(d, xrow);
-printMatrix(d);
       d->csol = d->csol->parent;
       if(ret == 1)
       {
@@ -77,11 +78,7 @@ int coverRow(Dance *d, Doubly *node)
    Doubly *xrow;
 
    for(xrow = node->right; xrow != node; xrow = xrow->right)
-   {
-      if(xrow->hcol == d->root)
-         continue;
       coverCol(d, xrow);
-   }
    coverCol(d, xrow);
 
    return 0;
@@ -104,6 +101,14 @@ int coverCol(Dance *d, Doubly *xrow)
          xrow2->down->up = xrow2->up;
          xrow2->hcol->drow--;
          xrow2->hrow->dcol--;
+
+         Doubly *temp = getMin(d, d->csol);//d->csol->minList[d->csol->minIndex];
+         if(xrow2->hcol->drow - d->rmax > 0 &&
+            xrow2->hcol->drow < temp->drow)
+         {
+            printf("%d\n", xrow2->dcol);
+            addMin(d->csol, xrow2->hcol);
+         }
       }
    }
 
@@ -116,11 +121,7 @@ int uncoverRow(Dance *d, Doubly *node)
 
    uncoverCol(d, node);
    for(xrow = node->left; xrow != node; xrow = xrow->left)
-   {
-      if(xrow->hcol == d->root)
-         continue;
       uncoverCol(d, xrow);
-   }
 
    return 0;
 }

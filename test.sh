@@ -27,7 +27,7 @@ elif [ "$type" = "g" ]; then
    read mode
    echo "dimension? \"row col\""
    read row col
-   ./a.out ${mode} tests/${mode}${row}x${col}.in
+   ./a.out ${mode} tests/${mode}/${row}x${col}.in
    gprof a.out gmon.out | head -25
    make clean
    make
@@ -39,13 +39,13 @@ elif [ "$type" = "t" ] || [ "$type" = "v" ] || [ "$type" = "b" ]; then
    read row col
 
 if [ "$type" = "t" ]; then
-   time ./a.out ${mode} tests/${mode}${row}x${col}.in
+   time ./a.out ${mode} tests/${mode}/${row}x${col}.in
 
 elif [ "$type" = "v" ]; then
-   valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${mode} tests/${mode}${row}x${col}.in
+   valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${mode} tests/${mode}/${row}x${col}.in
 
 elif [ "$type" = "b" ]; then
-   ./a.out ${mode} tests/${mode}${row}x${col}.in
+   ./a.out ${mode} tests/${mode}/${row}x${col}.in
 fi
 
 fi

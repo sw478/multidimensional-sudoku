@@ -7,5 +7,7 @@ int initMatrixFileSudoku(Dance *d, int x, int y);
 int hideRows(Dance *d, Sudoku *s);
 int hideRow(Dance *d, Doubly *row);
 int recoverHiddenRows(Dance *d);
+void coverRowHeaders(Dance *d);
+void uncoverRowHeaders(Dance *d);
 
 #endif

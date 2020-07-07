@@ -11,7 +11,5 @@ int uncoverCol(Dance *d, Doubly *xrow);
 int algorithmX(Dance *d);
 Doubly *nextRow(Doubly *xrow, int *num, int **hitList);
 int storeSol(Dance *d, Doubly *hcol);
-int coverRowHeaders(Dance *d);
-int uncoverRowHeaders(Dance *d);
 
 #endif

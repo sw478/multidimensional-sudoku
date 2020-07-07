@@ -24,11 +24,35 @@ void printBoard(int *grid, int x, int y)
 
 void printMatrix(Dance *d)
 {
-   int pcol = 0;
+   int pcol = 0, irow, nrow;
    Doubly *xcol, *xrow;
 
-   printf("\nX's: ");
+   printColHeaders(d);
 
+   for(xrow = d->root->down; xrow != d->root; xrow = xrow->down)
+   {
+      nrow = xrow->dcol - d->cmax;
+      printf("\n%3d: ", xrow->drow);
+      pcol = 0;
+      irow = 0;
+      for(xcol = xrow->right; irow < nrow; xcol = xcol->right, irow++, pcol++)
+      {
+         for(; pcol < xcol->dcol; pcol++, printf("_"));
+         printf("X");
+      }
+      for(; pcol < d->cmax; pcol++, printf("_"));
+   }
+   printf("\n");
+}
+
+void printColHeaders(Dance *d)
+{
+   int pcol = 0;
+   Doubly *xcol;
+
+   printf("     ");
+   for(pcol = 0; pcol < d->cmax; printf("%d", pcol % 10), pcol++);
+   printf("\nX's: ");
    pcol = 0;
    for(xcol = d->root->right; xcol != d->root; xcol = xcol->right, pcol++)
    {
@@ -36,20 +60,6 @@ void printMatrix(Dance *d)
       printf("%d", xcol->drow - d->rmax);
    }
    for(; pcol < d->cmax; pcol++, printf("0"));
-
-   for(xrow = d->root->down; xrow != d->root; xrow = xrow->down)
-   {
-      if(xrow->right->left != xrow)
-         continue;
-      printf("\n%3d: ", xrow->drow);
-      pcol = 0;
-      for(xcol = xrow->right; xcol != xrow; xcol = xcol->right, pcol++)
-      {
-         for(; pcol < xcol->dcol; pcol++, printf("_"));
-         printf("X");
-      }
-      for(; pcol < d->cmax; pcol++, printf("_"));
-   }
    printf("\n");
 }
 
@@ -72,7 +82,7 @@ void printSingleSol(Dance *d, SolTrie *sol)
    int pcol, cmax = ((Doubly*)(sol->row))->hcol->dcol;
 
    printf("\n     ");
-   for(pcol = 0; pcol < cmax; pcol++, printf("%d", pcol % 10));
+   for(pcol = 0; pcol < cmax; printf("%d", pcol % 10), pcol++);
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {
       printf("\n%3d: ", ((Doubly*)(cur->row))->drow);
@@ -95,7 +105,7 @@ void printSingleSol2(Dance *d, SolTrie *sol)
    if(!sol->row)
       return;
    cmax = ((Doubly*)(sol->row))->hcol->dcol;
-   grid = malloc(cmax*sizeof(int));
+   grid = calloc(cmax, sizeof(int));
 
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {

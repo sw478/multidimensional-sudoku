@@ -36,10 +36,13 @@ int main(int argc, char *argv[])
    initMatrix(d);
    printf("finished initializing structure\n");
    hideRows(d, s);
+   coverRowHeaders(d);
 
+   addMin(d->csol, heuristic(d));
    if(algorithmX(d))
       printf("no solutions\n");
 
+   uncoverRowHeaders(d);
    recoverHiddenRows(d);
    printSolutions(d);
    saveSolution(d, s);
@@ -77,7 +80,7 @@ void parseArgs(Sudoku *s, int argc, char *argv[])
    if(s->mode == 2)
       s->in = fopen(argv[2], "w+");
 
-   assert(3 == sscanf(argv[2], "tests/%c%dx%d.in", &temp, &s->x, &s->y));
+   assert(3 == sscanf(argv[2], "tests/%c/%dx%d.in", &temp, &s->x, &s->y));
    s->xy = s->x*s->y;
    s->gridSize = s->xy*s->xy;
    s->grid = calloc(s->gridSize, sizeof(int));

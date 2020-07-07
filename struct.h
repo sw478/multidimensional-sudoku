@@ -38,9 +38,10 @@ typedef struct hide
 
 typedef struct solTrie
 {
-   Doubly *row, *minCol;
+   Doubly *row, **minList;
    struct solTrie **child, *parent;
    int ichild, cap, numSols;
+   int minSize, minIndex;
 } SolTrie;
 
 typedef struct

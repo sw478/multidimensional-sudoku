@@ -12,4 +12,7 @@ void addChild(SolTrie *sol, SolTrie *child);
 void freeSol(SolTrie *sol);
 void incNumSols(SolTrie *sol);
 
+void addMin(SolTrie *sol, Doubly *hcol);
+Doubly *getMin(Dance *d, SolTrie *sol);
+
 #endif

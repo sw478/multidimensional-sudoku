@@ -1,5 +1,6 @@
 #include "setup.h"
 #include "solTrie.h"
+#include "dance.h"
 
 int initDance(Dance *d, int x, int y)
 {
@@ -22,7 +23,6 @@ int initDance(Dance *d, int x, int y)
 
    d->solRoot = initTrie(NULL);
    d->csol = d->solRoot->parent = d->solRoot;
-   d->csol->minCol = d->root;
    d->numSols = 0;
    d->solCap = 1;
    d->sols = malloc(sizeof(SolTrie));
@@ -181,4 +181,26 @@ int recoverHiddenRows(Dance *d)
    assert(hideRow->prev == hideRow);
 
    return 0;
+}
+
+void coverRowHeaders(Dance *d)
+{
+   Doubly *hrow;
+
+   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
+   {
+      hrow->right->left = hrow->left;
+      hrow->left->right = hrow->right;
+   }
+}
+
+void uncoverRowHeaders(Dance *d)
+{
+   Doubly *hrow;
+
+   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
+   {
+      hrow->right->left = hrow;
+      hrow->left->right = hrow;
+   }
 }
