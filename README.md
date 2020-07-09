@@ -35,6 +35,14 @@ time to create a canonical fully populated board of varying sizes:\
 	7x9: 25 sec\
 	8x8: more than 10 mins
 
+	notes on the heuristic
+
+did some testing on the effects of using the min elements in column heuristic.\
+for generating a canonical 4x5 board, using the heuristic the program finished\
+in 0.3 seconds and made 400 calls to algX, while without the heuristic, using\
+a simple "hcol = d->root->right", the program took 15 minutes to complete and\
+made 337,257,251 calls to algX.
+
 	version 0.5
 
 restructed and moved around portions of code: struct.h contains all structs\

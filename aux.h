@@ -9,6 +9,7 @@ void printColHeaders(Dance *d);
 void printSolutions(Dance *d);
 void printSingleSol(Dance *d, SolTrie *sol);
 void printSingleSol2(Dance *d, SolTrie *sol);
+void printHeur(Dance *d);
 int saveSolution(Dance *d, Sudoku *s);
 void checkMatrix(Dance *d);
 void checkDoubly(Doubly *doub);

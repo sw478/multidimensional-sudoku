@@ -1,6 +1,7 @@
 #include "setup.h"
 #include "solTrie.h"
 #include "dance.h"
+#include "heuristic.h"
 
 int initDance(Dance *d, int x, int y)
 {
@@ -146,6 +147,7 @@ int hideRow(Dance *d, Doubly *row)
       xrow->up->down = xrow->down;
       xrow->down->up = xrow->up;
       xrow->hcol->drow--;
+      decHeur(xrow->hcol->heur);
    }
 
    return 0;
@@ -167,6 +169,7 @@ int recoverHiddenRows(Dance *d)
          xrow->up->down = xrow;
          xrow->down->up = xrow;
          xrow->hcol->drow++;
+         incHeur(xrow->hcol->heur);
          xrow = xrow->right;
       }
       xrow->up->down = xrow;

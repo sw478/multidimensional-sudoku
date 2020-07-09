@@ -19,9 +19,6 @@ SolTrie* initTrie(Doubly *row)
    new->ichild = new->numSols = 0;
    new->cap = STARTING_CAP;
    new->child = malloc(new->cap*sizeof(SolTrie));
-   new->minList = malloc(sizeof(Doubly*));
-   new->minSize = 1;
-   new->minIndex = 0;
    new->parent = new;
 
    return new;
@@ -56,7 +53,6 @@ void freeSol(SolTrie *sol)
    for(i = 0; i < sol->ichild; i++)
       freeSol(sol->child[i]);
 
-   free(sol->minList);
    free(sol->child);
    free(sol);
 }

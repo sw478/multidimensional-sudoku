@@ -11,6 +11,21 @@
 #define BUFSIZE 1000
 
 /*
+ * a 2-d linked list of heur headers that holds all heurs mapped to hcol with
+ * the same number of elements beneath them together
+ */
+typedef struct heur
+{
+   /* used for hcol heurs */
+   void *hcol;
+   struct heur *head, *prev, *next;
+
+   /* used for heur headers */
+   int num;
+   struct heur *hprev, *hnext;
+} Heur;
+
+/*
  * columns describe the constraints
  * if Doubly is a root, drow = d->root->rmax, dcol = d->root->cmax
  *
@@ -28,6 +43,7 @@ typedef struct doubly
 {
    int drow, dcol;
    struct doubly *up, *down, *left, *right, *hcol, *hrow;
+   Heur *heur;
 } Doubly;
 
 typedef struct hide
@@ -52,6 +68,7 @@ typedef struct
    SolTrie *solRoot, *csol, **sols;
    Doubly *curRow;
    Hide *hideRoot;
+   Heur *heurRoot;
    FILE *init;
 } Dance;
 

@@ -4,7 +4,6 @@ void printBoard(int *grid, int x, int y)
 {
    int row, col, xy = x*y;
 
-   printf("\n");
    for(row = 0; row < xy; row++)
    {
       if(row % y == 0)
@@ -20,6 +19,7 @@ void printBoard(int *grid, int x, int y)
       }
       printf("\n");
    }
+   printf("\n");
 }
 
 void printMatrix(Dance *d)
@@ -32,15 +32,19 @@ void printMatrix(Dance *d)
    for(xrow = d->root->down; xrow != d->root; xrow = xrow->down)
    {
       nrow = xrow->dcol - d->cmax;
-      printf("\n%3d: ", xrow->drow);
+      if(nrow == 0)
+         continue;
+      printf("%3d: ", xrow->drow);
       pcol = 0;
       irow = 0;
-      for(xcol = xrow->right; irow < nrow; xcol = xcol->right, irow++, pcol++)
+      xcol = xrow->right;
+      for(; irow < nrow; xcol = xcol->right, irow++, pcol++)
       {
          for(; pcol < xcol->dcol; pcol++, printf("."));
          printf("X");
       }
       for(; pcol < d->cmax; pcol++, printf("."));
+      printf("\n");
    }
    printf("\n");
 }
@@ -104,21 +108,48 @@ void printSingleSol(Dance *d, SolTrie *sol)
 void printSingleSol2(Dance *d, SolTrie *sol)
 {
    SolTrie *cur;
-   int drow, num, igrid, xy = d->x*d->y, cmax, *grid;
+   int drow, num, igrid, xy = d->x*d->y, *grid;
    if(!sol->row)
       return;
-   cmax = ((Doubly*)(sol->row))->hcol->dcol;
-   grid = calloc(cmax, sizeof(int));
+   grid = calloc(d->cmax, sizeof(int));
 
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {
-      drow = ((Doubly*)cur->row)->drow;
+      drow = cur->row->drow;
       num = drow % xy;
       igrid = drow / xy;
       grid[igrid] = num + 1;
    }
    printBoard(grid, d->x, d->y);
    free(grid);
+}
+
+void printHeur(Dance *d)
+{
+   Heur *head = d->heurRoot, *heur;
+   Doubly *hcol;
+
+   printf("heuristics: \n");
+
+   printf("r: ");
+   for(heur = head->next; heur != head; heur = heur->next)
+   {
+      hcol = ((Doubly*)heur->hcol);
+      printf("%d ", hcol->dcol);
+   }
+   printf("\n");
+
+   for(head = d->heurRoot->hnext; head != d->heurRoot; head = head->hnext)
+   {
+      printf("%d: ", head->num);
+      for(heur = head->next; heur != head; heur = heur->next)
+      {
+         hcol = ((Doubly*)heur->hcol);
+         printf("%d ", hcol->dcol);
+      }
+      printf("\n");
+   }
+   printf("\n");
 }
 
 int saveSolution(Dance *d, Sudoku *s)
@@ -131,10 +162,12 @@ int saveSolution(Dance *d, Sudoku *s)
       printf("\n%lu solutions found\n", d->numSols);
       return d->numSols;
    }
+   else if(d->numSols == 0)
+      return 0;
 
    for(cur = d->sols[0]; cur->parent != cur; cur = cur->parent)
    {
-      rowNum = ((Doubly*)(cur->row))->drow;
+      rowNum = cur->row->drow;
       num = rowNum % s->xy;
       igrid = rowNum / s->xy;
       s->grid[igrid] = num + 1;

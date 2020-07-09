@@ -1,6 +1,7 @@
 #include "dance.h"
 #include "solTrie.h"
 #include "aux.h"
+#include "heuristic.h"
 
 /*
  * returns 0 if a solution was found (not leaf)
@@ -10,20 +11,23 @@
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *xrow;
-   int x = 1, ret, numSol = 0;
+   int x = 1, ret;
    /*int listSize, *hitList;*/
    SolTrie *sol;
 
    if(d->root == d->root->right)
    {
-      d->csol = d->solRoot;
-      return 2;
+      addLeaf(d);
+      return 0;
    }
    d->numCalls++;
 
-   /*hcol = d->root->right;*/
-   hcol = heuristic(d);
-   /*printColHeaders(d);*/
+   Heur *heur = d->heurRoot->hnext;
+   while(heur == heur->next)
+      heur = heur->hnext;
+   if(heur == d->heurRoot)
+      return 1;
+   hcol = heur->next->hcol;
 
 /* 
  * listSize = hcol->drow - d->rmax;
@@ -35,25 +39,27 @@ int algorithmX(Dance *d)
    for(; xrow != hcol; xrow = xrow->down)
    /*nextRow(hcol, &listSize, &hitList))*/
    {
+      sol = initTrie(xrow->hrow);
+      addChild(d->csol, sol);
+      d->csol = sol;
+//printColHeaders(d);
+//printHeur(d);
       coverRow(d, xrow);
       ret = algorithmX(d);
-      if(ret == 0 || ret == 2)
+      if(ret != 1)
          x = 0;
+//printColHeaders(d);
+//printHeur(d);
       uncoverRow(d, xrow);
 
-      if(x == 0)
+      d->csol = d->csol->parent;
+      if(x == 1)
       {
-         if(numSol == 0)
-            sol = initTrie(xrow->hrow);
-         if(d->csol != d->solRoot)
-            addChild(sol, d->csol);
-         d->csol = sol;
-         numSol++;
-         if(ret == 2)
-            addLeaf(d);
-         if(d->mode == 2)
-            break;
+         d->csol->ichild--;
+         freeSol(sol);
       }
+      else if(x == 0 && d->mode == 2)
+         break;
    }
 
    /*free(hitList);*/
@@ -102,13 +108,17 @@ int coverCol(Dance *d, Doubly *xrow)
 
    for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
    {
+      xcol->hcol->drow--;
+      xcol->hrow->dcol--;
       for(xrow2 = xcol->right; xrow2 != xcol; xrow2 = xrow2->right)
       {
          xrow2->up->down = xrow2->down;
          xrow2->down->up = xrow2->up;
          xrow2->hcol->drow--;
          xrow2->hrow->dcol--;
+         decHeur(xrow2->hcol->heur);
       }
+      decHeur(xrow2->hcol->heur);
    }
 
    return 0;
@@ -134,15 +144,19 @@ int uncoverCol(Dance *d, Doubly *xrow)
    hcol->left->right = hcol;
    d->root->dcol++;
 
-   for(xcol = hcol->up; xcol != hcol; xcol = xcol->up)
+   for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
    {
-      for(xrow2 = xcol->left; xrow2 != xcol; xrow2 = xrow2->left)
+      xcol->hcol->drow++;
+      xcol->hrow->dcol++;
+      for(xrow2 = xcol->right; xrow2 != xcol; xrow2 = xrow2->right)
       {
          xrow2->up->down = xrow2;
          xrow2->down->up = xrow2;
          xrow2->hcol->drow++;
          xrow2->hrow->dcol++;
+         incHeur(xrow2->hcol->heur);
       }
+      incHeur(xrow2->hcol->heur);
    }
 
    return 0;

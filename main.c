@@ -2,6 +2,7 @@
 #include "aux.h"
 #include "setup.h"
 #include "sew.h"
+#include "heuristic.h"
 #include "end.h"
 #include "error.h"
 
@@ -34,26 +35,27 @@ int main(int argc, char *argv[])
    initMatrixFileSudoku(d, s->x, s->y);
    initDance(d, s->x, s->y);
    initMatrix(d);
+   initHeurList(d);
+//printHeur(d);
    hideRows(d, s);
    coverRowHeaders(d);
-
+/*
    printf("cmax: %d\n", d->cmax);
    printf("ncol: %d\n", d->root->dcol);
    printf("rmax: %d\n", d->rmax);
    printf("nrow: %d\n", d->root->drow);
-   printf("finished initializing structure\n");
-   /*addMin(d->csol, heuristic(d));*/
-   if(algorithmX(d))
+*/   printf("finished initializing structure\n");
+
+   if(algorithmX(d) == 1)
       printf("no solutions\n");
    printf("numCalls: %d\n", d->numCalls);
-   if(d->csol != d->solRoot)
-      addChild(d->solRoot, d->csol);
 
    uncoverRowHeaders(d);
    recoverHiddenRows(d);
    printSolutions(d);
    saveSolution(d, s);
 
+   freeHeur(d);
    free(d->sols);
    freeDance(d);
 
