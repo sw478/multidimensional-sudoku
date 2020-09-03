@@ -3,6 +3,12 @@
 #include "dance.h"
 #include "heuristic.h"
 
+/*
+ * initialize values and structures in the dance struct
+ *
+ * since d->rmax and d->cmax are defined/configured in
+ * initMatrixFileSudoku, this has to follow that function
+ */
 int initDance(Dance *d, int x, int y)
 {
    assert(d != NULL);
@@ -33,12 +39,12 @@ int initDance(Dance *d, int x, int y)
 }
 
 /*
- * initializes text file containing coordinates specific to the constrainsts
- * of a general n x m sudoku board with box, row, col constrainsts
+ * creates and writes to a text file coordinates specific
+ * to the constrainsts of a general n x m sudoku board with box,
+ * row, col constrainsts
  *
- * modular so that this function can be substituted by any other
- * function writing constraint coordinates for other constraint problems
- * you might want to solve, such as diagonal sudoku boards that have
+ * this function is modular so that it can be substituted by other constraint
+ * problems you might want to solve, such as diagonal sudoku boards that have
  * extra diagonal constraints or for an n queens problems or pentomino tiling
  */
 

@@ -25,10 +25,10 @@ void initHeurList(Dance *d)
          head = temp;
       }
 
-      heur->next = head->next;
-      heur->prev = head;
-      head->next->prev = heur;
-      head->next = heur;
+      heur->next = head;
+      heur->prev = head->prev;
+      head->prev->next = heur;
+      head->prev = heur;
       heur->head = head;
    }
 }
@@ -51,7 +51,7 @@ void incHeur(Heur *heur)
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
 
-   if(0 && head->next == head && head->num != 0)
+   if(head->next == head && head->num != 0)
    {
       temp = head->hprev;  
       head->hnext->hprev = head->hprev;
@@ -64,7 +64,7 @@ void incHeur(Heur *heur)
    if(head->num != heur->num)
    {
       temp = initHeur(heur->num);
-      temp->hprev = head->hnext;
+      temp->hprev = head->hprev;
       temp->hnext = head;
       head->hprev->hnext = temp;
       head->hprev = temp;
@@ -85,7 +85,7 @@ void decHeur(Heur *heur)
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
 
-   if(0 && head->next == head && head->num != 0)
+   if(head->next == head && head->num != 0)
    {
       temp = head->hnext;
       head->hnext->hprev = head->hprev;

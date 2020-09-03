@@ -26,32 +26,26 @@ int main(int argc, char *argv[])
    Dance *d = malloc(sizeof(Dance));
    srand(time(NULL));
 
-   parseArgs(s, argc, argv);
+   parseArgs(s, argc, argv); /* gets file pointer of sudoku file*/
 
    if(s->mode == 1)
       printBoard(s->grid, s->x, s->y);
    d->mode = s->mode;
 
-   initMatrixFileSudoku(d, s->x, s->y);
-   initDance(d, s->x, s->y);
-   initMatrix(d);
-   initHeurList(d);
-//printHeur(d);
-   hideRows(d, s);
-   coverRowHeaders(d);
-/*
-   printf("cmax: %d\n", d->cmax);
-   printf("ncol: %d\n", d->root->dcol);
-   printf("rmax: %d\n", d->rmax);
-   printf("nrow: %d\n", d->root->drow);
-*/   printf("finished initializing structure\n");
+   initMatrixFileSudoku(d, s->x, s->y); /* writes to matrix file if it doesn't exist*/
+   initDance(d, s->x, s->y); /* initialize dance struct */
+   initMatrix(d); /* reads from matrix file and creates the general matrix for the given dimensions */
+   initHeurList(d); /* initializes the heuristic helper structure */
+   hideRows(d, s); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
+   coverRowHeaders(d); /* cover all row headers, necessary for program to work */
+   printf("finished initializing structure\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
    if(algorithmX(d) == 1)
       printf("no solutions\n");
-   printf("numCalls: %d\n", d->numCalls);
 
-   uncoverRowHeaders(d);
-   recoverHiddenRows(d);
+   printf("number of calls: %d\n", d->numCalls);
+   uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
+   recoverHiddenRows(d); /* handles memory */
    printSolutions(d);
    saveSolution(d, s);
 

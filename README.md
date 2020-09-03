@@ -33,7 +33,7 @@ time to create a canonical fully populated board of varying sizes:\
 	7x7: 2.5 sec\
 	7x8: 12 sec\
 	7x9: 25 sec\
-	8x8: more than 10 mins
+	8x8: more than 10 mins / unknown
 
 	notes on the heuristic
 
@@ -42,6 +42,10 @@ for generating a canonical 4x5 board, using the heuristic the program finished\
 in 0.3 seconds and made 400 calls to algX, while without the heuristic, using\
 a simple "hcol = d->root->right", the program took 15 minutes to complete and\
 made 337,257,251 calls to algX.
+
+while it's understandable that when you try larger and larger board sizes\
+that combinatorial explosion will take place for an NP-complete problem, it's\
+interesting that it would occur at 8x8
 
 	version 0.5
 

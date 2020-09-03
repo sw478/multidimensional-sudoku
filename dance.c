@@ -12,7 +12,7 @@ int algorithmX(Dance *d)
 {
    Doubly *hcol, *xrow;
    int x = 1, ret;
-   /*int listSize, *hitList;*/
+   int listSize, *hitList;
    SolTrie *sol;
 
    if(d->root == d->root->right)
@@ -22,34 +22,28 @@ int algorithmX(Dance *d)
    }
    d->numCalls++;
 
-   Heur *heur = d->heurRoot->hnext;
-   while(heur == heur->next)
-      heur = heur->hnext;
-   if(heur == d->heurRoot)
+   if(d->heurRoot->hnext == d->heurRoot)
       return 1;
-   hcol = heur->next->hcol;
+   //hcol = d->heurRoot->hnext->next->hcol;
+   hcol = heuristic(d);
+ 
+   listSize = hcol->drow - d->rmax;
+   hitList = calloc(listSize, sizeof(int));
 
-/* 
- * listSize = hcol->drow - d->rmax;
- * hitList = calloc(listSize, sizeof(int));
- */
-
+   //xrow = nextRow(hcol, &listSize, &hitList);
    xrow = hcol->down;
-   /*xrow = nextRow(hcol, &listSize, &hitList);*/
    for(; xrow != hcol; xrow = xrow->down)
-   /*nextRow(hcol, &listSize, &hitList))*/
+//nextRow(hcol, &listSize, &hitList))
    {
       sol = initTrie(xrow->hrow);
       addChild(d->csol, sol);
       d->csol = sol;
-//printColHeaders(d);
-//printHeur(d);
+//printMatrix(d);
       coverRow(d, xrow);
       ret = algorithmX(d);
       if(ret != 1)
          x = 0;
-//printColHeaders(d);
-//printHeur(d);
+//printMatrix(d);
       uncoverRow(d, xrow);
 
       d->csol = d->csol->parent;
@@ -58,14 +52,18 @@ int algorithmX(Dance *d)
          d->csol->ichild--;
          freeSol(sol);
       }
-      else if(x == 0 && d->mode == 2)
+      if(x == 0 && d->mode == 2)
          break;
    }
 
-   /*free(hitList);*/
+   free(hitList);
    return x;
 }
 
+/*
+ * used to randomize board
+ * keeps track of rows and records which have already been visited
+ */
 Doubly *nextRow(Doubly *hcol, int *num, int **hitList)
 {
    Doubly *row;
