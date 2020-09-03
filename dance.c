@@ -62,7 +62,15 @@ int algorithmX(Dance *d)
 
 /*
  * used to randomize board
- * keeps track of rows and records which have already been visited
+ * keeps track of rows and records which have already been visited by
+ *
+ * num: number of elements in column not visited yet
+ * hitlist: int pointer array of 0 - not visted or 1 - visited
+ * randInt: random int chosen between 0 and num
+ *
+ * O(n) operation, n being total elements in the column, visited or not
+ * first for loop loops to the element at the "randInt"th index and
+ * second for loop loops till an unvisited element is found
  */
 Doubly *nextRow(Doubly *hcol, int *num, int **hitList)
 {
