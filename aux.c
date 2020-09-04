@@ -105,9 +105,6 @@ void printSingleSol(Dance *d, SolTrie *sol)
    printf("\n");
 }
 
-/*
- * alternate function that prints matrix as a sudoku board
- */
 void printSingleSol2(Dance *d, SolTrie *sol)
 {
    SolTrie *cur;
@@ -155,9 +152,6 @@ void printHeur(Dance *d)
    printf("\n");
 }
 
-/*
- * copies solution from the solTrie to the sudoku struct
- */
 int saveSolution(Dance *d, Sudoku *s)
 {
    SolTrie *cur;
@@ -182,9 +176,6 @@ int saveSolution(Dance *d, Sudoku *s)
    return 0;
 }
 
-/*
- * uses asserts to validate the current matrix is well defined
- */
 void checkMatrix(Dance *d)
 {
    Doubly *hcol, *hrow, *doub;

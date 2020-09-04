@@ -5,7 +5,6 @@
 #include "heuristic.h"
 #include "end.h"
 #include "error.h"
-#include "generate.h"
 
 /*
  * argument format: a.out [mode: 1 for solve, 2 for gen] [file: empty to be
