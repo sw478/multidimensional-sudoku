@@ -1,5 +1,6 @@
 #include "end.h"
 #include "solTrie.h"
+#include "heuristic.h"
 
 void freeDance(Dance *d)
 {
@@ -18,6 +19,14 @@ void freeDance(Dance *d)
    freeSol(d->solRoot);
    free(d->hideRoot);
    free(d->initList);
+
+   freeHeur(d);
+   free(d->sols);
+
+   fclose(d->s->in);
+   free(d->s->grid);
+   free(d->s);
+
    free(d);
 }
 

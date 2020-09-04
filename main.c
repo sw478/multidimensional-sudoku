@@ -31,11 +31,11 @@ int main(int argc, char *argv[])
    if(d->s->mode == 1)
       printBoard(d, d->s->grid);
 
-   initMatrixFileSudoku(d, d->s->x, d->s->y); /* writes to matrix file if it doesn't exist*/
-   initDance(d, d->s->x, d->s->y); /* initialize dance struct */
+   initMatrixFileSudoku(d); /* writes to matrix file if it doesn't exist*/
+   initDance(d); /* initialize dance struct */
    initMatrix(d); /* reads from matrix file and creates the general matrix for the given dimensions */
    initHeurList(d); /* initializes the heuristic helper structure */
-   hideRows(d, d->s); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
+   hideRows(d); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished initializing structure\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
@@ -46,14 +46,7 @@ int main(int argc, char *argv[])
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
    recoverHiddenRows(d); /* handles memory */
    printSolutions(d);
-   saveSolution(d);
-
-   freeHeur(d);
-   free(d->sols);
-
-   fclose(d->s->in);
-   free(d->s->grid);
-   free(d->s);
+   saveSolution(d); /* translates solTrie matrix rows to sudoku solution */
 
    freeDance(d);
 

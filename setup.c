@@ -9,14 +9,12 @@
  * since d->rmax and d->cmax are defined/configured in
  * initMatrixFileSudoku, this has to follow that function
  */
-int initDance(Dance *d, int x, int y)
+int initDance(Dance *d)
 {
    assert(d != NULL);
 
-   d->s->x = x;
-   d->s->y = y;
-   d->s->xy = x*y;
-   d->s->gridSize = x*x*y*y;
+   d->s->xy = d->s->x*d->s->y;
+   d->s->gridSize = d->s->xy*d->s->xy;
 
    d->ilist = 0;
    d->initListCap = 1;
@@ -66,9 +64,10 @@ int initDance(Dance *d, int x, int y)
  *    2: col-num
  *    3: box-num
  */
-int initMatrixFileSudoku(Dance *d, int x, int y)
+int initMatrixFileSudoku(Dance *d)
 {
-   int igrid = 0, inum = 0, sr = 0, sc = 0, sb = 0, xy = x*y, gridSize = xy*xy;
+   int igrid = 0, inum = 0, sr = 0, sc = 0, sb = 0;
+   int x = d->s->x, y = d->s->y, xy = d->s->xy, gridSize = d->s->gridSize;
    int irow, icol[4], i;
    char *fileName = malloc(BUFSIZE*sizeof(char));
 
@@ -112,18 +111,18 @@ int initMatrixFileSudoku(Dance *d, int x, int y)
  * hides necessary rows and stores them in hideList
  * row headers are used to
  */
-int hideRows(Dance *d, Sudoku *s)
+int hideRows(Dance *d)
 {
    Doubly *row = d->root->down;
-   int igrid, num;
+   int *grid = d->s->grid, igrid, num, xy = d->s->xy;
 
    if(d->s->mode == 2)
       return 1;
    for(row = d->root->down; row != d->root; row = row->down)
    {
-      igrid = (int)(row->drow / s->xy);
-      num = row->drow % s->xy + 1;
-      if(0 == s->grid[igrid] || num == s->grid[igrid])
+      igrid = (int)(row->drow / xy);
+      num = row->drow % xy + 1;
+      if(0 == grid[igrid] || num == grid[igrid])
          continue;
       hideRow(d, row);
    }
