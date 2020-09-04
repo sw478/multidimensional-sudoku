@@ -13,8 +13,11 @@ int initDance(Dance *d, int x, int y)
 {
    assert(d != NULL);
 
-   d->x = x;
-   d->y = y;
+   d->s->x = x;
+   d->s->y = y;
+   d->s->xy = x*y;
+   d->s->gridSize = x*x*y*y;
+
    d->ilist = 0;
    d->initListCap = 1;
    d->initList = malloc(sizeof(Doubly*));
@@ -114,7 +117,7 @@ int hideRows(Dance *d, Sudoku *s)
    Doubly *row = d->root->down;
    int igrid, num;
 
-   if(d->mode == 2)
+   if(d->s->mode == 2)
       return 1;
    for(row = d->root->down; row != d->root; row = row->down)
    {

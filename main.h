@@ -2,6 +2,6 @@
 #define SUDOKU_H
 #include "struct.h"
 
-void parseArgs(Sudoku *s, int argc, char *argv[]);
+void parseArgs(Dance *d, int argc, char *argv[]);
 
 #endif

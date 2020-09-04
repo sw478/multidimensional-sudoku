@@ -1,7 +1,8 @@
 #include "aux.h"
 
-void printBoard(int *grid, int x, int y)
+void printBoard(Dance *d, int *grid)
 {
+   int x = d->s->x, y = d->s->y;
    int row, col, xy = x*y;
 
    for(row = 0; row < xy; row++)
@@ -108,7 +109,7 @@ void printSingleSol(Dance *d, SolTrie *sol)
 void printSingleSol2(Dance *d, SolTrie *sol)
 {
    SolTrie *cur;
-   int drow, num, igrid, xy = d->x*d->y, *grid;
+   int drow, num, igrid, xy = d->s->xy, *grid;
    if(!sol->row)
       return;
    grid = calloc(d->cmax, sizeof(int));
@@ -120,7 +121,7 @@ void printSingleSol2(Dance *d, SolTrie *sol)
       igrid = drow / xy;
       grid[igrid] = num + 1;
    }
-   printBoard(grid, d->x, d->y);
+   printBoard(d, grid);
    free(grid);
 }
 
@@ -152,10 +153,10 @@ void printHeur(Dance *d)
    printf("\n");
 }
 
-int saveSolution(Dance *d, Sudoku *s)
+int saveSolution(Dance *d)
 {
    SolTrie *cur;
-   int num, igrid, rowNum;
+   int num, igrid, rowNum, xy = d->s->xy, *grid = d->s->grid;
 
    if(d->numSols > 1)
    {
@@ -168,9 +169,9 @@ int saveSolution(Dance *d, Sudoku *s)
    for(cur = d->sols[0]; cur->parent != cur; cur = cur->parent)
    {
       rowNum = cur->row->drow;
-      num = rowNum % s->xy;
-      igrid = rowNum / s->xy;
-      s->grid[igrid] = num + 1;
+      num = rowNum % xy;
+      igrid = rowNum / xy;
+      grid[igrid] = num + 1;
    }
 
    return 0;

@@ -52,7 +52,7 @@ int algorithmX(Dance *d)
          d->csol->ichild--;
          freeSol(sol);
       }
-      if(x == 0 && d->mode == 2)
+      if(x == 0 && d->s->mode == 2)
          break;
    }
 

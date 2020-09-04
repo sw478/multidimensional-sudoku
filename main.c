@@ -22,21 +22,20 @@
  */
 int main(int argc, char *argv[])
 {
-   Sudoku *s = malloc(sizeof(Sudoku));
    Dance *d = malloc(sizeof(Dance));
+   d->s = malloc(sizeof(Sudoku));
    srand(time(NULL));
 
-   parseArgs(s, argc, argv); /* gets file pointer of sudoku file*/
+   parseArgs(d, argc, argv); /* gets file pointer of sudoku file*/
 
-   if(s->mode == 1)
-      printBoard(s->grid, s->x, s->y);
-   d->mode = s->mode;
+   if(d->s->mode == 1)
+      printBoard(d, d->s->grid);
 
-   initMatrixFileSudoku(d, s->x, s->y); /* writes to matrix file if it doesn't exist*/
-   initDance(d, s->x, s->y); /* initialize dance struct */
+   initMatrixFileSudoku(d, d->s->x, d->s->y); /* writes to matrix file if it doesn't exist*/
+   initDance(d, d->s->x, d->s->y); /* initialize dance struct */
    initMatrix(d); /* reads from matrix file and creates the general matrix for the given dimensions */
    initHeurList(d); /* initializes the heuristic helper structure */
-   hideRows(d, s); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
+   hideRows(d, d->s); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished initializing structure\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
@@ -47,22 +46,24 @@ int main(int argc, char *argv[])
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
    recoverHiddenRows(d); /* handles memory */
    printSolutions(d);
-   saveSolution(d, s);
+   saveSolution(d);
 
    freeHeur(d);
    free(d->sols);
-   freeDance(d);
 
-   fclose(s->in);
-   free(s->grid);
-   free(s);
+   fclose(d->s->in);
+   free(d->s->grid);
+   free(d->s);
+
+   freeDance(d);
 
    return 0;
 }
 
-void parseArgs(Sudoku *s, int argc, char *argv[])
+void parseArgs(Dance *d, int argc, char *argv[])
 {
    int i, c, test;
+   Sudoku *s = d->s;
    char *buf = malloc(BUFSIZE*sizeof(char)), temp;
 
    memset(buf, 0, BUFSIZE*sizeof(char));

@@ -11,8 +11,22 @@
 #define BUFSIZE 1000
 
 /*
- * a 2-d linked list of heur headers that holds all heurs mapped to hcol with
- * the same number of elements beneath them together
+ * a two dimensional linked list of heur headers
+ * 
+ * heur headers are heads of lists that holds all
+ * heurs with the same number of elements beneath them together
+ *
+ * heurs are doubly linked to each column header
+ *
+ * incHeur and decHeur are the main operations
+ * when a doubly under a column header is covered or uncovered, the
+ * column header's element count is appropriately incremented or
+ * decremented, the heur it's linked to is moved from one heur list
+ * to another, and a heur headers are created and destroyed when a
+ * new column is needed or when a heur column no longer has elements
+ *
+ * probably plan to refactor later since hcol heurs and heur headers'
+ * data can be separated into two distinct structs
  */
 typedef struct heur
 {
@@ -52,17 +66,50 @@ typedef struct hide
    struct hide *next, *prev;
 } Hide;
 
+/*
+ * actually a tree not a trie
+ *
+ * when solving an exact cover problem, a set of rows constitute a solution,
+ * and algorithm X finds these rows one at a time, but searches for them using
+ * a depth first approach, so what you get is a tree with rows as the nodes,
+ * and in this case, the struct solTrie acts as the node.
+ *
+ * row: matrix row associated with the solTrie
+ * child: pointer array of child nodes
+ * parent: each node's children's parent node points to this node
+ * ichild: child array's next available index
+ * cap: current array capacity
+ * numSols: number of leaf nodes including and underneath this current solTrie
+ */
 typedef struct solTrie
 {
-   Doubly *row, **minList;
+   Doubly *row;
    struct solTrie **child, *parent;
    int ichild, cap, numSols;
-   int minSize, minIndex;
 } SolTrie;
+
+/*
+ * grid: numbers of the sudoku board, indexed on the board from left to right
+ * x & y: dimensions of a single sudoku box
+ * xy: x*y, max number on the sudoku board
+ * z: in the future, planning on expanding the program's capacbilities to solve
+ * boards of higher dimensions
+ * gridSize: xy*xy, total size of sudoku board
+ * mode: 0 - generating, 1 - solving
+ *
+ * in: file pointer for sudoku text file, not to be confused with matrix text file
+ */
+typedef struct
+{
+   int *grid, x, y, xy, z, gridSize, mode;
+   FILE *in;
+} Sudoku;
 
 typedef struct
 {
-   int rmax, cmax, mode, x, y, ilist, initListCap, numCalls;
+   Sudoku *s;
+
+   int rmax, cmax, ilist, initListCap, numCalls;
    long int numSols, solCap;
    Doubly *root, *xrow, *xcol, **initList;
    SolTrie *solRoot, *csol, **sols;
@@ -71,12 +118,5 @@ typedef struct
    Heur *heurRoot;
    FILE *init;
 } Dance;
-
-typedef struct
-{
-   int *grid, x, y, xy, z, gridSize;
-   int elements, steps, fit, visited, mode;
-   FILE *in;
-} Sudoku;
 
 #endif
