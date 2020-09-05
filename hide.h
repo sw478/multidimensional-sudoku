@@ -2,8 +2,11 @@
 #define HIDE_H
 #include "struct.h"
 
-int hideRows(Dance *d);
-int hideRow(Dance *d, Doubly *row);
-int recoverHiddenRows(Dance *d);
+int initHide(Dance *d);
+void hideAllCells(Dance *d);
+int hideSingleCell(Dance *d, int igrid);
+void unhideAllCells(Dance *d);
+int unhideSingleCell(Dance *d, int igrid);
+void freeHide(Dance *d);
 
 #endif

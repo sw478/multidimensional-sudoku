@@ -2,6 +2,7 @@
 #include "solTrie.h"
 #include "dance.h"
 #include "heuristic.h"
+#include "hide.h"
 
 /*
  * initialize values and structures in the dance struct
@@ -26,8 +27,7 @@ int initDance(Dance *d)
    d->root->up = d->root->down = d->root->left = d->root->right = d->root;
    d->xcol = d->xrow = d->root->hcol = d->root->hrow = d->root;
 
-   d->hideRoot = malloc(sizeof(Doubly));
-   d->hideRoot->next = d->hideRoot->prev = d->hideRoot;
+   d->hideList = malloc(d->s->gridSize*sizeof(Hide*));
 
    d->solRoot = initTrie(NULL);
    d->csol = d->solRoot->parent = d->solRoot;

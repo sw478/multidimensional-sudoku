@@ -50,7 +50,9 @@ interesting that it would occur at 8x8
 	version 0.6
 
 annotated and commented in struct.h and some other functions. moved sudoku struct\
-into dance struct to make things easier, doesn't change efficiency much.
+into dance struct to make things easier, doesn't change efficiency much. redesigned\
+hide mechanism to work for generating boards, this increases initialization time\
+significantly since the program has to loop through all matrix rows
 
 	version 0.5
 

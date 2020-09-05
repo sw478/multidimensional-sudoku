@@ -60,10 +60,20 @@ typedef struct doubly
    Heur *heur;
 } Doubly;
 
+/*
+ * each hide is associated with a sudoku cell
+ * hrows: each cell is associated with a group of matrix rows, formatted
+ * as a list of pointers
+ * num: the number for the cell (must be known, so only for given numbers when
+ * solving a board), and shouldn't change throughout the course of the program
+ * filled: whether or not the cell has been filled with the number, and
+ * whether or not the rows have been hidden (should be hidden if filled)
+ * 1 - filled/hidden, 0 - empty/unhidden
+ */
 typedef struct hide
 {
-   Doubly *xrow;
-   struct hide *next, *prev;
+   Doubly **hrows;
+   int num, filled;
 } Hide;
 
 /*
@@ -145,7 +155,7 @@ typedef struct
    SolTrie *solRoot, *csol, **sols;
    long int numSols, solCap; 
 
-   Hide *hideRoot;
+   Hide **hideList;
    Heur *heurRoot;
    FILE *init;
 } Dance;

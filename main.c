@@ -35,8 +35,10 @@ int main(int argc, char *argv[])
    initMatrixFileSudoku(d); /* writes to matrix file if it doesn't exist*/
    initDance(d); /* initialize dance struct */
    initMatrix(d); /* reads from matrix file and creates the general matrix for the given dimensions */
+   initHide(d);
+   printf("finished initHide\n");
    initHeurList(d); /* initializes the heuristic helper structure */
-   hideRows(d); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
+   hideAllCells(d); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished initializing structure\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
@@ -45,7 +47,7 @@ int main(int argc, char *argv[])
 
    printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
-   recoverHiddenRows(d); /* handles memory */
+   unhideAllCells(d); /* handles memory */
    printSolutions(d);
    saveSolution(d); /* translates solTrie matrix rows to sudoku solution */
 
