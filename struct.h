@@ -105,15 +105,46 @@ typedef struct
    FILE *in;
 } Sudoku;
 
+/*
+ * rmax, cmax: dimensions of matrix
+ * numCalls: # of times algorithm X is called
+ * root: entry point for matrix
+ * xrow & xcol: used for tracking doubly
+ *
+ * sewing:
+ * initList: list of all the Doubly when initializing the matrix. used for sorting
+ * ilist: next available index in initList
+ * initListCap: capacity of initList
+ *
+ * storing solutions:
+ * solRoot: root node for solTrie tree
+ * csol: current solTrie being tracked
+ * sols: list of leaf nodes, # of leaf nodes is # of distinct solutions
+ * numSols: next available index in sols
+ * solCap: current capacity of sols, doubles when reached
+ * 
+ * typical case for solving sudokus is to have only one solution
+ * which is why solCap usually stays at 1, and would make the tree behave
+ * as doubly linked list
+ *
+ * hideRoot: dummy node/entry point for list of Hide structs
+ * heurRoot: dummy node/entry point for heuristic structure
+ *
+ * init: file pointer for matrix text file (not to be confused with sudoku text file)
+ */
 typedef struct
 {
    Sudoku *s;
 
-   int rmax, cmax, ilist, initListCap, numCalls;
-   long int numSols, solCap;
-   Doubly *root, *xrow, *xcol, **initList;
+   int rmax, cmax, numCalls;
+   Doubly *root, *xrow, *xcol;
+
+   Doubly **initList;
+   int ilist, initListCap;
+
    SolTrie *solRoot, *csol, **sols;
-   Doubly *curRow;
+   long int numSols, solCap; 
+
    Hide *hideRoot;
    Heur *heurRoot;
    FILE *init;

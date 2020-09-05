@@ -47,6 +47,11 @@ while it's understandable that when you try larger and larger board sizes\
 that combinatorial explosion will take place for an NP-complete problem, it's\
 interesting that it would occur at 8x8
 
+	version 0.6
+
+annotated and commented in struct.h and some other functions. moved sudoku struct\
+into dance struct to make things easier, doesn't change efficiency much.
+
 	version 0.5
 
 restructed and moved around portions of code: struct.h contains all structs\
