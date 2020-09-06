@@ -106,6 +106,7 @@ typedef struct solTrie
  * boards of higher dimensions
  * gridSize: xy*xy, total size of sudoku board
  * mode: 0 - generating, 1 - solving
+ * filled: number of cells filled, used for unhideRandom
  *
  * in: file pointer for sudoku text file, not to be confused with matrix text file
  */
@@ -137,7 +138,8 @@ typedef struct
  * which is why solCap usually stays at 1, and would make the tree behave
  * as doubly linked list
  *
- * hideRoot: dummy node/entry point for list of Hide structs
+ * hideList: list of pointers to Hide structs
+ * hidden: number of cells currently hidden
  * heurRoot: dummy node/entry point for heuristic structure
  *
  * init: file pointer for matrix text file (not to be confused with sudoku text file)
@@ -156,6 +158,8 @@ typedef struct
    long int numSols, solCap; 
 
    Hide **hideList;
+   int hidden;
+
    Heur *heurRoot;
    FILE *init;
 } Dance;

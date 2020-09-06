@@ -132,6 +132,7 @@ void unhideAllCells(Dance *d)
 void freeHide(Dance *d)
 {
    int igrid;
+
    for(igrid = 0; igrid < d->s->gridSize; igrid++)
    {
       free(d->hideList[igrid]->hrows);
@@ -140,3 +141,15 @@ void freeHide(Dance *d)
 
    free(d->hideList);
 }
+
+void savePuzzle(Dance *d)
+{
+   int igrid;
+
+   for(igrid = 0; igrid < d->s->gridSize; igrid++)
+   {
+      if(d->hideList[igrid]->filled == 0)
+         d->s->grid[igrid] = 0;
+   }
+}
+
