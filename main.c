@@ -6,6 +6,7 @@
 #include "end.h"
 #include "error.h"
 #include "hide.h"
+#include "shuffle.h"
 
 /*
  * argument format: a.out [mode: 1 for solve, 2 for gen] [file: empty to be
@@ -67,6 +68,10 @@ int main(int argc, char *argv[])
 
       savePuzzle(d);
       printBoard(d, d->s->grid);
+
+      shuffle(d);
+      printBoard(d, d->s->grid);
+      unhideAllCells(d);
    }
 
    freeDance(d);
