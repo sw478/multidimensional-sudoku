@@ -4,25 +4,19 @@
  * randomly shuffles the board into another board
  * within the same symmetry group defined by:
  * permutation of sudoku number labeling: (xy)!
- * swapping rows within any row box and cols
- * within any col box: (x!)^y and (y!)^x
+ * swapping rows within any row box: (x!)^y
+ * swapping cols within any col box: (y!)^x
  * swapping box rows and box cols: y! and x!
- * reflecting along the vertical, horizontal,
- * and diagonal centerlines (2^4)
- * 90 degree rotations (4)
- *
- * you could shuffle the board with some certain
- * group operations and end up with the same board
+ * transposing: 2
  */
 void shuffle(Dance *d)
 {
-   //relabel(d);
-   //shuffleRows(d);
-   //shuffleCols(d);
-   //shuffleRowBoxes(d);
-   //shuffleColBoxes(d);
-   reflect(d);
-   //rotate(d);
+   relabel(d);
+   shuffleRows(d);
+   shuffleCols(d);
+   shuffleRowBoxes(d);
+   shuffleColBoxes(d);
+   transpose(d);
 }
 
 void relabel(Dance *d)
@@ -123,48 +117,15 @@ void shuffleColBoxes(Dance *d)
    printf("finished swapping col boxes\n");
 }
 
-void reflect(Dance *d)
-{
-   //if(rand() % 2)
-      //reflectHorizontal(d);
-   //if(rand() % 2)
-      //reflectVertical(d);
-   //if(rand() % 2)
-      reflectDiagonal(d);
-
-   printf("finished relecting\n");
-}
-
-void reflectHorizontal(Dance *d)
-{
-   int *grid = d->s->grid, i, j;
-   int xy = d->s->xy;
-
-   for(i = 0; i < xy; i++)
-   {
-      for(j = 0; j < xy/2; j++)
-         swap(&grid[i*xy + j], &grid[i*xy + xy - j - 1]);
-   }
-}
-
-void reflectVertical(Dance *d)
-{
-   int *grid = d->s->grid, i, j;
-   int xy = d->s->xy;
-
-   for(i = 0; i < xy/2; i++)
-   {
-      for(j = 0; j < xy; j++)
-         swap(&grid[i*xy + j], &grid[(xy - i - 1)*xy + j]);
-   }
-}
-
-void reflectDiagonal(Dance *d)
+void transpose(Dance *d)
 {
    int *grid = d->s->grid, row, col;
    int igrid, xy = d->s->xy, gridSize = xy*xy;
-   int *new = malloc(gridSize*sizeof(int));
+   int *new;
 
+   if(rand() % 2)
+      return;
+   new = malloc(gridSize*sizeof(int));
    for(igrid = 0; igrid < gridSize; igrid++)
    {
       row = igrid / xy;
@@ -174,21 +135,6 @@ void reflectDiagonal(Dance *d)
 
    free(grid);
    d->s->grid = new;
-}
-
-void rotate(Dance *d)
-{
-   int i, irand = rand() % 4;
-
-   for(i = 0; i < irand; i++)
-      rotateOnce(d);
-
-   printf("finished rotating\n");
-}
-
-void rotateOnce(Dance *d)
-{
-
 }
 
 /*
@@ -208,9 +154,11 @@ int *shuffledList(int len)
       swap(&nums[irand], &nums[i]);
    }
 
-   //for(i = 0; i < len; i++)
-   //   printf("%d ", nums[i]);
-   //printf("\n");
+/*
+   for(i = 0; i < len; i++)
+      printf("%d ", nums[i]);
+   printf("\n");
+*/
 
    return nums;
 }

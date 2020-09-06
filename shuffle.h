@@ -11,12 +11,6 @@ void shuffleRows(Dance *d);
 void shuffleCols(Dance *d);
 void shuffleRowBoxes(Dance *d);
 void shuffleColBoxes(Dance *d);
-void reflect(Dance *d);
-void rotate(Dance *d);
-
-void reflectHorizontal(Dance *d);
-void reflectVertical(Dance *d);
-void reflectDiagonal(Dance *d);
-void rotateOnce(Dance *d);
+void transpose(Dance *d);
 
 #endif
