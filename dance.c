@@ -1,6 +1,6 @@
 #include "dance.h"
 #include "solTrie.h"
-#include "aux.h"
+#include "auxil.h"
 #include "heuristic.h"
 
 /*

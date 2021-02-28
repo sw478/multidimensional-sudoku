@@ -1,6 +1,6 @@
 #include "hide.h"
 #include "heuristic.h"
-#include "aux.h"
+#include "auxil.h"
 
 /*
  * initializes hide structure

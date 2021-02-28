@@ -1,5 +1,5 @@
 #include "main.h"
-#include "aux.h"
+#include "auxil.h"
 #include "setup.h"
 #include "sew.h"
 #include "heuristic.h"

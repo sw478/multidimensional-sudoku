@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="acb63964-e607-4a00-9c7f-42978a38cfeb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.c" beforeDir="false" afterPath="$PROJECT_DIR$/setup.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,26 +50,45 @@
   <component name="TaskManager">
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="WindowStateProjectService">
     <state x="739" y="298" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1614482757179">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="739" y="298" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614482757179" />
-    <state width="1900" height="186" key="GridCell.Tab.0.bottom" timestamp="1614497511058">
+    <state x="732" y="322" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1614548462036">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1900" height="186" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1614497511058" />
-    <state width="1900" height="186" key="GridCell.Tab.0.center" timestamp="1614497511058">
+    <state x="732" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1614548462036" />
+    <state x="93" y="93" width="1733" height="853" key="DiffContextDialog" timestamp="1614548470910">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1900" height="186" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1614497511058" />
-    <state width="1900" height="186" key="GridCell.Tab.0.left" timestamp="1614497511058">
+    <state x="93" y="93" width="1733" height="853" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614548470910" />
+    <state width="1900" height="186" key="GridCell.Tab.0.bottom" timestamp="1614548379377">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1900" height="186" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1614497511058" />
-    <state width="1900" height="186" key="GridCell.Tab.0.right" timestamp="1614497511058">
+    <state width="1900" height="186" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1614548379377" />
+    <state width="1900" height="186" key="GridCell.Tab.0.center" timestamp="1614548379376">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1900" height="186" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1614497511058" />
+    <state width="1900" height="186" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1614548379376" />
+    <state width="1900" height="186" key="GridCell.Tab.0.left" timestamp="1614548379376">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1900" height="186" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1614548379376" />
+    <state width="1900" height="186" key="GridCell.Tab.0.right" timestamp="1614548379376">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1900" height="186" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1614548379376" />
   </component>
 </project>

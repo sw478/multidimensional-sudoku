@@ -32,6 +32,17 @@ If the above is the input matrix, a solution would be the set of rows { B, D, F 
 
 As you can see, each column has no more than, or less than, one X.
 
+For sudokus, we can model them by seeing that for a board with:
+
+    box dimensions = x & y,
+    row, col, and box size = xy
+    gridSize = xy*xy
+    
+we have 4 types of "constraints": values through xy must be in a row, column, and box, and no more than one value can be in a
+single cell. These constraints are what define the matrix's columns (4*gridSize), and its rows represent the possible placement
+of values, as well as the possible value (xy*gridSize).
+
+Solving the matrix in this way allows us to easily find a solution for a sudoku puzzle.
 
 ## components
 
@@ -167,6 +178,60 @@ sudoku board with the same dimensions can also be run now without having to rein
 
 If you wanted to use this for another exact cover problem, the code has been made modular so you can just swap out and
 create your own function that writes to a matrix coordinate file. The overall process is the same.
+
+## matrixFile creation
+
+Python can't be used for this project efficiently, but can be used to write to the matrixFile
+
+#### second sudoku matrix setup
+
+Instead of each row describing a single placement of a value and its position, each row will
+describe the placement of xy number of values (ex. where all the ones are) and no two can
+overlap, which makes this a valid modification of the first matrix setup
+
+    irow: value*layoutNumber (xy*numLayout)
+    icol: value associated with layout (xy) and number of cells in a sudoku board (x*y)^2
+    
+There are only a finite number of possible layouts, and they can be visualized as such:
+
+    .   X   .   |   .   .   .   |   .   .   .
+    .   .   .   |   X   .   .   |   .   .   .
+    .   .   .   |   .   .   .   |   .   X   .
+    _   _   _       _   _   _       _   _   _
+    .   .   .   |   .   X   .   |   .   .   .
+    .   .   .   |   .   .   .   |   .   .   X
+    X   .   .   |   .   .   .   |   .   .   .
+    _   _   _       _   _   _       _   _   _
+    .   .   X   |   .   .   .   |   .   .   .
+    .   .   .   |   .   .   .   |   X   .   .
+    .   .   .   |   .   .   X   |   .   .   .
+    
+For a 3x3 board, in each sudoku box, n*m here describes the number of possibilities for where you can place an additional
+number of the same value as the rest
+
+    3*3 3*2 3*1
+    2*3 2*2 2*1
+    1*3 1*2 1*1
+    
+    num_layouts = (x!^y)*(y!^x)
+
+While it's definitely a large number of layouts, the layouts only need to be calculated once, and you can reuse the set
+of layouts for any other sudoku with the same dimensions.
+
+But now there's a tradeoff between memory space and efficiency: with this setup, you would still have to create a matrix
+with a row dimension equal to num_layouts*xy. (col dimension would just be xy + xy*xy)
+
+## todo
+
+#### short term goals
+
+improve user interface\
+add boards for higher dimensions, ex. 2x2x2, 2x3x4, 3x3x3x3\
+figure out an efficient way to generate boards
+
+#### long term goals
+
+design an app/web app for this program
 
 ## data
 
