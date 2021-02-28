@@ -4,5 +4,5 @@ a.out
 /dance
 /tests/g
 /.idea/
-/.idea/workspace.xml
+.idea/workspace.xml
 *.xml

@@ -12,11 +12,24 @@ class Doubly():
         self.heur = None
 
 class solTrie():
-    def __init__(self):
+    def __init__(self, xrow):
         self.parent = self
+        self.xrow = xrow
+        self.children = []
+        self.numSols = 0
 
     def setParent(self, parent):
         self.parent = parent
+
+    def addChild(self, child):
+        self.children.append(child)
+
+    def incNumSols(self):
+        temp = self
+        temp.numSols += 1
+        while(temp.parent != temp):
+            temp.parent.numSols += 1
+            temp = temp.parent
 
 class Hide():
     def __init__(self):
@@ -89,8 +102,7 @@ class Dance():
         self.cmax = cmax
         self.root = Doubly(rmax, cmax)
         self.xcol = self.xrow = self.root
-        self.hideList = []
-        self.solRoot = solTrie()
+        self.solRoot = solTrie(None)
         self.csol = self.solRoot
         self.sols = []
         self.numSols = 0
@@ -104,8 +116,8 @@ class Dance():
         initList = []
         for line in lines:
             line = line.split(" ")
-            irow = line[0]
-            icol = line[1]
+            irow = int(line[0])
+            icol = int(line[1])
 
             initList.append(Doubly(irow, icol))
 
@@ -113,13 +125,17 @@ class Dance():
 
     def setSudoku(self, sudoku):
         self.s = sudoku
+        self.hideList = [None]*self.s.gridSize
+
+    def addLeaf(self):
+        self.sols.append(self.csol)
 
     def connectRows(self, initList):
         hrow = self.root
         prev = -1
 
         # sort initList by rows in increasing order
-        initList = sorted(initList, key=itemgetter(0))
+        initList.sort(key=lambda x: x.drow)
 
         for cur in initList:
             irow = cur.drow
@@ -146,7 +162,7 @@ class Dance():
         prev = -1
 
         # sort initList by cols in increasing order
-        initList = sorted(initList, key=itemgetter(1))
+        initList.sort(key=lambda x: x.dcol)
 
         for cur in initList:
             icol = cur.dcol
@@ -199,7 +215,7 @@ class Dance():
             hcol = hcol.right
 
     def initHide(self):
-        grid = self.s.board
+        grid = self.s.grid
         xy = self.s.xy
         num = 0
 
@@ -253,8 +269,8 @@ class Dance():
             while(xrow != hrow):
                 xrow.up.down = xrow.down
                 xrow.down.up = xrow.up
-                xrow.hcol.dorw -= 1
-                xrow.hcol.heur.decHeur()
+                xrow.hcol.drow -= 1
+                #xrow.hcol.heur.decHeur()
 
                 xrow = xrow.right
 
@@ -277,7 +293,7 @@ class Dance():
                 xrow.up.down = xrow
                 xrow.down.up = xrow
                 xrow.hcol.drow += 1
-                xrow.hcol.heur.incHeur()
+                #xrow.hcol.heur.incHeur()
 
                 xrow = xrow.right
 
@@ -383,16 +399,15 @@ class Dance():
             xcol = xcol.right
             pcol += 1
 
-        for pcol in range(self.cmax):
+        while(pcol < self.cmax):
             res += "0"
+            pcol += 1
         res += "\n"
 
         return res
 
     def __repr__(self):
         res = ""
-        pcol = 0
-
         res += self.printColHeaders()
 
         xrow = self.root.down
@@ -422,6 +437,109 @@ class Dance():
             xrow = xrow.down
         res += "\n"
 
+        return res
+
+    def algorithmX(self):
+        x = 1
+
+        if(self.root == self.root.right):
+            self.addLeaf()
+            return 0
+        self.numCalls += 1
+
+        if(self.heurRoot.hnext == self.heurRoot):
+            return 1
+        hcol = self.heurRoot.hnext.next.hcol
+        #hcol = self.heuristic()
+
+        listSize = hcol.drow - self.rmax
+        hitList = [0]*listSize
+
+        #xrow = nextRow(hcol, listSize, hitList)
+        xrow = hcol.down
+        while(xrow != hcol):
+            sol = solTrie(xrow.hrow)
+            self.csol.addChild(sol)
+            self.csol = sol
+
+            self.coverRow(xrow)
+            ret = self.algorithmX()
+            if(ret != 1):
+                x = 0
+
+            self.uncoverRow(xrow)
+
+            self.csol = self.csol.parent
+            if(x == 1):
+                del self.csol.children[-1]
+            if(x == 0 and d.s.mode == 2):
+                break
+
+            xrow = xrow.down
+        return x
+
+    def coverRow(self, node):
+        xrow = node.right
+        while(xrow != node):
+            self.coverCol(xrow)
+            xrow = xrow.right
+        self.coverCol(xrow)
+
+    def uncoverRow(self, node):
+        self.uncoverCol(node)
+        xrow = node.left
+        while(xrow != node):
+            self.uncoverCol(xrow)
+            xrow = xrow.left
+
+    def coverCol(self, xrow):
+        hcol = xrow.hcol
+        hcol.right.left = hcol.left
+        hcol.left.right = hcol.right
+        self.root.dcol -= 1
+
+        xcol = hcol.down
+        while(xcol != hcol):
+            xcol.hcol.drow -= 1
+            xcol.hrow.dcol -= 1
+
+            xrow2 = xcol.right
+            while(xrow2 != xcol):
+                xrow2.up.down = xrow2.down
+                xrow2.down.up = xrow2.up
+                xrow2.hcol.drow -= 1
+                xrow2.hrow.dcol -= 1
+                # xrow2.hcol.heur.decHeur()
+
+                xrow2 = xrow2.right
+            # xrow2.hcol.heur.decHeur()
+
+            xcol = xcol.down
+
+    def uncoverCol(self, xrow):
+        hcol = xrow.hcol
+        hcol.right.left = hcol
+        hcol.left.right = hcol
+        self.root.dcol += 1
+
+        xcol = hcol.down
+        while(xcol != hcol):
+            xcol.hcol.drow += 1
+            xcol.hrow.dcol += 1
+
+            xrow2 = xcol.right
+            while(xrow2 != xcol):
+                xrow2.up.down = xrow2
+                xrow2.down.up = xrow2
+                xrow2.hcol.drow += 1
+                xrow2.hrow.dcol += 1
+                # xrow2.hcol.heur.incHeur()
+
+                xrow2 = xrow2.right
+            # xrow2.hcol.heur.incHeur()
+
+            xcol = xcol.down
+
 class Sudoku():
     def __init__(self, grid, x, y):
         self.grid = grid
@@ -449,8 +567,8 @@ def initMatrixFileSudoku(x, y):
             irow = igrid * xy + inum
             icol.append(igrid)
             icol.append(inum + sr*xy + gridSize)
-            icol.append(inum + sc*xy + gridSize)
-            icol.append(inum + sb*xy + gridSize)
+            icol.append(inum + sc*xy + gridSize * 2)
+            icol.append(inum + sb*xy + gridSize * 3)
 
             for i in range(4):
                 f.write("%d %d\n" % (irow, icol[i]))
@@ -488,7 +606,7 @@ def readSudokuBoard(fileName):
     y = int(x_y[1])
     board = board[1:]
     board.remove("")
-    print(board)
+
     return Sudoku(board, x, y)
 
 def main():
@@ -503,16 +621,20 @@ def main():
     rmax, cmax = initMatrixFileSudoku(s.x, s.y)
     maxtrixFile = "dance/ds0r%dc%d" % (s.y, s.x)
     d = Dance(maxtrixFile, rmax, cmax)
+    print(d)
     d.setSudoku(s)
     d.initHeurList()
 
     if(mode == 1):
         d.initHide()
         d.hideAllCells()
+    print(d)
 
     d.coverRowHeaders()
+    print(d)
 
     d.uncoverRowHeaders()
+    print(d)
 
     if(mode == 1):
         d.unhideAllCells()
