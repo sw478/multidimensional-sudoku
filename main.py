@@ -1,7 +1,4 @@
-import random
-import time
 import sys
-from operator import itemgetter
 
 class Doubly():
     def __init__(self, drow, dcol):
@@ -105,6 +102,7 @@ class Dance():
         self.solRoot = solTrie(None)
         self.csol = self.solRoot
         self.sols = []
+        self.hideList = []
         self.numSols = 0
         self.numCalls = 0
         self.heurRoot = None
@@ -125,7 +123,6 @@ class Dance():
 
     def setSudoku(self, sudoku):
         self.s = sudoku
-        self.hideList = [None]*self.s.gridSize
 
     def addLeaf(self):
         self.sols.append(self.csol)
@@ -224,7 +221,7 @@ class Dance():
         for igrid in range(self.s.gridSize):
             h = Hide()
             h.num = grid[igrid]
-            self.hideList[igrid] = h
+            self.hideList.append(h)
             h.hrows = [None for i in range(xy-1)]
             h.filled = 0
 
@@ -472,7 +469,7 @@ class Dance():
             self.csol = self.csol.parent
             if(x == 1):
                 del self.csol.children[-1]
-            if(x == 0 and d.s.mode == 2):
+            if(x == 0 and self.s.mode == 2):
                 break
 
             xrow = xrow.down
