@@ -23,7 +23,7 @@ Example from wikipedia:
     E   .   X   X   .   .   X   X
     F   .   X   .   .   .   .   X
 
-If the above is the input matrix, a solution would be the set of rows (B, D, F):
+If the above is the input matrix, a solution would be the set of rows { B, D, F }:
 
         1   2   3   4   5   6   7
     B   X   .   .   X   .   .   .
@@ -37,14 +37,14 @@ As you can see, each column has no more than, or less than, one X.
 
 #### doubly and dance
 
-The main data structure used here is the dancing link matrix ("dance"). It's a two dimensional linked "list" made up of
-objects/structs ("doubly") that can point to other doubly in four directions (left, right, up, down). It stores its own
-coordinates ("drow", "dcol"), as well as an extra pointer to its column header for ease of use. In the above example, each
-Doubly object would represent an X, and each Doubly would point to the closest Doubly to their left, right, above, and below.
-Having pointers set up like this enables the program to make common operations on the matrix fast.
+The main data structure used here is the dancing link matrix ("dance"). It's a two dimensional linked "list"/matrix made up of
+objects/structs ("doubly") that can point to other doubly. It stores its own coordinates ("drow", "dcol"), as well as an extra
+pointer to its headers for ease of use. In the above example, each Doubly object would represent an X, and each Doubly would
+point to the closest Doubly to their left, right, above, and below. Having pointers set up like this enables the program to
+make common operations, such as traversing the matrix, fast that would be otherwise slow with something else like a 2D array.
 For example, the two most common operations is covering and uncovering a doubly.
 
-These operations
+These operations:
 
     doubly->next->prev = doubly->prev
     doubly->prev->next = doubly->next
@@ -54,9 +54,13 @@ cover a doubly without having to delete it, and
     doubly->next->prev = doubly
     doubly->prev->next = doubly
 
-uncovers it. Of course, the doubly is stored somewhere where you can easily recover it.
+uncovers it.
 
-You wouldn't be able to do something like this quickly with something like a 2d array.
+In Algorithm X, you usually cover and uncover rows and columns at a time, but you don't need to store the location of each
+covered doubly. If you covered doubly1, then covered doubly2 (doubly1's immediate neighbor) doubly1 still has a pointer to
+doubly2. And so now you can cover as many doubly as you want, and you only need memory for a single one.
+
+note: uncovering doubly has to be done precisely in reverse order, otherwise the matrix would then be messed up
 
 #### root, column & row headers
 
@@ -174,7 +178,7 @@ longest recorded time to create a random fully populated board of varying sizes:
 5x5: 0.6 sec\
 5x6: 18 sec\
 6x6: 5 mins\
-7x7: not yet tried
+7x7: unknown / too long
 
 time to create a canonical fully populated board of varying sizes:\
 (rows are chosen deterministically)\
@@ -197,4 +201,4 @@ time to create a canonical fully populated board of varying sizes:\
 7x7: 2.5 sec\
 7x8: 12 sec\
 7x9: 25 sec\
-8x8: more than 10 mins / unknown
+8x8: unknown / too long
