@@ -1,7 +1,7 @@
 # sudoku
 
 This project features a sudoku solver written in C. C was chosen since a good portion of this code takes advantage
-of pointer logic. It uses Donald Knuth's Algorithm X and dancing links data structure to solve this exact cover problem.
+of pointer logic. It uses Donald Knuth's Algorithm X and a dancing links data structure to solve this exact cover problem.
 This program can be used to solve other exact cover problems, such as pentomino tiling or the n-queens problem.
 
 	https://en.wikipedia.org/wiki/Exact_cover
@@ -163,3 +163,38 @@ sudoku board with the same dimensions can also be run now without having to rein
 
 If you wanted to use this for another exact cover problem, the code has been made modular so you can just swap out and
 create your own function that writes to a matrix coordinate file. The overall process is the same.
+
+## data
+
+longest recorded time to create a random fully populated board of varying sizes:\
+(rows are chosen nondeterministically)\
+3x3: 0.05 sec\
+4x4: 0.14 sec\
+4x5: 0.26 sec\
+5x5: 0.6 sec\
+5x6: 18 sec\
+6x6: 5 mins\
+7x7: not yet tried
+
+time to create a canonical fully populated board of varying sizes:\
+(rows are chosen deterministically)\
+3x3: 0.035 sec\
+3x17: 12 sec\
+3x18: 5 sec\
+3x19: 55 sec\
+4x4: 0.13 sec\
+4x12: 2 min 30 sec\
+5x5: 0.48 sec\
+5x10: 2 sec\
+5x11: 4 sec\
+5x12: 6 sec\
+5x13: 1 min 21 sec\
+6x6: 0.9 sec\
+6x7: 1.2 sec\
+6x8: 1.4 sec\
+6x9: 3 sec\
+6x10: 4 min 45 sec\
+7x7: 2.5 sec\
+7x8: 12 sec\
+7x9: 25 sec\
+8x8: more than 10 mins / unknown
