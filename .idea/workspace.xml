@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="acb63964-e607-4a00-9c7f-42978a38cfeb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/images/dancing_links.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/sudoku_seppuku.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.c" beforeDir="false" afterPath="$PROJECT_DIR$/setup.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/matrixFileCreator.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,11 +34,20 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\trUser\PycharmProjects\sudoku\images" />
+    </key>
+  </component>
   <component name="RunManager">
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="matrixFileCreator" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="sudoku" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -32,7 +59,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\trUser\PycharmProjects\sudoku\matrixFileCreator.py" />
       <option name="PARAMETERS" value="1 tests/s/2x2.in" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -43,7 +70,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
+        <item itemvalue="Python.matrixFileCreator" />
       </list>
     </recent_temporary>
   </component>
@@ -61,19 +88,22 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="739" y="298" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1614482757179">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="739" y="298" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614482757179" />
-    <state x="732" y="322" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1614548462036">
+    <state x="732" y="322" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1614548639923">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="732" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1614548462036" />
-    <state x="93" y="93" width="1733" height="853" key="DiffContextDialog" timestamp="1614548470910">
+    <state x="732" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1614548639923" />
+    <state x="93" y="93" width="1733" height="853" key="DiffContextDialog" timestamp="1614548803722">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="93" y="93" width="1733" height="853" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614548470910" />
+    <state x="93" y="93" width="1733" height="853" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614548803722" />
     <state width="1900" height="186" key="GridCell.Tab.0.bottom" timestamp="1614548379377">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

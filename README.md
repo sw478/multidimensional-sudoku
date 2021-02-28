@@ -4,14 +4,16 @@ This project features a sudoku solver written in C. C was chosen since a good po
 of pointer logic. It uses Donald Knuth's Algorithm X and a dancing links data structure to solve this exact cover problem.
 This program can be used to solve other exact cover problems, such as pentomino tiling or the n-queens problem.
 
-	https://en.wikipedia.org/wiki/Exact_cover
-	https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
-    https://en.wikipedia.org/wiki/Dancing_Links
+* https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
+* https://en.wikipedia.org/wiki/Dancing_Links
+* https://en.wikipedia.org/wiki/Exact_cover
+
+![seppuku](images/sudoku_seppuku.png)
 
 ## logic
 
-Given a list of coordinates for an exact cover matrix, solution(s) are found by finding a set of rows with coordinates that
-span all possible columns, but no more than once.
+Given a list of coordinates for an exact cover matrix, solution(s) are found by finding a set of disjoint rows with coordinates that
+span all columns.
 
 Example from wikipedia:
 
@@ -73,6 +75,8 @@ doubly2. And so now you can cover as many doubly as you want, and you only need 
 
 note: uncovering doubly has to be done precisely in reverse order, otherwise the matrix would then be messed up
 
+![dancing links](images/dancing_links.png)
+
 #### root, column & row headers
 
 Frequently referenced as "hcol" and "hrow", the column and row headers are also doubly objects, as well as the matrix root.
@@ -108,29 +112,33 @@ This can also be done by using negative values to represent the number of elemen
         # doubly is an hcol
     
     num_elements_below = -1 * doubly->drow
-    
-I personally didn't choose that way in case I wanted to use unsigned ints in the future.
 
+This wasn't chosen simply in case unsigned ints were to be used in the future.
+
+note: an "empty" matrix just means all the column headers have been covered
 note: rmax and cmax are just the dimensions of the matrix
-note: row headers aren't needed for the computation itself, but it's useful for printing and identifying solutions
+note: row headers aren't used for the computation itself, but are useful for printing and identifying solutions, and
+initializing the matrix
 
 #### solTrie
 
 The solTrie objects are used to store the solution(s). Each row in the set of a solution will be pointed to by a solTrie
-object. If a matrix has a single solution, the tree will just be a list. There's also no necessary order to the list/tree.
-The tree grows along with the algorithm, since each call to Algorithm X is associated with a row.
+object. If a matrix has a single solution, the tree will just be a list, otherwise, it'll just be a normal tree with its
+leaves signifying a solution. There's also no necessary order to the list/tree.
+The tree grows along with the algorithm, since each call to Algorithm X is associated with a candidate matrix row.
 
-note: solTrie doesn't actually make up a trie, but did at the beginning
+note: solTrie isn't technically a trie
 
 #### hide
 
 The hide object is just a list of rows that you want to hide from the matrix. This is useful because all sudokus of the
-same dimension have the same initial matrix, but given different clues, you can eliminate different rows. Initializing
-the matrix can be costly if you wanted to solve multiple sudokus, so this allows you to initialize it just once.
+same dimension have the same initial matrix, but given different clues, you eliminate different rows. Initializing
+the matrix can be costly if you wanted to solve multiple sudokus, so this allows you to initialize it just once. This
+functionality can also be helpful in generating sudokus.
 
 #### heur & heurList
 
-In Algorithm X, you have a list of columns to choose from. Once heuristic is choosing a column with the least amount of
+In Algorithm X, you have a list of columns to choose from. One heuristic is choosing a column with the least amount of
 elements underneath. heurList is a list of list of heur objects. Each heur is tied to a column header, along with the number
 of elements currently underneath it. When a doubly under a column header is covered or uncovered, the column header's element
 count is appropriately incremented or decremented, the heur it's linked to is moved from one heur list to another, and a
@@ -164,8 +172,8 @@ This enables you to get a column header with minimal elements underneath in O(1)
 
 The incrementing and decrementing operations are also in O(1) time.
 Choosing a column with minimal elements, while a heuristic, doesn't guarantee a faster solve though.
-For some boards, The program was faster if had it choose a random column, so its commented out at the
-moment.
+For some cases, The program can be faster if it chose a random column or the first uncovered column,
+so its commented out at the moment.
 
 ## process
 
@@ -181,45 +189,7 @@ create your own function that writes to a matrix coordinate file. The overall pr
 
 ## matrixFile creation
 
-Python can't be used for this project efficiently, but can be used to write to the matrixFile
-
-#### second sudoku matrix setup
-
-Instead of each row describing a single placement of a value and its position, each row will
-describe the placement of xy number of values (ex. where all the ones are) and no two can
-overlap, which makes this a valid modification of the first matrix setup
-
-    irow: value*layoutNumber (xy*numLayout)
-    icol: value associated with layout (xy) and number of cells in a sudoku board (x*y)^2
-    
-There are only a finite number of possible layouts, and they can be visualized as such:
-
-    .   X   .   |   .   .   .   |   .   .   .
-    .   .   .   |   X   .   .   |   .   .   .
-    .   .   .   |   .   .   .   |   .   X   .
-    _   _   _       _   _   _       _   _   _
-    .   .   .   |   .   X   .   |   .   .   .
-    .   .   .   |   .   .   .   |   .   .   X
-    X   .   .   |   .   .   .   |   .   .   .
-    _   _   _       _   _   _       _   _   _
-    .   .   X   |   .   .   .   |   .   .   .
-    .   .   .   |   .   .   .   |   X   .   .
-    .   .   .   |   .   .   X   |   .   .   .
-    
-For a 3x3 board, in each sudoku box, n*m here describes the number of possibilities for where you can place an additional
-number of the same value as the rest
-
-    3*3 3*2 3*1
-    2*3 2*2 2*1
-    1*3 1*2 1*1
-    
-    num_layouts = (x!^y)*(y!^x)
-
-While it's definitely a large number of layouts, the layouts only need to be calculated once, and you can reuse the set
-of layouts for any other sudoku with the same dimensions.
-
-But now there's a tradeoff between memory space and efficiency: with this setup, you would still have to create a matrix
-with a row dimension equal to num_layouts*xy. (col dimension would just be xy + xy*xy)
+While difficult to implement pointers in python effectively, it can be used for writing to the matrixFile
 
 ## todo
 

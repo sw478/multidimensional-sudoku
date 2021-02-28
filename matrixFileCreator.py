@@ -31,6 +31,7 @@ def initMatrixFileSudoku(x, y):
 
 # first xy columns are for which number is associated with the layout
 # next xy*xy columns refer to the layout's grid cell positions
+# filename is ds2_(y)x(x), s2 meaning the second matrix setup for sudoku
 def initMatrixFileSudoku2(x, y):
     xy = x*y
     fileName = "dance/ds2_%dx%d.txt" % (y, x)
@@ -41,15 +42,18 @@ def initMatrixFileSudoku2(x, y):
     xplist = []
     yplist = []
 
+    # get all permutations of _list into _plist
     heap(xplist, x, xlist)
     heap(yplist, y, ylist)
 
+    # get all permutations of y number of xplists and x number of yplists
     xfy_powlist = iter(y, [], xplist, [])
     yfx_powlist = iter(x, [], yplist, [])
 
     print(len(xfy_powlist))
     print(len(yfx_powlist))
 
+    # total number of layouts for this set of dimensions
     print(len(xfy_powlist)*len(yfx_powlist))
 
     coords_list = []
