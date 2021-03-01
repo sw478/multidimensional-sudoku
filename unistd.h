@@ -9,7 +9,7 @@
 
 #include <stdlib.h>
 #include <io.h>
-/* #include <getopt.h> /* getopt at: https://gist.github.com/bikerm16/1b75e2dd20d839dcea58 */
+// #include <getopt.h> /* getopt at: https://gist.github.com/bikerm16/1b75e2dd20d839dcea58 */
 #include <process.h> /* for getpid() and the exec..() family */
 #include <direct.h> /* for _getcwd() and _chdir() */
 
@@ -28,7 +28,7 @@
 #define execve _execve
 #define ftruncate _chsize
 #define unlink _unlink
-#define fileno _fileno
+/* #define fileno _fileno */
 #define getcwd _getcwd
 #define chdir _chdir
 #define isatty _isatty

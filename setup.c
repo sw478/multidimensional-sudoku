@@ -27,8 +27,6 @@ int initDance(Dance *d)
    d->root->up = d->root->down = d->root->left = d->root->right = d->root;
    d->xcol = d->xrow = d->root->hcol = d->root->hrow = d->root;
 
-   d->hideList = malloc(d->s->gridSize*sizeof(Hide*));
-
    d->solRoot = initTrie(NULL);
    d->csol = d->solRoot->parent = d->solRoot;
    d->numSols = 0;

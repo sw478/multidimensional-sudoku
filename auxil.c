@@ -28,7 +28,7 @@ void printMatrix(Dance *d)
    int pcol = 0, irow, nrow;
    Doubly *xcol, *xrow;
 
-   printColHeaders(d);
+   //printColHeaders(d);
 
    for(xrow = d->root->down; xrow != d->root; xrow = xrow->down)
    {
@@ -78,8 +78,9 @@ void printSolutions(Dance *d)
    for(i = 0; i < d->numSols; i++)
    {
       printf("\n\nsol %d: \n", i + 1);
-      //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
-      printSingleSol_Sudoku(d, d->sols[i]); /* prints the solution as a sudoku grid */
+      printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
+      //printSingleSol_Sudoku(d, d->sols[i]); /* prints the solution as a sudoku grid */
+      //printSingleSol_Sudoku2(d, d->sols[i]);
    }
    printf("\n\n");
 }
@@ -92,7 +93,7 @@ void printSingleSol_Matrix(Dance *d, SolTrie *sol)
    if(sol == d->solRoot)
       return;
 
-   printColHeaders(d);
+   //printColHeaders(d);
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {
       printf("%3d: ", cur->row->drow);
@@ -124,6 +125,31 @@ void printSingleSol_Sudoku(Dance *d, SolTrie *sol)
       num = drow % xy;
       igrid = drow / xy;
       grid[igrid] = num + 1;
+   }
+   printBoard(d, grid);
+   free(grid);
+}
+
+void printSingleSol_Sudoku2(Dance *d, SolTrie *sol)
+{
+   SolTrie *cur;
+   int num, igrid, xy = d->s->xy, *grid;
+   Doubly *hrow, *xrow;
+
+   if(!sol->row)
+      return;
+   grid = calloc(d->cmax, sizeof(int));
+
+   for(cur = sol; cur->parent != cur; cur = cur->parent)
+   {
+      hrow = cur->row;
+      num = hrow->drow % xy;
+
+      for(xrow = hrow->right->right; xrow != hrow; xrow = xrow->right)
+      {
+         igrid = xrow->dcol - xy;
+         grid[igrid] = num + 1;
+      }
    }
    printBoard(d, grid);
    free(grid);

@@ -10,7 +10,7 @@
  * cell values are known
  * 
  * xy1 is xy-1 since the number of row headers that can be covered
- * for a signle cell is one less than the # of possible cell numbers
+ * for a single cell is one less than the # of possible cell numbers
  *
  * uses the values from d->s->grid, so for generation must
  * be called after saveSolution
@@ -19,12 +19,14 @@
  *
  * d->hideList is allocated memory in initDance
  */
-int initHide(Dance *d)
+int initHide_Sudoku(Dance *d)
 {
    Doubly *xrow;
    int *grid = d->s->grid, igrid, xy = d->s->xy, gridSize = d->s->gridSize;
    int ihide, num;
    Hide *h;
+
+   d->hideList = malloc(d->s->gridSize*sizeof(Hide*));
 
    xrow = d->root->down;
    for(igrid = 0; igrid < gridSize; igrid++)
@@ -142,7 +144,7 @@ void freeHide(Dance *d)
    free(d->hideList);
 }
 
-void savePuzzle(Dance *d)
+void saveGeneratedPuzzle(Dance *d)
 {
    int igrid;
 
@@ -153,3 +155,50 @@ void savePuzzle(Dance *d)
    }
 }
 
+/*
+   in this variation, there will only be one hide struct in d->hideList,
+   and its hrows will contain all the rows to be hidden.
+
+   h->num and h->filled aren't used in this
+*/
+int initHide_Sudoku2(Dance *d)
+{
+   Doubly *xrow;
+   int *grid = d->s->grid, igrid, xy = d->s->xy, gridSize = d->s->gridSize;
+   int ihide, num;
+   Hide *h;
+
+   d->hideList = malloc(sizeof(Hide*));
+   h = malloc(sizeof(Hide));
+   d->hideList[0] = h;
+   
+   h->num = 0;
+   h->filled = 0;
+   h->hrows = malloc((xy-1)*sizeof(Doubly));
+
+   xrow = d->root->down;
+   for(igrid = 0; igrid < gridSize; igrid++)
+   {
+
+      if(grid[igrid] == 0)
+      {
+         for(ihide = 0; ihide < xy; ihide++, xrow = xrow->down);
+         continue;
+      }
+
+      for(ihide = 0; ihide < xy-1; xrow = xrow->down)
+      {
+         num = (xrow->drow % xy) + 1;
+         if(grid[igrid] == num)
+            continue;
+         h->hrows[ihide] = xrow;
+         ihide++;
+      }
+      if(num != xy)
+         xrow = xrow->down;
+    
+   }
+   assert(xrow == d->root);
+
+   return 0;
+}
