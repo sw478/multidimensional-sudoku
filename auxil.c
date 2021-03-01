@@ -75,7 +75,8 @@ void printSolutions(Dance *d)
    for(i = 0; i < d->numSols; i++)
    {
       printf("\n\nsol %d: ", i + 1);
-      printSingleSol2(d, d->sols[i]);
+      printSingleSol(d, d->sols[i]); /* prints rows of matrices */
+      // printSingleSol2(d, d->sols[i]); /* prints the solution as a sudoku grid */
    }
    printf("\n\n");
 }

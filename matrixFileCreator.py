@@ -1,11 +1,18 @@
 
 fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800]
 
+# to solve a custom exact cover problem, you have to write your own
+# initMatrixFile() function. it will have to return the dimensions
+# of the matrix (rmax, cmax) and change MATRIX_FILE to a custom file
+# location. once AlgorithmX is done running, solTrie will have the rows
+# of your solution stored. you can use printSolutions() in auxil.c to
+# print out all your solutions
+
 def initMatrixFileSudoku(x, y):
     xy = x*y
     gridSize = xy*xy
-    fileName = "dance/ds1_%dx%d.txt" % (y, x)
-    f = open(fileName, "w")
+    matrixFile = "dance/ds1_%dx%d.txt" % (y, x)
+    f = open(matrixFile, "w")
 
     for igrid in range(gridSize):
         sr = igrid // xy
