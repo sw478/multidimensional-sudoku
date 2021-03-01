@@ -7,7 +7,8 @@
 #include <limits.h>
 #include <assert.h>
 #include <time.h>
-#include <unistd.h>
+/* #include <unistd.h> */
+#include <io.h>
 #define BUFSIZE 1000
 
 /*

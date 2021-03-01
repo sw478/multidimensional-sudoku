@@ -8,7 +8,7 @@ echo $USAGE
 read type
 
 if [ "$type" = "q" ]; then
-   exit 1
+   exit 0
 
 elif [ "$type" = "m" ]; then
    make clean
@@ -45,6 +45,8 @@ elif [ "$type" = "v" ]; then
    valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${mode} tests/${mode}/${row}x${col}.in
 
 elif [ "$type" = "b" ]; then
+   make clean
+   make
    ./a.out ${mode} tests/${mode}/${row}x${col}.in
 fi
 
