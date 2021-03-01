@@ -7,3 +7,6 @@ a.out
 CppProperties.json
 workspace.code-workspace
 .vscode/
+unistd_io.h
+
+test.sh
