@@ -68,20 +68,23 @@ void printColHeaders(Dance *d)
    printf("\n");
 }
 
+/*
+   of course, won't work if matrix isn't solving a sudoku
+*/
 void printSolutions(Dance *d)
 {
    int i;
 
    for(i = 0; i < d->numSols; i++)
    {
-      printf("\n\nsol %d: ", i + 1);
-      printSingleSol(d, d->sols[i]); /* prints rows of matrices */
-      // printSingleSol2(d, d->sols[i]); /* prints the solution as a sudoku grid */
+      printf("\n\nsol %d: \n", i + 1);
+      //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
+      printSingleSol_Sudoku(d, d->sols[i]); /* prints the solution as a sudoku grid */
    }
    printf("\n\n");
 }
 
-void printSingleSol(Dance *d, SolTrie *sol)
+void printSingleSol_Matrix(Dance *d, SolTrie *sol)
 {
    SolTrie *cur;
    Doubly *xcol;
@@ -107,7 +110,7 @@ void printSingleSol(Dance *d, SolTrie *sol)
    printf("\n");
 }
 
-void printSingleSol2(Dance *d, SolTrie *sol)
+void printSingleSol_Sudoku(Dance *d, SolTrie *sol)
 {
    SolTrie *cur;
    int drow, num, igrid, xy = d->s->xy, *grid;
@@ -152,30 +155,6 @@ void printHeur(Dance *d)
       printf("\n");
    }
    printf("\n");
-}
-
-int saveSolution(Dance *d)
-{
-   SolTrie *cur;
-   int num, igrid, rowNum, xy = d->s->xy, *grid = d->s->grid;
-
-   if(d->numSols > 1)
-   {
-      printf("\n%lu solutions found\n", d->numSols);
-      return d->numSols;
-   }
-   else if(d->numSols == 0)
-      return 0;
-
-   for(cur = d->sols[0]; cur->parent != cur; cur = cur->parent)
-   {
-      rowNum = cur->row->drow;
-      num = rowNum % xy;
-      igrid = rowNum / xy;
-      grid[igrid] = num + 1;
-   }
-
-   return 0;
 }
 
 void checkMatrix(Dance *d)

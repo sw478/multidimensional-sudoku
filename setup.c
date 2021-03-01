@@ -69,20 +69,20 @@ int initMatrixFileSudoku(Dance *d)
    int igrid = 0, inum = 0, sr = 0, sc = 0, sb = 0;
    int x = d->s->x, y = d->s->y, xy = d->s->xy, gridSize = d->s->gridSize;
    int irow, icol[4], i;
-   char *fileName = malloc(BUFSIZE*sizeof(char));
+   char *matrixFile = malloc(BUFSIZE*sizeof(char));
 
-   sprintf(fileName, "dance/ds1_%dx%d.txt", y, x);
+   sprintf(matrixFile, "dance/ds1_%dx%d.txt", y, x);
 
    d->rmax = xy*gridSize;
    d->cmax = 4*gridSize;
 
-   if(access(fileName, F_OK) != -1)
+   if(access(matrixFile, F_OK) != -1)
    {
-      d->init = fopen(fileName, "r+");
-      free(fileName);
+      d->init = fopen(matrixFile, "r+");
+      free(matrixFile);
       return 1;
    }
-   d->init = fopen(fileName, "w+");
+   d->init = fopen(matrixFile, "w+");
 
    for(igrid = 0; igrid < gridSize; igrid++)
    {
@@ -103,7 +103,7 @@ int initMatrixFileSudoku(Dance *d)
       }
    }
 
-   free(fileName);
+   free(matrixFile);
    return 0;
 }
 
