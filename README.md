@@ -1,8 +1,9 @@
 # sudoku
 
 This project features a sudoku solver written in C. C was chosen since a good portion of this code takes advantage
-of pointer logic. It uses Donald Knuth's Algorithm X and a dancing links data structure to solve this exact cover problem.
-This program can be used to solve other exact cover problems, such as pentomino tiling or the n-queens problem.
+of pointer logic. Using Donald Knuth's Algorithm X and a dancing links data structure, we are able to solve this
+exact cover problem. Since the algorithm and data structure is meant for exact cover problems in general, this
+program can be used to solve those other problems, such as pentomino tiling and the n-queens problem.
 
 * https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
 * https://en.wikipedia.org/wiki/Dancing_Links
