@@ -60,9 +60,6 @@ def initMatrixFileSudoku2(x, y):
     print(len(xfy_powlist))
     print(len(yfx_powlist))
 
-    # total number of layouts for this set of dimensions
-    print(len(xfy_powlist)*len(yfx_powlist))
-
     coords_list = []
     for xfy_perms in xfy_powlist:
         for yfx_perms in yfx_powlist:
@@ -88,14 +85,12 @@ def initMatrixFileSudoku2(x, y):
                     loc = row * xy + col
                     coords.append(loc)
 
-            printLayout(coords, x, y)
+            #printLayout(coords, x, y)
 
             coords_list.append(coords)
 
     rmax = xy*len(coords_list)
-    cmax = xy*xy
-
-    print(len(coords_list))
+    cmax = xy + xy*xy
 
     irow = 0
     for coords in coords_list:
@@ -108,6 +103,13 @@ def initMatrixFileSudoku2(x, y):
             irow += 1
 
     f.close()
+
+    print("rmax: " + repr(rmax))
+    print("cmax: " + repr(cmax))
+
+
+    print("num_layouts: " + repr(len(coords_list)))
+
     return rmax, cmax
 
 def printLayout(coords, x, y):
@@ -164,7 +166,7 @@ def swap(A, i, j):
 
 def main():
     #initMatrixFileSudoku(x=3, y=3)
-    initMatrixFileSudoku2(x=2, y=3)
+    initMatrixFileSudoku2(x=3, y=3)
 
 if __name__ == "__main__":
     main()
