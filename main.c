@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
    //initMatrixFileSudoku(d); /* writes to matrix file if it doesn't exist*/
    sprintf(matrixFile, "dance/ds2_%dx%d.txt", d->s->y, d->s->x); /* change to your own matrixFile if needed */
    d->init = fopen(matrixFile, "r+");
+   free(matrixFile);
 
    // calculating rmax and cmax
    x = d->s->x;
@@ -82,12 +83,12 @@ int main(int argc, char *argv[])
    if(algorithmX(d) == 1)
       printf("no solutions\n");
 
-   printf("number of calls: %d\n", d->numCalls);
+   //printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
 
    //if(mode == 1)
       //unhideAllCells(d); /* handles memory */
-   printSolutions(d);
+   //printSolutions(d);
    //saveSolution_Sudoku(d); /* translates solTrie matrix rows to sudoku solution */
    saveSolution_Sudoku2(d);
 
