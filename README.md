@@ -32,7 +32,7 @@ If the above is the input matrix, a solution would be the set of rows { B, D, F 
     D   .   .   X   .   X   X   .
     F   .   X   .   .   .   .   X
 
-As you can see, each column has no more than, or less than, one X.
+As you can see, each column has exactly one X.
 
 For sudokus, we can model them by seeing that for a board with:
 
@@ -41,8 +41,8 @@ For sudokus, we can model them by seeing that for a board with:
     gridSize = xy*xy
     
 we have 4 types of "constraints": values through xy must be in a row, column, and box, and no more than one value can be in a
-single cell. These constraints are what define the matrix's columns (4*gridSize), and its rows represent the possible placement
-of values, as well as the possible value (xy*gridSize).
+single cell. These constraints are what define the matrix's columns (4\*gridSize), and its rows represent the possible placement
+of values, as well as the possible value (xy\*gridSize).
 
 Solving the matrix in this way allows us to easily find a solution for a sudoku puzzle.
 

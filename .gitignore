@@ -1,10 +1,7 @@
 *.o
 a.out
 *.swp
-/dance
-/tests/g
 /.idea/
-.idea/workspace.xml
 *.xml
 .vs/
 CppProperties.json
