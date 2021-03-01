@@ -6,3 +6,5 @@ a.out
 /.idea/
 .idea/workspace.xml
 *.xml
+.vs/
+CppProperties.json
