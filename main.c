@@ -63,8 +63,6 @@ int main(int argc, char *argv[])
    printf("rmax: %d\n", d->rmax);
    printf("cmax: %d\n", d->cmax);
 
-   d->hideList = malloc(0);
-
 
    initDance(d); /* initialize dance struct */
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
