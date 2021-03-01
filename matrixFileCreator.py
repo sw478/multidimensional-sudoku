@@ -88,14 +88,17 @@ def initMatrixFileSudoku2(x, y):
                     loc = row * xy + col
                     coords.append(loc)
 
+            printLayout(coords, x, y)
+
             coords_list.append(coords)
 
-    rmax = len(coords_list)
+    rmax = xy*len(coords_list)
     cmax = xy*xy
+
+    print(len(coords_list))
 
     irow = 0
     for coords in coords_list:
-        print(coords)
         for j in range(xy):
             f.write("%d %d\n" % (irow, j))
             for coord in coords:
@@ -106,6 +109,25 @@ def initMatrixFileSudoku2(x, y):
 
     f.close()
     return rmax, cmax
+
+def printLayout(coords, x, y):
+    xy = x * y
+    coords.sort()
+
+    inext = 0
+    for row in range(xy):
+        if (row % y == 0):
+            print("")
+        for col in range(xy):
+            if (col % x == 0):
+                print(" ", end="")
+            if inext < xy and coords[inext] == row * xy + col:
+                print("  X", end="")
+                inext += 1
+            else:
+                print("  _", end="")
+        print("")
+    print("")
 
 def iter(pow, perms, plist, powlist):
     if(pow == 0):
