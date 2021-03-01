@@ -27,8 +27,6 @@ int initDance(Dance *d)
    d->root->up = d->root->down = d->root->left = d->root->right = d->root;
    d->xcol = d->xrow = d->root->hcol = d->root->hrow = d->root;
 
-   d->hideList = malloc(d->s->gridSize*sizeof(Hide*));
-
    d->solRoot = initTrie(NULL);
    d->csol = d->solRoot->parent = d->solRoot;
    d->numSols = 0;
@@ -69,20 +67,20 @@ int initMatrixFileSudoku(Dance *d)
    int igrid = 0, inum = 0, sr = 0, sc = 0, sb = 0;
    int x = d->s->x, y = d->s->y, xy = d->s->xy, gridSize = d->s->gridSize;
    int irow, icol[4], i;
-   char *fileName = malloc(BUFSIZE*sizeof(char));
+   char *matrixFile = malloc(BUFSIZE*sizeof(char));
 
-   sprintf(fileName, "dance/d%dx%d.txt", y, x);
+   sprintf(matrixFile, "dance/ds1_%dx%d.txt", y, x);
 
    d->rmax = xy*gridSize;
    d->cmax = 4*gridSize;
 
-   if(access(fileName, F_OK) != -1)
+   if(access(matrixFile, F_OK) != -1)
    {
-      d->init = fopen(fileName, "r+");
-      free(fileName);
+      d->init = fopen(matrixFile, "r+");
+      free(matrixFile);
       return 1;
    }
-   d->init = fopen(fileName, "w+");
+   d->init = fopen(matrixFile, "w+");
 
    for(igrid = 0; igrid < gridSize; igrid++)
    {
@@ -103,82 +101,8 @@ int initMatrixFileSudoku(Dance *d)
       }
    }
 
-   free(fileName);
+   free(matrixFile);
    return 0;
-}
-
-/*
- * instead of each row describing a single placement of a value and its
- * position, each row will describe the placement of xy number of values
- * (ex. where all the ones are) and no two can overlap, which makes
- * this a valid modification of the first matrix setup
- * 
- * irow: value*layoutNumber (x*y*numLayout)
- * icol: positions on a sudoku board (x*y)^2
- *
- * there are only a set number of possible layouts, and they can be visualized
- * as such:
- *
- * ex. 3x3 board
- * (each a*b corresponds to a x*y box on the suduoku board)
- *
- * 3*3 3*2 3*1
- * 2*3 2*2 2*1
- * 1*3 1*2 1*1
- *
- * this comes out to be: (x!^y)*(y!^x)
- */
-int initMatrixFileSudoku2(Dance *d)
-{
-   int igrid = 0, inum = 0, sr = 0, sc = 0, sb = 0;
-   int x = d->s->x, y = d->s->y, xy = d->s->xy, gridSize = d->s->gridSize;
-   int irow, icol[4], i;
-   char *fileName = malloc(BUFSIZE*sizeof(char));
-
-   sprintf(fileName, "dance/ds2%dx%d.txt", y, x);
-
-   d->rmax = xy*gridSize;
-   d->cmax = 4*gridSize;
-
-   if(access(fileName, F_OK) != -1)
-   {
-      d->init = fopen(fileName, "r+");
-      free(fileName);
-      return 1;
-   }
-   d->init = fopen(fileName, "w+");
-
-   numLayouts = xy*factorial(x)*factorial(y)
-   numRows = numLayouts*xy
-
-   for(igrid = 0; igrid < gridSize; igrid++)
-   {
-      sr = igrid / xy;
-      sc = igrid % xy;
-      sb = (sr / y)*y + sc / x;
-
-      for(inum = 0; inum < xy; inum++)
-      {
-         irow = igrid * xy + inum;
-         icol[0] = igrid;
-         icol[1] = inum + sr*xy + gridSize;
-         icol[2] = inum + sc*xy + gridSize * 2;
-         icol[3] = inum + sb*xy + gridSize * 3;
-
-         for(i = 0; i < 4; i++)
-            fprintf(d->init, "%d %d\n", irow, icol[i]);
-      }
-   }
-
-   free(fileName);
-   return 0;
-}
-
-/* hardcoded because anything n > 10 is unnecessary */
-long int factorial(int n)
-{
-   if(n < 1 || n > 10)
-      factorialError()
 }
 
 void coverRowHeaders(Dance *d)

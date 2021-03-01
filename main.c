@@ -1,5 +1,5 @@
 #include "main.h"
-#include "aux.h"
+#include "auxil.h"
 #include "setup.h"
 #include "sew.h"
 #include "heuristic.h"
@@ -26,6 +26,10 @@ int main(int argc, char *argv[])
 {
    Dance *d = malloc(sizeof(Dance));
    int mode;
+   int x, y, xy, gridSize, xf, yf, xfy, yfx;
+   char *matrixFile = malloc(BUFSIZE*sizeof(char));
+   int fact[11] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800};
+
    d->s = malloc(sizeof(Sudoku));
    srand(time(NULL));
 
@@ -35,16 +39,42 @@ int main(int argc, char *argv[])
    if(mode == 1) /* if solving */
       printBoard(d, d->s->grid);
 
-   initMatrixFileSudoku(d); /* writes to matrix file if it doesn't exist*/
+   //initMatrixFileSudoku(d); /* writes to matrix file if it doesn't exist*/
+   sprintf(matrixFile, "dance/ds2_%dx%d.txt", d->s->y, d->s->x); /* change to your own matrixFile if needed */
+   d->init = fopen(matrixFile, "r+");
+
+   // calculating rmax and cmax
+   x = d->s->x;
+   y = d->s->y;
+   xy = x*y;
+   gridSize = xy*xy;
+
+   xf = fact[x];
+   yf = fact[y];
+   printf("xf: %d\n", xf);
+   printf("yf: %d\n", yf);
+   xfy = (int)(pow(xf, y));
+   yfx = (int)(pow(yf, x));
+   printf("xfy: %d\n", xfy);
+   printf("yfx: %d\n", yfx);
+
+   d->rmax = xy * (xfy*yfx);
+   d->cmax = xy + gridSize;
+   printf("rmax: %d\n", d->rmax);
+   printf("cmax: %d\n", d->cmax);
+
+
    initDance(d); /* initialize dance struct */
-   initMatrix(d); /* reads from matrix file and creates the general matrix for the given dimensions */
+   initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
    initHeurList(d); /* initializes the heuristic helper structure */
+
+   printMatrix(d);
 
    if(mode == 1)
    {
-      initHide(d);
-      printf("finished initHide\n");
-      hideAllCells(d); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
+      //initHide_Sudoku(d);
+      //printf("finished initHide\n");
+      //hideAllCells(d); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    }
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished initializing structure\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
@@ -55,18 +85,19 @@ int main(int argc, char *argv[])
    printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
 
-   if(mode == 1)
-      unhideAllCells(d); /* handles memory */
+   //if(mode == 1)
+      //unhideAllCells(d); /* handles memory */
    printSolutions(d);
-   saveSolution(d); /* translates solTrie matrix rows to sudoku solution */
+   //saveSolution_Sudoku(d); /* translates solTrie matrix rows to sudoku solution */
+   saveSolution_Sudoku2(d);
 
    if(mode == 2)
    {
-      initHide(d);
+      initHide_Sudoku(d);
       printf("finished initHide\n");
       hideAllCells(d);
 
-      savePuzzle(d);
+      saveGeneratedPuzzle(d);
       printBoard(d, d->s->grid);
 
       shuffle(d);

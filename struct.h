@@ -7,8 +7,10 @@
 #include <limits.h>
 #include <assert.h>
 #include <time.h>
-#include <unistd.h>
+// #include "unistd.h"
+#include <io.h>
 #define BUFSIZE 1000
+#define F_OK 0
 
 /*
  * a two dimensional linked list of heur headers
