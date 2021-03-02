@@ -46,20 +46,17 @@ int saveSolution_Sudoku2(Dance *d)
    }
    else if(d->numSols == 0)
       return 0;
-    printf("HERE\n");
+   
    for(cur = d->sols[0]; cur->parent != cur; cur = cur->parent)
    {
       hrow = cur->row;
       num = hrow->drow % xy;
-      printf("num: %d |", num + 1);
 
       for(xrow = hrow->right->right; xrow != hrow; xrow = xrow->right)
       {
          igrid = xrow->dcol - xy;
          grid[igrid] = num + 1;
-         printf("%d ", igrid);
       }
-      printf("\n");
    }
 
    return 0;
