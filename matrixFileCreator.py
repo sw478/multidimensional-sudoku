@@ -167,8 +167,8 @@ def swap(A, i, j):
     A[j] = temp
 
 def main():
-    initMatrixFileSudoku(x=3, y=3)
-    #initMatrixFileSudoku2(x=3, y=4)
+    #initMatrixFileSudoku(x=2, y=2)
+    initMatrixFileSudoku2(x=3, y=2)
 
 if __name__ == "__main__":
     main()

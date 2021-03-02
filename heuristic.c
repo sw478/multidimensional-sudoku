@@ -1,7 +1,6 @@
 #include "heuristic.h"
 #include "error.h"
 
-<<<<<<< HEAD
 /* using heur */
 Doubly *heuristic(Dance *d)
 {
@@ -35,8 +34,6 @@ Doubly *heuristic2(Dance *d)
    return minXs;
 }
 
-=======
->>>>>>> 0c6c7655aeba089eddc4b613790f96950b1a084d
 /*
    d->heurRoot acts as a header for hcols with 0 elements underneath
 
