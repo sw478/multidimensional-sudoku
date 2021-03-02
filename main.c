@@ -102,6 +102,7 @@ int runSudoku(int argc, char *argv[])
    return 0;
 }
 
+/* using layouts */
 int runSudoku2(int argc, char *argv[])
 {
    Dance *d = malloc(sizeof(Dance));
