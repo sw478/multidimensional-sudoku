@@ -181,17 +181,20 @@ int hide_Sudoku2(Dance *d)
    /* skip the first xy columns */
    for(hcol = d->root->right; hcol->dcol < xy; hcol = hcol->right);
 
+   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
+      hrow->rowIsHidden = 0;
+
    for(igrid = 0; igrid < gridSize; hcol = hcol->right, igrid++)
    {
       num = grid[igrid];
       if(num == 0)
          continue;
+      num--; /* adjust for off-by-one error */
 
       for(doub = hcol->down; doub != hcol; doub = doub->down)
       {
          if(doub->drow % xy == num)
             continue;
-         
          hrow = doub->hrow;
          if(hrow->rowIsHidden)
             continue;
@@ -227,6 +230,9 @@ int unhide_Sudoku2(Dance *d)
       hrow->rowIsHidden = 0;
       unhideSingleRow(d, hrow);
    }
+
+   free(d->hideList[0]);
+   free(d->hideList);
 
    return 0;
 }

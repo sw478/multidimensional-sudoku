@@ -2,7 +2,7 @@
 #define HEURISTIC_H
 #include "struct.h"
 
-void initHeurList(Dance *d);
+void initHeurList(Dance *d, int maxElements);
 Heur *initHeur(int num);
 void incHeur(Heur *heur);
 void decHeur(Heur *heur);

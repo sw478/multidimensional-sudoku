@@ -24,8 +24,10 @@ int algorithmX(Dance *d)
 
    if(d->heurRoot->hnext == d->heurRoot)
       return 1;
-   //hcol = d->heurRoot->hnext->next->hcol;
-   hcol = heuristic(d);
+   //hcol = heuristic(d);
+   hcol = heuristic2(d);
+   if(hcol == d->root)
+      return 1;
  
    listSize = hcol->drow - d->rmax;
    hitList = calloc(listSize, sizeof(int));
@@ -53,7 +55,11 @@ int algorithmX(Dance *d)
          freeSol(sol);
       }
       if(x == 0 && d->s->mode == 2)
+      {
+         /* if you want to stop at the first solution found,
+            have it break here */
          break;
+      }
    }
 
    free(hitList);
@@ -160,7 +166,27 @@ int uncoverCol(Dance *d, Doubly *xrow)
    return 0;
 }
 
+/* using heur */
 Doubly *heuristic(Dance *d)
+{
+   Heur *heurHeader;
+
+   // find the first non-empty heur header
+   for(heurHeader = d->heurRoot->hnext; heurHeader != d->heurRoot; heurHeader = heurHeader->hnext)
+   {
+      if(heurHeader->next != heurHeader)
+         break;
+   }
+
+   // signifying none has been found
+   if(heurHeader == d->heurRoot)
+      return d->root;
+
+   return heurHeader->next->hcol;
+}
+
+/* original setup, O(cmax) time */
+Doubly *heuristic2(Dance *d)
 {
    Doubly *hcol, *minXs;
 

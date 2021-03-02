@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
    initDance(d); /* initialize dance struct */
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
-   initHeurList(d); /* initializes the heuristic helper structure */
+   initHeurList(d, 0); /* initializes the heuristic helper structure */
 
    //printMatrix(d);
 
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
    }
 
    hide_Sudoku2(d);
-   //printMatrix(d);
+   printMatrix(d);
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished initializing structure\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
    //if(mode == 1)
       //unhideAllCells(d); /* handles memory */
-   //printSolutions(d);
+   printSolutions(d);
    //saveSolution_Sudoku(d); /* translates solTrie matrix rows to sudoku solution */
    saveSolution_Sudoku2(d);
 
