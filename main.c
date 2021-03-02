@@ -26,9 +26,7 @@ int main(int argc, char *argv[])
 {
    Dance *d = malloc(sizeof(Dance));
    int mode;
-   int x, y, xy, xf, yf, xfy, yfx;
    char *matrixFile = malloc(BUFSIZE*sizeof(char));
-   int fact[11] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800};
 
    d->s = malloc(sizeof(Sudoku));
    srand(time(NULL));
@@ -44,36 +42,27 @@ int main(int argc, char *argv[])
    d->init = fopen(matrixFile, "r+");
    free(matrixFile);
 
-   // calculating rmax and cmax
-   x = d->s->x;
-   y = d->s->y;
-   xy = x*y;
-   xf = fact[x];
-   yf = fact[y];
-   xfy = (int)(pow(xf, y));
-   yfx = (int)(pow(yf, x));
-   d->rmax = xy * (xfy*yfx);
-   d->cmax = xy + xy*xy;
-   printf("rmax: %d\n", d->rmax);
-   printf("cmax: %d\n", d->cmax);
-
+   setMatrixDimensions(d);
 
    initDance(d); /* initialize dance struct */
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
-   initHeurList(d, 0); /* initializes the heuristic helper structure */
+   initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
 
+   //printHeur(d);
    //printMatrix(d);
 
    if(mode == 1)
    {
       //initHide_Sudoku(d);
-      //printf("finished initHide\n");
+      //printf("finished hide\n");
       //hideAllCells(d); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    }
-
    hide_Sudoku2(d);
-   printMatrix(d);
+   printf("finished hide\n");
+   
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
+   printf("finished cover\n");
+
    printf("finished initializing structure\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
    if(algorithmX(d) == 1)
@@ -106,6 +95,24 @@ int main(int argc, char *argv[])
    freeDance(d);
 
    return 0;
+}
+
+void setMatrixDimensions(Dance *d)
+{
+   int x, y, xy, xf, yf, xfy, yfx;
+   int fact[11] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800};
+
+   x = d->s->x;
+   y = d->s->y;
+   xy = x*y;
+   xf = fact[x];
+   yf = fact[y];
+   xfy = (int)(pow(xf, y));
+   yfx = (int)(pow(yf, x));
+   d->rmax = xy * (xfy*yfx);
+   d->cmax = xy + xy*xy;
+   printf("rmax: %d\n", d->rmax);
+   printf("cmax: %d\n", d->cmax);
 }
 
 void parseArgs(Dance *d, int argc, char *argv[])

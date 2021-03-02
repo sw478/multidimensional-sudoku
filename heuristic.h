@@ -4,8 +4,8 @@
 
 void initHeurList(Dance *d, int maxElements);
 Heur *initHeur(int num);
-void incHeur(Heur *heur);
-void decHeur(Heur *heur);
+void incHeur(Dance *d, Heur *heur, int amount);
+void decHeur(Dance *d, Heur *heur, int amount);
 void freeHeur(Dance *d);
 void freeHeurHead(Heur *head);
 

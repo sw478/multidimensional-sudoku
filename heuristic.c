@@ -1,4 +1,5 @@
 #include "heuristic.h"
+#include "error.h"
 
 /*
    d->heurRoot acts as a header for hcols with 0 elements underneath
@@ -19,7 +20,8 @@ void initHeurList(Dance *d, int maxColElements)
       maxColElements = d->rmax;
 
    // initialize heur headers from the back
-   for(hnum = 1; hnum < maxColElements; hnum++)
+   // note off by one
+   for(hnum = 1; hnum < maxColElements + 1; hnum++)
    {
       newHeurHeader = initHeur(hnum);
       newHeurHeader->hnext = d->heurRoot;
@@ -45,58 +47,68 @@ void initHeurList(Dance *d, int maxColElements)
       heur->prev = heurHeader->prev;
       heurHeader->prev->next = heur;
       heurHeader->prev = heur;
-      heur->head = heurHeader;
+      heur->heurHeader = heurHeader;
    }
 }
 
 Heur *initHeur(int num)
 {
    Heur *heur = malloc(sizeof(Heur));
-   heur->head = heur->prev = heur->next = heur;
+   heur->heurHeader = heur->prev = heur->next = heur;
    heur->hprev = heur->hnext = heur;
    heur->num = num;
 
    return heur;
 }
 
-void incHeur(Heur *heur)
+void incHeur(Dance *d, Heur *heur, int amount)
 {
-   Heur *head = heur->head;
+   Heur *head = heur->heurHeader;
+   int i;
 
    // remove heur from current heur sublist
-   heur->num++;
+   heur->num += amount;
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
 
+   if(((Doubly*)heur->hcol)->drow - d->rmax != heur->num)
+      heurNumError();
+
    // go to correct heur header
-   head = head->hnext;
+   for(i = 0; i < amount; i++)
+      head = head->hnext;
 
    // add heur to heur header
    heur->next = head;
    heur->prev = head->prev;
    head->prev->next = heur;
    head->prev = heur;
-   heur->head = head;
+   heur->heurHeader = head;
 }
 
-void decHeur(Heur *heur)
+void decHeur(Dance *d, Heur *heur, int amount)
 {
-   Heur *head = heur->head;
+   Heur *head = heur->heurHeader;
+   int i;
 
    // remove heur from current heur sublist
-   heur->num--;
+   heur->num -= amount;
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
 
+   if(((Doubly*)heur->hcol)->drow - d->rmax != heur->num)
+      heurNumError();
+
    // go to correct heur header
-   head = head->hprev;
+   for(i = 0; i < amount; i++)
+      head = head->hprev;
 
    // add heur to heur header
    heur->next = head;
    heur->prev = head->prev;
    head->prev->next = heur;
    head->prev = heur;
-   heur->head = head;
+   heur->heurHeader = head;
 }
 
 void freeHeur(Dance *d)

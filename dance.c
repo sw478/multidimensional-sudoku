@@ -12,7 +12,7 @@ int algorithmX(Dance *d)
 {
    Doubly *hcol, *xrow;
    int x = 1, ret;
-   int listSize, *hitList;
+   //int listSize, *hitList;
    SolTrie *sol;
 
    if(d->root == d->root->right)
@@ -22,15 +22,15 @@ int algorithmX(Dance *d)
    }
    d->numCalls++;
 
-   if(d->heurRoot->hnext == d->heurRoot)
-      return 1;
-   //hcol = heuristic(d);
-   hcol = heuristic2(d);
+   hcol = heuristic(d);
+   //hcol = heuristic2(d);
    if(hcol == d->root)
       return 1;
+   
+//printHeur(d);
  
-   listSize = hcol->drow - d->rmax;
-   hitList = calloc(listSize, sizeof(int));
+   //listSize = hcol->drow - d->rmax;
+   //hitList = calloc(listSize, sizeof(int));
 
    //xrow = nextRow(hcol, &listSize, &hitList);
    xrow = hcol->down;
@@ -62,7 +62,7 @@ int algorithmX(Dance *d)
       }
    }
 
-   free(hitList);
+   //free(hitList);
    return x;
 }
 
@@ -120,9 +120,9 @@ int coverCol(Dance *d, Doubly *xrow)
          xrow2->down->up = xrow2->up;
          xrow2->hcol->drow--;
          xrow2->hrow->dcol--;
-         decHeur(xrow2->hcol->heur);
+         decHeur(d, xrow2->hcol->heur, 1);
       }
-      decHeur(xrow2->hcol->heur);
+      decHeur(d, xcol->hcol->heur, 1);
    }
 
    return 0;
@@ -158,9 +158,9 @@ int uncoverCol(Dance *d, Doubly *xrow)
          xrow2->down->up = xrow2;
          xrow2->hcol->drow++;
          xrow2->hrow->dcol++;
-         incHeur(xrow2->hcol->heur);
+         incHeur(d, xrow2->hcol->heur, 1);
       }
-      incHeur(xrow2->hcol->heur);
+      incHeur(d, xcol->hcol->heur, 1);
    }
 
    return 0;
@@ -171,18 +171,18 @@ Doubly *heuristic(Dance *d)
 {
    Heur *heurHeader;
 
+   if(d->heurRoot->hnext == d->heurRoot)
+      return d->root;
+
    // find the first non-empty heur header
    for(heurHeader = d->heurRoot->hnext; heurHeader != d->heurRoot; heurHeader = heurHeader->hnext)
    {
       if(heurHeader->next != heurHeader)
-         break;
+         return heurHeader->next->hcol;
    }
 
    // signifying none has been found
-   if(heurHeader == d->heurRoot)
-      return d->root;
-
-   return heurHeader->next->hcol;
+   return d->root;
 }
 
 /* original setup, O(cmax) time */
