@@ -162,20 +162,26 @@ void printHeur(Dance *d)
 
    printf("heuristics: \n");
 
-   printf("r: ");
-   for(heur = head->next; heur != head; heur = heur->next)
+   if(head->next != head)
    {
-      hcol = ((Doubly*)heur->hcol);
-      printf("%d ", hcol->dcol);
+      printf("r: ");
+      for(heur = head->next; heur != head; heur = heur->next)
+      {
+         hcol = ((Doubly*)heur->hcol);
+         printf("%d ", hcol->dcol);
+      }
+      printf("\n");
    }
-   printf("\n");
 
    for(head = d->heurRoot->hnext; head != d->heurRoot; head = head->hnext)
    {
+      if(head->next == head)
+         continue;
       printf("%d: ", head->num);
       for(heur = head->next; heur != head; heur = heur->next)
       {
          hcol = ((Doubly*)heur->hcol);
+         assert(hcol->drow - d->rmax == heur->num);
          printf("%d ", hcol->dcol);
       }
       printf("\n");

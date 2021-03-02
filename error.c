@@ -22,7 +22,13 @@ void usage()
 
 void numArgError()
 {
-   fprintf(stderr, "Num Arg Error");
+   fprintf(stderr, "Num Arg Error\n");
+   exit(EXIT_FAILURE);
+}
+
+void heurNumError()
+{
+   fprintf(stderr, "Heur Num Error\n");
    exit(EXIT_FAILURE);
 }
 

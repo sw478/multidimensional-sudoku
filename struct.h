@@ -33,7 +33,7 @@ typedef struct heur
 {
    /* used for hcol heurs */
    void *hcol;
-   struct heur *head, *prev, *next;
+   struct heur *heurHeader, *prev, *next;
 
    /* used for heur headers */
    struct heur *hprev, *hnext;

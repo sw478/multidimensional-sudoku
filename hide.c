@@ -79,7 +79,7 @@ int hideSingleCell(Dance *d, int igrid)
          xrow->up->down = xrow->down;
          xrow->down->up = xrow->up;
          xrow->hcol->drow--;
-         decHeur(xrow->hcol->heur);
+         decHeur(d, xrow->hcol->heur, 1);
       }
    }
    h->filled = 1;
@@ -107,7 +107,7 @@ int unhideSingleCell(Dance *d, int igrid)
          xrow->up->down = xrow;
          xrow->down->up = xrow;
          xrow->hcol->drow++;
-         incHeur(xrow->hcol->heur);
+         incHeur(d, xrow->hcol->heur, 1);
       }
    }
    h->filled = 0;
@@ -243,8 +243,11 @@ int hideSingleRow(Dance *d, Doubly *hrow)
 
    for(doub = hrow->right; doub != hrow; doub = doub->right)
    {
+      doub->hcol->drow--;
+      doub->hrow->dcol--;
       doub->up->down = doub->down;
       doub->down->up = doub->up;
+      decHeur(d, doub->hcol->heur, 1);
    }
 
    hrow->up->down = hrow->down;
@@ -259,8 +262,11 @@ int unhideSingleRow(Dance *d, Doubly *hrow)
 
    for(doub = hrow->right; doub != hrow; doub = doub->right)
    {
+      doub->hcol->drow++;
+      doub->hrow->dcol++;
       doub->up->down = doub;
       doub->down->up = doub;
+      incHeur(d, doub->hcol->heur, 1);
    }
 
    hrow->up->down = hrow;
