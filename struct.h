@@ -59,6 +59,7 @@ typedef struct doubly
    int drow, dcol;
    struct doubly *up, *down, *left, *right, *hcol, *hrow;
    Heur *heur;
+   int rowIsHidden;
 } Doubly;
 
 /*
@@ -159,7 +160,7 @@ typedef struct
    long int numSols, solCap; 
 
    Hide **hideList;
-   int hidden;
+   int hidden, hideCap, ihide;
 
    Heur *heurRoot;
    FILE *init;
