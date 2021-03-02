@@ -9,4 +9,3 @@ workspace.code-workspace
 .vscode/
 unistd_io.h
 test.sh
-/dance
