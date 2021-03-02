@@ -232,9 +232,7 @@ int unhide_Sudoku2(Dance *d)
       hrow->rowIsHidden = 0;
       unhideSingleRow(d, hrow);
    }
-   d->ihide = 0;
-
-   free(d->hideList[0]);
+   d->ihide = 1;
 
    return 0;
 }
