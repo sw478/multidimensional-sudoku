@@ -2,8 +2,6 @@
 #define DANCE_H
 #include "struct.h"
 
-Doubly *heuristic(Dance *d);
-Doubly *heuristic2(Dance *d);
 Doubly *randHCol(Dance *d);
 int coverRow(Dance *d, Doubly *node);
 int coverCol(Dance *d, Doubly *xrow);

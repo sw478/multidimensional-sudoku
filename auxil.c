@@ -189,6 +189,9 @@ void printHeur(Dance *d)
    printf("\n");
 }
 
+/*
+   use if you want to assert the matrix is stitched together properly
+*/
 void checkMatrix(Dance *d)
 {
    Doubly *hcol, *hrow, *doub;
@@ -206,6 +209,7 @@ void checkMatrix(Dance *d)
    }
 }
 
+/* assert doubly is uncovered and stitched properly */
 void checkDoubly(Doubly *doub)
 {
    assert(doub->left->right == doub);

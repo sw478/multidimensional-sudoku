@@ -7,6 +7,8 @@
 #include "error.h"
 #include "hide.h"
 #include "shuffle.h"
+#include "setMatrixDimensions.h"
+#include "hrowCover.h"
 
 /*
  * argument format: a.out [mode: 1 for solve, 2 for gen] [file: empty to be
@@ -42,7 +44,7 @@ int main(int argc, char *argv[])
    d->init = fopen(matrixFile, "r+");
    free(matrixFile);
 
-   setMatrixDimensions(d);
+   setMatrixDimensions_Sudoku2(d);
 
    initDance(d); /* initialize dance struct */
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
@@ -95,24 +97,6 @@ int main(int argc, char *argv[])
    freeDance(d);
 
    return 0;
-}
-
-void setMatrixDimensions(Dance *d)
-{
-   int x, y, xy, xf, yf, xfy, yfx;
-   int fact[11] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800};
-
-   x = d->s->x;
-   y = d->s->y;
-   xy = x*y;
-   xf = fact[x];
-   yf = fact[y];
-   xfy = (int)(pow(xf, y));
-   yfx = (int)(pow(yf, x));
-   d->rmax = xy * (xfy*yfx);
-   d->cmax = xy + xy*xy;
-   printf("rmax: %d\n", d->rmax);
-   printf("cmax: %d\n", d->cmax);
 }
 
 void parseArgs(Dance *d, int argc, char *argv[])

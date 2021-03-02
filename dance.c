@@ -165,36 +165,3 @@ int uncoverCol(Dance *d, Doubly *xrow)
 
    return 0;
 }
-
-/* using heur */
-Doubly *heuristic(Dance *d)
-{
-   Heur *heurHeader;
-
-   if(d->heurRoot->hnext == d->heurRoot)
-      return d->root;
-
-   // find the first non-empty heur header
-   for(heurHeader = d->heurRoot->hnext; heurHeader != d->heurRoot; heurHeader = heurHeader->hnext)
-   {
-      if(heurHeader->next != heurHeader)
-         return heurHeader->next->hcol;
-   }
-
-   // signifying none has been found
-   return d->root;
-}
-
-/* original setup, O(cmax) time */
-Doubly *heuristic2(Dance *d)
-{
-   Doubly *hcol, *minXs;
-
-   for(hcol = minXs = d->root->right; hcol != d->root; hcol = hcol->right)
-   {
-      if(hcol->drow < minXs->drow)
-         minXs = hcol;
-   }
-
-   return minXs;
-}

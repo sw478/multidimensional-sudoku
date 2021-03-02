@@ -82,8 +82,8 @@ def initMatrixFileSudoku2(x, y):
                     row += col_coords[irow][icol]
                     col += row_coords[irow][icol]
 
-                    loc = row * xy + col
-                    coords.append(loc)
+                    coord = row * xy + col
+                    coords.append(coord)
 
             #printLayout(coords, x, y)
 
@@ -166,7 +166,7 @@ def swap(A, i, j):
 
 def main():
     #initMatrixFileSudoku(x=3, y=3)
-    initMatrixFileSudoku2(x=3, y=3)
+    initMatrixFileSudoku2(x=3, y=4)
 
 if __name__ == "__main__":
     main()

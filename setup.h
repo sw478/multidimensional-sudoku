@@ -4,7 +4,5 @@
 
 int initDance(Dance *d);
 int initMatrixFileSudoku(Dance *d);
-void coverRowHeaders(Dance *d);
-void uncoverRowHeaders(Dance *d);
 
 #endif
