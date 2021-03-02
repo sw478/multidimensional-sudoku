@@ -77,6 +77,7 @@ int runSudoku(int argc, char *argv[])
 
    printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
+   unhide_Sudoku2(d);
 
    if(mode == 1)
       unhideAllCells(d); /* handles memory */
