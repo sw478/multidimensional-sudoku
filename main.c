@@ -27,8 +27,8 @@
 int main(int argc, char *argv[])
 {
    srand(time(NULL));
-   runSudoku(argc, argv);
-   //runSudoku2(argc, argv);
+   //runSudoku(argc, argv);
+   runSudoku2(argc, argv);
 }
 
 int runSudoku(int argc, char *argv[])
@@ -82,7 +82,6 @@ int runSudoku(int argc, char *argv[])
       unhideAllCells(d); /* handles memory */
    printSolutions_Sudoku(d);
    saveSolution_Sudoku(d); /* translates solTrie matrix rows to sudoku solution */
-   unhideAllCells(d);
 
    if(mode == 2)
    {

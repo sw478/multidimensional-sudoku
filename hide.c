@@ -57,6 +57,7 @@ int initHide_Sudoku(Dance *d)
     
    }
    assert(xrow == d->root);
+   d->ihide = d->s->gridSize;
 
    return 0;
 }
@@ -134,12 +135,12 @@ void unhideAllCells(Dance *d)
 
 void freeHide(Dance *d)
 {
-   int igrid;
+   int ihide;
 
-   for(igrid = 0; igrid < d->s->gridSize; igrid++)
+   for(ihide = 0; ihide < d->ihide; ihide++)
    {
-      free(d->hideList[igrid]->hrows);
-      free(d->hideList[igrid]);
+      free(d->hideList[ihide]->hrows);
+      free(d->hideList[ihide]);
    }
 
    free(d->hideList);
@@ -231,9 +232,9 @@ int unhide_Sudoku2(Dance *d)
       hrow->rowIsHidden = 0;
       unhideSingleRow(d, hrow);
    }
+   d->ihide = 0;
 
    free(d->hideList[0]);
-   free(d->hideList);
 
    return 0;
 }
