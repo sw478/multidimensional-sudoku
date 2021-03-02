@@ -71,7 +71,7 @@ void printColHeaders(Dance *d)
 /*
    of course, won't work if matrix isn't solving a sudoku
 */
-void printSolutions(Dance *d)
+void printSolutions_Sudoku(Dance *d)
 {
    int i;
 
@@ -79,7 +79,19 @@ void printSolutions(Dance *d)
    {
       printf("\n\nsol %d: \n", i + 1);
       //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
-      //printSingleSol_Sudoku(d, d->sols[i]); /* prints the solution as a sudoku grid */
+      printSingleSol_Sudoku(d, d->sols[i]); /* prints the solution as a sudoku grid */
+   }
+   printf("\n\n");
+}
+
+void printSolutions_Sudoku2(Dance *d)
+{
+   int i;
+
+   for(i = 0; i < d->numSols; i++)
+   {
+      printf("\n\nsol %d: \n", i + 1);
+      //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
       printSingleSol_Sudoku2(d, d->sols[i]);
    }
    printf("\n\n");

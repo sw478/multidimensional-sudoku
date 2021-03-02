@@ -39,6 +39,8 @@ def initMatrixFileSudoku(x, y):
 # first xy columns are for which number is associated with the layout
 # next xy*xy columns refer to the layout's grid cell positions
 # filename is ds2_(y)x(x), s2 meaning the second matrix setup for sudoku
+
+# anything above 3x3 creates a ridiculously large matrixFile
 def initMatrixFileSudoku2(x, y):
     xy = x*y
     fileName = "dance/ds2_%dx%d.txt" % (y, x)
@@ -165,8 +167,8 @@ def swap(A, i, j):
     A[j] = temp
 
 def main():
-    #initMatrixFileSudoku(x=3, y=3)
-    initMatrixFileSudoku2(x=3, y=4)
+    initMatrixFileSudoku(x=3, y=3)
+    #initMatrixFileSudoku2(x=3, y=4)
 
 if __name__ == "__main__":
     main()

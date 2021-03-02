@@ -29,6 +29,7 @@ int initHide_Sudoku(Dance *d)
    d->hideList = malloc(d->s->gridSize*sizeof(Hide*));
 
    xrow = d->root->down;
+   
    for(igrid = 0; igrid < gridSize; igrid++)
    {
       h = malloc(sizeof(Hide));

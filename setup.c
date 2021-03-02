@@ -104,5 +104,3 @@ int initMatrixFileSudoku(Dance *d)
    free(matrixFile);
    return 0;
 }
-
-

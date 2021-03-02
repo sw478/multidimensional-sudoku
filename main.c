@@ -26,12 +26,19 @@
  */
 int main(int argc, char *argv[])
 {
+   srand(time(NULL));
+   runSudoku(argc, argv);
+   //runSudoku2(argc, argv);
+}
+
+int runSudoku(int argc, char *argv[])
+{
+
    Dance *d = malloc(sizeof(Dance));
    int mode;
    char *matrixFile = malloc(BUFSIZE*sizeof(char));
 
    d->s = malloc(sizeof(Sudoku));
-   srand(time(NULL));
 
    parseArgs(d, argc, argv); /* gets file pointer of sudoku file*/
    mode = d->s->mode;
@@ -39,46 +46,42 @@ int main(int argc, char *argv[])
    if(mode == 1) /* if solving */
       printBoard(d, d->s->grid);
 
-   //initMatrixFileSudoku(d); /* writes to matrix file if it doesn't exist*/
-   sprintf(matrixFile, "dance/ds2_%dx%d.txt", d->s->y, d->s->x); /* change to your own matrixFile if needed */
+   //initMatrixFileSudoku(d); /* using matrixFileCreator.py probably easier */
+   sprintf(matrixFile, "dance/ds1_%dx%d.txt", d->s->y, d->s->x);
    d->init = fopen(matrixFile, "r+");
    free(matrixFile);
 
-   setMatrixDimensions_Sudoku2(d);
+   setMatrixDimensions_Sudoku(d);
 
    initDance(d); /* initialize dance struct */
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
-   initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
-
-   //printHeur(d);
+   printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
+   
    //printMatrix(d);
+
+   initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
+   printf("finished heur\n");
 
    if(mode == 1)
    {
-      //initHide_Sudoku(d);
-      //printf("finished hide\n");
-      //hideAllCells(d); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
+      initHide_Sudoku(d);
+      hideAllCells(d); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    }
-   hide_Sudoku2(d);
    printf("finished hide\n");
    
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished cover\n");
-
-   printf("finished initializing structure\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
    if(algorithmX(d) == 1)
       printf("no solutions\n");
 
    printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
-   unhide_Sudoku2(d);
 
-   //if(mode == 1)
-      //unhideAllCells(d); /* handles memory */
-   printSolutions(d);
-   //saveSolution_Sudoku(d); /* translates solTrie matrix rows to sudoku solution */
-   saveSolution_Sudoku2(d);
+   if(mode == 1)
+      unhideAllCells(d); /* handles memory */
+   printSolutions_Sudoku(d);
+   saveSolution_Sudoku(d); /* translates solTrie matrix rows to sudoku solution */
 
    if(mode == 2)
    {
@@ -93,6 +96,61 @@ int main(int argc, char *argv[])
       printBoard(d, d->s->grid);
       unhideAllCells(d);
    }
+
+   freeDance(d);
+
+   return 0;
+}
+
+int runSudoku2(int argc, char *argv[])
+{
+   Dance *d = malloc(sizeof(Dance));
+   char *matrixFile = malloc(BUFSIZE*sizeof(char));
+
+   d->s = malloc(sizeof(Sudoku));
+
+   parseArgs(d, argc, argv); /* gets file pointer of sudoku file*/
+
+   if(d->s->mode == 2)
+   {
+      fprintf(stderr, "Can't generate puzzles with layout setup\n");
+      error();
+   }
+
+   printBoard(d, d->s->grid);
+ 
+   /* can set to custom matrixFile here */
+   sprintf(matrixFile, "dance/ds2_%dx%d.txt", d->s->y, d->s->x);
+   d->init = fopen(matrixFile, "r+");
+   free(matrixFile);
+
+   setMatrixDimensions_Sudoku2(d);
+
+   initDance(d); /* initialize dance struct */
+   initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
+   printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
+
+   initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
+   printf("finished heur\n");
+   
+   //printHeur(d);
+   //printMatrix(d);
+
+   hide_Sudoku2(d);
+   printf("finished hide\n");
+   
+   coverRowHeaders(d); /* cover all row headers, necessary for program to work */
+   printf("finished cover\n");
+
+   if(algorithmX(d) == 1)
+      printf("no solutions\n");
+
+   printf("number of calls: %d\n", d->numCalls);
+   uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
+   unhide_Sudoku2(d);
+
+   printSolutions_Sudoku2(d);
+   saveSolution_Sudoku2(d);
 
    freeDance(d);
 
