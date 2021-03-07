@@ -29,6 +29,7 @@ int initHide_Sudoku(Dance *d)
    d->hideList = malloc(d->s->gridSize*sizeof(Hide*));
 
    xrow = d->root->down;
+   
    for(igrid = 0; igrid < gridSize; igrid++)
    {
       h = malloc(sizeof(Hide));
@@ -56,6 +57,7 @@ int initHide_Sudoku(Dance *d)
     
    }
    assert(xrow == d->root);
+   d->ihide = d->s->gridSize;
 
    return 0;
 }
@@ -79,7 +81,7 @@ int hideSingleCell(Dance *d, int igrid)
          xrow->up->down = xrow->down;
          xrow->down->up = xrow->up;
          xrow->hcol->drow--;
-         decHeur(xrow->hcol->heur);
+         decHeur(d, xrow->hcol->heur, 1);
       }
    }
    h->filled = 1;
@@ -107,7 +109,7 @@ int unhideSingleCell(Dance *d, int igrid)
          xrow->up->down = xrow;
          xrow->down->up = xrow;
          xrow->hcol->drow++;
-         incHeur(xrow->hcol->heur);
+         incHeur(d, xrow->hcol->heur, 1);
       }
    }
    h->filled = 0;
@@ -133,12 +135,12 @@ void unhideAllCells(Dance *d)
 
 void freeHide(Dance *d)
 {
-   int igrid;
+   int ihide;
 
-   for(igrid = 0; igrid < d->s->gridSize; igrid++)
+   for(ihide = 0; ihide < d->ihide; ihide++)
    {
-      free(d->hideList[igrid]->hrows);
-      free(d->hideList[igrid]);
+      free(d->hideList[ihide]->hrows);
+      free(d->hideList[ihide]);
    }
 
    free(d->hideList);
@@ -159,46 +161,116 @@ void saveGeneratedPuzzle(Dance *d)
    in this variation, there will only be one hide struct in d->hideList,
    and its hrows will contain all the rows to be hidden.
 
+   in the original, we traversed down the row headers, but in this, we traverse
+   the column headers by grid number
+
    h->num and h->filled aren't used in this
 */
-int initHide_Sudoku2(Dance *d)
+int hide_Sudoku2(Dance *d)
 {
-   Doubly *xrow;
+   Doubly *doub, *hcol, *hrow;
    int *grid = d->s->grid, igrid, xy = d->s->xy, gridSize = d->s->gridSize;
-   int ihide, num;
+   int ihide, num, hideCap = 100;
    Hide *h;
 
    d->hideList = malloc(sizeof(Hide*));
    h = malloc(sizeof(Hide));
    d->hideList[0] = h;
    
-   h->num = 0;
-   h->filled = 0;
-   h->hrows = malloc((xy-1)*sizeof(Doubly));
+   ihide = 0;
+   h->hrows = malloc(hideCap*sizeof(Doubly));
 
-   xrow = d->root->down;
-   for(igrid = 0; igrid < gridSize; igrid++)
+   /* skip the first xy columns */
+   for(hcol = d->root->right; hcol->dcol < xy; hcol = hcol->right);
+
+   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
+      hrow->rowIsHidden = 0;
+
+   for(igrid = 0; igrid < gridSize; hcol = hcol->right, igrid++)
    {
-
-      if(grid[igrid] == 0)
-      {
-         for(ihide = 0; ihide < xy; ihide++, xrow = xrow->down);
+      num = grid[igrid];
+      if(num == 0)
          continue;
-      }
+      num--; /* adjust for off-by-one error */
 
-      for(ihide = 0; ihide < xy-1; xrow = xrow->down)
+      for(doub = hcol->down; doub != hcol; doub = doub->down)
       {
-         num = (xrow->drow % xy) + 1;
-         if(grid[igrid] == num)
+         if(doub->drow % xy == num)
             continue;
-         h->hrows[ihide] = xrow;
+         hrow = doub->hrow;
+         if(hrow->rowIsHidden)
+            continue;
+         hrow->rowIsHidden = 1;
+         h->hrows[ihide] = hrow;
+         hideSingleRow(d, hrow);
+
          ihide++;
+         if(ihide > hideCap)
+         {
+            hideCap *= 2;
+            h->hrows = realloc(h->hrows, hideCap*sizeof(Doubly));
+         }
       }
-      if(num != xy)
-         xrow = xrow->down;
-    
    }
-   assert(xrow == d->root);
+
+   h->hrows = realloc(h->hrows, ihide*sizeof(Doubly));
+   d->ihide = ihide;
+
+   return 0;
+}
+
+int unhide_Sudoku2(Dance *d)
+{
+   Doubly *hrow;
+   int i;
+   Hide *h;
+
+   h = d->hideList[0];
+   for(i = 0; i < d->ihide; i++)
+   {
+      hrow = h->hrows[i];
+      hrow->rowIsHidden = 0;
+      unhideSingleRow(d, hrow);
+   }
+   d->ihide = 1; /* have freeHide clean up memory */
+
+   return 0;
+}
+
+int hideSingleRow(Dance *d, Doubly *hrow)
+{
+   Doubly *doub;
+
+   for(doub = hrow->right; doub != hrow; doub = doub->right)
+   {
+      doub->hcol->drow--;
+      doub->hrow->dcol--;
+      doub->up->down = doub->down;
+      doub->down->up = doub->up;
+      decHeur(d, doub->hcol->heur, 1);
+   }
+
+   hrow->up->down = hrow->down;
+   hrow->down->up = hrow->up;
+
+   return 0;
+}
+
+int unhideSingleRow(Dance *d, Doubly *hrow)
+{
+   Doubly *doub;
+
+   for(doub = hrow->right; doub != hrow; doub = doub->right)
+   {
+      doub->hcol->drow++;
+      doub->hrow->dcol++;
+      doub->up->down = doub;
+      doub->down->up = doub;
+      incHeur(d, doub->hcol->heur, 1);
+   }
+
+   hrow->up->down = hrow;
+   hrow->down->up = hrow;
 
    return 0;
 }

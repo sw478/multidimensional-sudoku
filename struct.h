@@ -33,11 +33,13 @@ typedef struct heur
 {
    /* used for hcol heurs */
    void *hcol;
-   struct heur *head, *prev, *next;
+   struct heur *heurHeader, *prev, *next;
 
    /* used for heur headers */
-   int num;
    struct heur *hprev, *hnext;
+
+   /* used for both */
+   int num;
 } Heur;
 
 /*
@@ -58,7 +60,10 @@ typedef struct doubly
 {
    int drow, dcol;
    struct doubly *up, *down, *left, *right, *hcol, *hrow;
+
+   /* could probably move to a struct made for headers that contain doubly */
    Heur *heur;
+   int rowIsHidden;
 } Doubly;
 
 /*
@@ -159,7 +164,7 @@ typedef struct
    long int numSols, solCap; 
 
    Hide **hideList;
-   int hidden;
+   int hidden, hideCap, ihide;
 
    Heur *heurRoot;
    FILE *init;

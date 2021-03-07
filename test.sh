@@ -32,7 +32,7 @@ elif [ "$type" = "g" ]; then
    make clean
    make
 
-elif [ "$type" = "t" ] || [ "$type" = "v" ] || [ "$type" = "b" ]; then
+elif [ "$type" = "t" ] || [ "$type" = "v" ] || [ "$type" = "b" ] || [ "$type" = "e" ]; then
    echo "mode? s to solve, g to generate"
    read mode
    echo "dimension? \"row col\""
@@ -45,9 +45,14 @@ elif [ "$type" = "v" ]; then
    valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${mode} tests/${mode}/${row}x${col}.in
 
 elif [ "$type" = "b" ]; then
-   make clean
    make
    ./a.out ${mode} tests/${mode}/${row}x${col}.in
+
+elif [ "$type" = "e" ]; then
+   make clean
+   make
+   ./a.out ${mode} tests/${mode}/${row}x${col}emp.in
+
 fi
 
 fi

@@ -2,10 +2,12 @@
 #define HEURISTIC_H
 #include "struct.h"
 
-void initHeurList(Dance *d);
+Doubly *heuristic(Dance *d);
+Doubly *heuristic2(Dance *d);
+void initHeurList(Dance *d, int maxElements);
 Heur *initHeur(int num);
-void incHeur(Heur *heur);
-void decHeur(Heur *heur);
+void incHeur(Dance *d, Heur *heur, int amount);
+void decHeur(Dance *d, Heur *heur, int amount);
 void freeHeur(Dance *d);
 void freeHeurHead(Heur *head);
 

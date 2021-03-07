@@ -2,10 +2,11 @@
 #define ERROR_H
 #include "struct.h"
 
+void error();
 void invalidInput();
 void fileError(char *fileName);
 void usage();
-void error();
 void numArgError();
+void heurNumError();
 
 #endif

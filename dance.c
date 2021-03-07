@@ -12,7 +12,7 @@ int algorithmX(Dance *d)
 {
    Doubly *hcol, *xrow;
    int x = 1, ret;
-   int listSize, *hitList;
+   //int listSize, *hitList;
    SolTrie *sol;
 
    if(d->root == d->root->right)
@@ -22,13 +22,15 @@ int algorithmX(Dance *d)
    }
    d->numCalls++;
 
-   if(d->heurRoot->hnext == d->heurRoot)
-      return 1;
-   //hcol = d->heurRoot->hnext->next->hcol;
    hcol = heuristic(d);
+   //hcol = heuristic2(d);
+   if(hcol == d->root)
+      return 1;
+   
+//printHeur(d);
  
-   listSize = hcol->drow - d->rmax;
-   hitList = calloc(listSize, sizeof(int));
+   //listSize = hcol->drow - d->rmax;
+   //hitList = calloc(listSize, sizeof(int));
 
    //xrow = nextRow(hcol, &listSize, &hitList);
    xrow = hcol->down;
@@ -53,10 +55,14 @@ int algorithmX(Dance *d)
          freeSol(sol);
       }
       if(x == 0 && d->s->mode == 2)
+      {
+         /* if you want to stop at the first solution found,
+            have it break here */
          break;
+      }
    }
 
-   free(hitList);
+   //free(hitList);
    return x;
 }
 
@@ -114,9 +120,9 @@ int coverCol(Dance *d, Doubly *xrow)
          xrow2->down->up = xrow2->up;
          xrow2->hcol->drow--;
          xrow2->hrow->dcol--;
-         decHeur(xrow2->hcol->heur);
+         decHeur(d, xrow2->hcol->heur, 1);
       }
-      decHeur(xrow2->hcol->heur);
+      decHeur(d, xcol->hcol->heur, 1);
    }
 
    return 0;
@@ -152,23 +158,10 @@ int uncoverCol(Dance *d, Doubly *xrow)
          xrow2->down->up = xrow2;
          xrow2->hcol->drow++;
          xrow2->hrow->dcol++;
-         incHeur(xrow2->hcol->heur);
+         incHeur(d, xrow2->hcol->heur, 1);
       }
-      incHeur(xrow2->hcol->heur);
+      incHeur(d, xcol->hcol->heur, 1);
    }
 
    return 0;
-}
-
-Doubly *heuristic(Dance *d)
-{
-   Doubly *hcol, *minXs;
-
-   for(hcol = minXs = d->root->right; hcol != d->root; hcol = hcol->right)
-   {
-      if(hcol->drow < minXs->drow)
-         minXs = hcol;
-   }
-
-   return minXs;
 }

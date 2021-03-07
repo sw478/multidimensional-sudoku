@@ -10,6 +10,9 @@ int unhideSingleCell(Dance *d, int igrid);
 void freeHide(Dance *d);
 void saveGeneratedPuzzle(Dance *d);
 
-int initHide_Sudoku2(Dance *d);
+int hide_Sudoku2(Dance *d);
+int unhide_Sudoku2(Dance *d);
+int hideSingleRow(Dance *d, Doubly *hrow);
+int unhideSingleRow(Dance *d, Doubly *hrow);
 
 #endif

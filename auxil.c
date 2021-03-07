@@ -71,16 +71,28 @@ void printColHeaders(Dance *d)
 /*
    of course, won't work if matrix isn't solving a sudoku
 */
-void printSolutions(Dance *d)
+void printSolutions_Sudoku(Dance *d)
 {
    int i;
 
    for(i = 0; i < d->numSols; i++)
    {
       printf("\n\nsol %d: \n", i + 1);
-      printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
-      //printSingleSol_Sudoku(d, d->sols[i]); /* prints the solution as a sudoku grid */
-      //printSingleSol_Sudoku2(d, d->sols[i]);
+      //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
+      printSingleSol_Sudoku(d, d->sols[i]); /* prints the solution as a sudoku grid */
+   }
+   printf("\n\n");
+}
+
+void printSolutions_Sudoku2(Dance *d)
+{
+   int i;
+
+   for(i = 0; i < d->numSols; i++)
+   {
+      printf("\n\nsol %d: \n", i + 1);
+      //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
+      printSingleSol_Sudoku2(d, d->sols[i]);
    }
    printf("\n\n");
 }
@@ -162,17 +174,9 @@ void printHeur(Dance *d)
 
    printf("heuristics: \n");
 
-   printf("r: ");
-   for(heur = head->next; heur != head; heur = heur->next)
+   if(head->next != head)
    {
-      hcol = ((Doubly*)heur->hcol);
-      printf("%d ", hcol->dcol);
-   }
-   printf("\n");
-
-   for(head = d->heurRoot->hnext; head != d->heurRoot; head = head->hnext)
-   {
-      printf("%d: ", head->num);
+      printf("r: ");
       for(heur = head->next; heur != head; heur = heur->next)
       {
          hcol = ((Doubly*)heur->hcol);
@@ -180,9 +184,26 @@ void printHeur(Dance *d)
       }
       printf("\n");
    }
+
+   for(head = d->heurRoot->hnext; head != d->heurRoot; head = head->hnext)
+   {
+      if(head->next == head)
+         continue;
+      printf("%d: ", head->num);
+      for(heur = head->next; heur != head; heur = heur->next)
+      {
+         hcol = ((Doubly*)heur->hcol);
+         assert(hcol->drow - d->rmax == heur->num);
+         printf("%d ", hcol->dcol);
+      }
+      printf("\n");
+   }
    printf("\n");
 }
 
+/*
+   use if you want to assert the matrix is stitched together properly
+*/
 void checkMatrix(Dance *d)
 {
    Doubly *hcol, *hrow, *doub;
@@ -200,6 +221,7 @@ void checkMatrix(Dance *d)
    }
 }
 
+/* assert doubly is uncovered and stitched properly */
 void checkDoubly(Doubly *doub)
 {
    assert(doub->left->right == doub);

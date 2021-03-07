@@ -20,7 +20,7 @@ void freeDance(Dance *d)
    freeSol(d->solRoot);
    free(d->initList);
 
-   //freeHide(d);
+   freeHide(d);
    freeHeur(d);
    free(d->sols);
 

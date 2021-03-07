@@ -40,6 +40,7 @@ def initMatrixFile_Sudoku(x, y):
 # next xy*xy columns refer to the layout's grid cell positions
 # filename is ds2_(y)x(x), s2 meaning the second matrix setup for sudoku
 def initMatrixFile_Sudoku2(x, y):
+    # anything above 3x3 creates a ridiculously large matrixFile
     xy = x*y
     fileName = "dance/ds2_%dx%d.txt" % (y, x)
     f = open(fileName, "w")
@@ -82,8 +83,8 @@ def initMatrixFile_Sudoku2(x, y):
                     row += col_coords[irow][icol]
                     col += row_coords[irow][icol]
 
-                    loc = row * xy + col
-                    coords.append(loc)
+                    coord = row * xy + col
+                    coords.append(coord)
 
             printLayout(coords, x, y)
 
@@ -200,7 +201,7 @@ def initMatrixFile_NQueens(n):
     fileName = "dance/dq_%d.txt" % (n)
     f = open(fileName, "w")
 
-    for i in range(n2):
+    for i in range(n2):g
         row = i % n
         col = i // n
         if(row == 0 and col == 0) or (row == n-1 and col == n-1):

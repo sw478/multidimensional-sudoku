@@ -1,115 +1,147 @@
 #include "heuristic.h"
+#include "error.h"
 
-void initHeurList(Dance *d)
+/* using heur */
+Doubly *heuristic(Dance *d)
+{
+   Heur *heurHeader;
+
+   if(d->heurRoot->hnext == d->heurRoot)
+      return d->root;
+
+   // find the first non-empty heur header
+   for(heurHeader = d->heurRoot->hnext; heurHeader != d->heurRoot; heurHeader = heurHeader->hnext)
+   {
+      if(heurHeader->next != heurHeader)
+         return heurHeader->next->hcol;
+   }
+
+   // signifying none has been found
+   return d->root;
+}
+
+/* original setup, O(cmax) time */
+Doubly *heuristic2(Dance *d)
+{
+   Doubly *hcol, *minXs;
+
+   for(hcol = minXs = d->root->right; hcol != d->root; hcol = hcol->right)
+   {
+      if(hcol->drow < minXs->drow)
+         minXs = hcol;
+   }
+
+   return minXs;
+}
+
+/*
+   d->heurRoot acts as a header for hcols with 0 elements underneath
+
+   maxColElements is optional, set to 0 if unknown
+   maxColElements is just the maximum amount of elements underneath an hcol possible
+*/
+void initHeurList(Dance *d, int maxColElements)
 {
    Doubly *hcol;
-   Heur *heur, *head, *temp;
+   Heur *heur, *heurHeader, *newHeurHeader;
+   int hnum;
    d->heurRoot = initHeur(0);
    d->heurRoot->hcol = ((void*)d->root);
 
+   // if maxColElements set to 0, set maxColElements to d->rmax
+   if(maxColElements < 1)
+      maxColElements = d->rmax;
+
+   // initialize heur headers from the back
+   // note off by one
+   for(hnum = 1; hnum < maxColElements + 1; hnum++)
+   {
+      newHeurHeader = initHeur(hnum);
+      newHeurHeader->hnext = d->heurRoot;
+      newHeurHeader->hprev = d->heurRoot->hprev;
+      d->heurRoot->hprev->hnext = newHeurHeader;
+      d->heurRoot->hprev = newHeurHeader;
+   }
+
    for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
    {
+      // associate heur with current hcol
       heur = initHeur(hcol->drow - d->rmax);
       heur->hcol = ((void*)hcol);
       hcol->heur = heur;
 
-      head = d->heurRoot->hnext;
-      for(; heur->num < head->num; head = head->hnext);
-      if(heur->num != head->num)
-      {
-         temp = initHeur(heur->num);
-         temp->hprev = head->prev;
-         temp->hnext = head;
-         head->hprev->hnext = temp;
-         head->hprev = temp;
-         head = temp;
-      }
+      // find the correct heur header
+      heurHeader = d->heurRoot;
+      for(; heur->num > heurHeader->num; heurHeader = heurHeader->hnext);
+      assert(heur->num == heurHeader->num);
 
-      heur->next = head;
-      heur->prev = head->prev;
-      head->prev->next = heur;
-      head->prev = heur;
-      heur->head = head;
+      // add heur to heur header
+      heur->next = heurHeader;
+      heur->prev = heurHeader->prev;
+      heurHeader->prev->next = heur;
+      heurHeader->prev = heur;
+      heur->heurHeader = heurHeader;
    }
 }
 
 Heur *initHeur(int num)
 {
    Heur *heur = malloc(sizeof(Heur));
-   heur->head = heur->prev = heur->next = heur;
+   heur->heurHeader = heur->prev = heur->next = heur;
    heur->hprev = heur->hnext = heur;
    heur->num = num;
 
    return heur;
 }
 
-void incHeur(Heur *heur)
+void incHeur(Dance *d, Heur *heur, int amount)
 {
-   Heur *head = heur->head, *temp;
+   Heur *head = heur->heurHeader;
+   int i;
 
-   heur->num++;
+   // remove heur from current heur sublist
+   heur->num += amount;
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
 
-   if(head->next == head && head->num != 0)
-   {
-      temp = head->hprev;  
-      head->hnext->hprev = head->hprev;
-      head->hprev->hnext = head->hnext;
-      free(head);
-      head = temp;
-   }
+   if(((Doubly*)heur->hcol)->drow - d->rmax != heur->num)
+      heurNumError();
 
-   head = head->hnext;
-   if(head->num != heur->num)
-   {
-      temp = initHeur(heur->num);
-      temp->hprev = head->hprev;
-      temp->hnext = head;
-      head->hprev->hnext = temp;
-      head->hprev = temp;
-      head = temp;
-   }
-   heur->next = head->next;
-   heur->prev = head;
-   head->next->prev = heur;
-   head->next = heur;
-   heur->head = head;
+   // go to correct heur header
+   for(i = 0; i < amount; i++)
+      head = head->hnext;
+
+   // add heur to heur header
+   heur->next = head;
+   heur->prev = head->prev;
+   head->prev->next = heur;
+   head->prev = heur;
+   heur->heurHeader = head;
 }
 
-void decHeur(Heur *heur)
+void decHeur(Dance *d, Heur *heur, int amount)
 {
-   Heur *head = heur->head, *temp;
+   Heur *head = heur->heurHeader;
+   int i;
 
-   heur->num--;
+   // remove heur from current heur sublist
+   heur->num -= amount;
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
 
-   if(head->next == head && head->num != 0)
-   {
-      temp = head->hnext;
-      head->hnext->hprev = head->hprev;
-      head->hprev->hnext = head->hnext;
-      free(head);
-      head = temp;
-   }
+   if(((Doubly*)heur->hcol)->drow - d->rmax != heur->num)
+      heurNumError();
 
-   head = head->hprev;
-   if(head->num != heur->num)
-   {
-      temp = initHeur(heur->num);
-      temp->hnext = head->hnext;
-      temp->hprev = head;
-      head->hnext->hprev = temp;
-      head->hnext = temp;
-      head = temp;
-   }
+   // go to correct heur header
+   for(i = 0; i < amount; i++)
+      head = head->hprev;
 
-   heur->next = head->next;
-   heur->prev = head;
-   head->next->prev = heur;
-   head->next = heur;
-   heur->head = head;
+   // add heur to heur header
+   heur->next = head;
+   heur->prev = head->prev;
+   head->prev->next = heur;
+   head->prev = heur;
+   heur->heurHeader = head;
 }
 
 void freeHeur(Dance *d)
