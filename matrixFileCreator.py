@@ -215,7 +215,7 @@ def initMatrixFile_NQueens(n):
         if(diag1 != -1):
             f.write("%d %d\n" % (mrow, diag1 + n*2))
         if(diag2 != -1):
-            f.write("%d %d\n" % (mrow, diag2 + n*2 + diag2_start_index))
+            f.write("%d %d\n" % (mrow, diag2 + n*2))
 
     f.close()
 
@@ -223,7 +223,8 @@ def initMatrixFile_NQueens(n):
 def main():
     #initMatrixFile_Sudoku(x=2, y=2)
     #initMatrixFile_Sudoku2(x=2, y=2)
-    initMatrixFile_NQueens(n=8)
+    for i in range(21):
+        initMatrixFile_NQueens(n=i)
 
 if __name__ == "__main__":
     main()

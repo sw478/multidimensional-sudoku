@@ -3,7 +3,8 @@
 #include "struct.h"
 
 void parseArgs(Dance *d, int argc, char *argv[]);
-int runSudoku(int argc, char *argv[]);
-int runSudoku2(int argc, char *argv[]);
+int runSudoku(Dance *d, int argc, char *argv[]);
+int runSudoku2(Dance *d, int argc, char *argv[]);
+int runNQueens(Dance *d, int argc, char *argv[]);
 
 #endif

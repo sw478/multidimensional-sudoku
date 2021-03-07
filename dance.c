@@ -12,7 +12,7 @@ int algorithmX(Dance *d)
 {
    Doubly *hcol, *xrow;
    int x = 1, ret;
-   //int listSize, *hitList;
+   //int listSize, *hitList; /* used to randomize row picking */
    SolTrie *sol;
 
    if(d->root == d->root->right)
@@ -40,12 +40,12 @@ int algorithmX(Dance *d)
       sol = initTrie(xrow->hrow);
       addChild(d->csol, sol);
       d->csol = sol;
-//printMatrix(d);
+printMatrix(d);
       coverRow(d, xrow);
       ret = algorithmX(d);
       if(ret != 1)
          x = 0;
-//printMatrix(d);
+printMatrix(d);
       uncoverRow(d, xrow);
 
       d->csol = d->csol->parent;
@@ -57,7 +57,7 @@ int algorithmX(Dance *d)
       if(x == 0 && d->s->mode == 2)
       {
          /* if you want to stop at the first solution found,
-            have it break here */
+            break here */
          break;
       }
    }

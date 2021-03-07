@@ -23,3 +23,14 @@ void setMatrixDimensions_Sudoku2(Dance *d)
    printf("rmax: %d\n", d->rmax);
    printf("cmax: %d\n", d->cmax);
 }
+
+void setMatrixDimensions_NQueens(Dance *d)
+{
+   int n = d->nq, ndiag;
+
+   ndiag = 4 * n - 6;
+   d->rmax = n*n;
+   d->cmax = 2*n + ndiag;
+   printf("rmax: %d\n", d->rmax);
+   printf("cmax: %d\n", d->cmax);
+}

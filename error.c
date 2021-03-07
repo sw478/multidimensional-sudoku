@@ -32,6 +32,12 @@ void heurNumError()
    exit(EXIT_FAILURE);
 }
 
+void invalidN()
+{
+   fprintf(stderr, "Invalid value for n\n");
+   exit(EXIT_FAILURE);
+}
+
 void error()
 {
    perror(NULL);

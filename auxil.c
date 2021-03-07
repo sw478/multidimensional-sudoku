@@ -75,11 +75,9 @@ void printSolutions_Sudoku(Dance *d)
 {
    int i;
 
+   printf("\n%lu solutions found\n", d->numSols);
    if(d->numSols != 1)
-   {
-      printf("\n%lu solutions found\n", d->numSols);
       return;
-   }
 
    for(i = 0; i < d->numSols; i++)
    {
@@ -94,17 +92,30 @@ void printSolutions_Sudoku2(Dance *d)
 {
    int i;
 
+   printf("\n%lu solutions found\n", d->numSols);
    if(d->numSols != 1)
-   {
-      printf("\n%lu solutions found\n", d->numSols);
       return;
-   }
    
    for(i = 0; i < d->numSols; i++)
    {
       printf("\nsol %d: \n", i + 1);
       //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
       printSingleSol_Sudoku2(d, d->sols[i]);
+   }
+   printf("\n");
+}
+
+void printSolutions_NQueens(Dance *d)
+{
+   int i;
+   
+   printf("\n%lu solutions found\n", d->numSols);
+   
+   for(i = 0; i < d->numSols; i++)
+   {
+      printf("\nsol %d: \n", i + 1);
+      //printSingleSol_Matrix(d, d->sols[i]);
+      printSingleSol_NQueens(d, d->sols[i]);
    }
    printf("\n");
 }
@@ -177,6 +188,43 @@ void printSingleSol_Sudoku2(Dance *d, SolTrie *sol)
    }
    printBoard(d, grid);
    free(grid);
+}
+
+void printSingleSol_NQueens(Dance *d, SolTrie *sol)
+{
+   SolTrie *cur;
+   Doubly *hrow;
+   int n = d->nq, n2 = n*n, *board, pos;
+
+   if(!sol->row)
+      return;
+   board = calloc(n2, sizeof(int));
+
+   for(cur = sol; cur->parent != cur; cur = cur->parent)
+   {
+      hrow = cur->row;
+      pos = hrow->drow;
+
+      board[pos] = 1;
+   }
+   printBoard_NQueens(d, board);
+   free(board);
+}
+
+void printBoard_NQueens(Dance *d, int *board)
+{
+   int n = d->nq, n2 = n*n, pos;
+   
+   for(pos = 0; pos < n2; pos++)
+   {
+      if(board[pos] == 1)
+         printf(" X");
+      else
+         printf(" _");
+      
+      if(pos % n == 0)
+         printf("\n");
+   }
 }
 
 void printHeur(Dance *d)

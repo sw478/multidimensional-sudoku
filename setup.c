@@ -104,3 +104,47 @@ int initMatrixFileSudoku(Dance *d)
    free(matrixFile);
    return 0;
 }
+
+/*
+   convert hcols
+
+      root <---> temp2 <> hcol <---> temp1 <> root
+
+   to
+
+      root <---> temp2 <> root
+      hcol <---> temp1 <> hcol
+*/
+void stitch_secondary(Dance *d, int dcol_sec)
+{
+   Doubly *hcol, *temp1, *temp2;
+   assert(dcol_sec < d->cmax);
+
+   for(hcol = d->root->right; hcol->dcol != dcol_sec; hcol = hcol->right);
+   d->hcol_sec = hcol;
+
+   temp1 = d->root->left;
+   temp2 = hcol->left;
+
+   d->root->left = temp2;
+   temp2->right = d->root;
+
+   hcol->left = temp1;
+   temp1->right = hcol;
+}
+
+void unstitch_secondary(Dance *d)
+{
+   Doubly *hcol, *temp1, *temp2;
+
+   hcol = d->hcol_sec;
+
+   temp1 = hcol->left;
+   temp2 = d->root->left;
+
+   d->root->left = temp1;
+   temp1->right = d->root;
+
+   hcol->left = temp2;
+   temp2->right = hcol;
+}

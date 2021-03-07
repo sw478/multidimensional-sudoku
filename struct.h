@@ -157,6 +157,15 @@ typedef struct
 typedef struct
 {
    Sudoku *s;
+   int nq;
+   /* 
+      0 for sudoku
+      1 for sudoku2
+      2 for n queens
+   */
+   int problem;
+   
+   Doubly *hcol_sec;
 
    int rmax, cmax, numCalls;
    Doubly *root, *xrow, *xcol;

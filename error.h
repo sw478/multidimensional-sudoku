@@ -8,5 +8,6 @@ void fileError(char *fileName);
 void usage();
 void numArgError();
 void heurNumError();
+void invalidN();
 
 #endif

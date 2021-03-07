@@ -23,9 +23,9 @@ elif [ "$type" = "s" ]; then
 elif [ "$type" = "g" ]; then
    make clean
    gcc -pg -Wall -std=c89 -pedantic *.c 
-   echo "mode? s to solve, g to generate"
+   echo "mode? \"s\" to solve, \"g\" to generate"
    read mode
-   echo "dimension? \"row col\""
+   echo "dimension? \"row\" \"col\""
    read row col
    ./a.out ${mode} tests/${mode}/${row}x${col}.in
    gprof a.out gmon.out | head -25
@@ -33,25 +33,50 @@ elif [ "$type" = "g" ]; then
    make
 
 elif [ "$type" = "t" ] || [ "$type" = "v" ] || [ "$type" = "b" ] || [ "$type" = "e" ]; then
-   echo "mode? s to solve, g to generate"
+   echo "problem: \"s\" for sudoku \"s2\" for sudoku2 \"q\" for n queens"
+   read problem
+
+if [ "$problem" = "s" ] || [ "$problem" = "s2" ]; then
+   echo "mode? \"s\" to solve, \"g\" to generate"
    read mode
-   echo "dimension? \"row col\""
+   echo "dimension? \"row\" \"col\""
    read row col
 
 if [ "$type" = "t" ]; then
-   time ./a.out ${mode} tests/${mode}/${row}x${col}.in
+   time ./a.out ${problem} ${mode} tests/${mode}/${row}x${col}.in
 
 elif [ "$type" = "v" ]; then
-   valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${mode} tests/${mode}/${row}x${col}.in
+   valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${problem} ${mode} tests/${mode}/${row}x${col}.in
 
 elif [ "$type" = "b" ]; then
    make
-   ./a.out ${mode} tests/${mode}/${row}x${col}.in
+   ./a.out ${problem} ${mode} tests/${mode}/${row}x${col}.in
 
 elif [ "$type" = "e" ]; then
-   make clean
    make
-   ./a.out ${mode} tests/${mode}/${row}x${col}emp.in
+   ./a.out ${problem} ${mode} tests/${mode}/${row}x${col}emp.in
+
+fi
+
+elif [ "$problem" = "q" ]; then
+   echo "n?"
+   read n
+
+if [ "$type" = "t" ]; then
+   time ./a.out ${problem} ${n}
+
+elif [ "$type" = "v" ]; then
+   valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${problem} ${n}
+
+elif [ "$type" = "b" ]; then
+   make
+   ./a.out ${problem} ${n}
+
+elif [ "$type" = "e" ]; then
+   make
+   ./a.out ${problem} ${n}
+
+fi
 
 fi
 
