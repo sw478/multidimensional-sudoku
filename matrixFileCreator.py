@@ -8,7 +8,7 @@ fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800]
 # of your solution stored. you can use printSolutions() in auxil.c to
 # print out all your solutions
 
-def initMatrixFileSudoku(x, y):
+def initMatrixFile_Sudoku(x, y):
     xy = x*y
     gridSize = xy*xy
     matrixFile = "dance/ds1_%dx%d.txt" % (y, x)
@@ -39,9 +39,8 @@ def initMatrixFileSudoku(x, y):
 # first xy columns are for which number is associated with the layout
 # next xy*xy columns refer to the layout's grid cell positions
 # filename is ds2_(y)x(x), s2 meaning the second matrix setup for sudoku
-
-# anything above 3x3 creates a ridiculously large matrixFile
-def initMatrixFileSudoku2(x, y):
+def initMatrixFile_Sudoku2(x, y):
+    # anything above 3x3 creates a ridiculously large matrixFile
     xy = x*y
     fileName = "dance/ds2_%dx%d.txt" % (y, x)
     f = open(fileName, "w")
@@ -87,7 +86,7 @@ def initMatrixFileSudoku2(x, y):
                     coord = row * xy + col
                     coords.append(coord)
 
-            #printLayout(coords, x, y)
+            printLayout(coords, x, y)
 
             coords_list.append(coords)
 
@@ -166,9 +165,70 @@ def swap(A, i, j):
     A[i] = A[j]
     A[j] = temp
 
+"""
+    each matrix row corresponds to a position on the board
+    matrix columns correspond to ranks (rows), files (columns),
+    and diagonals in that order
+    
+    there are 4n-6 number of non trivial diagonals for each board
+    
+    diagonals (n = 4) denoted as such:
+    
+    diag1:
+    X 0 1 2
+    0 1 2 3
+    1 2 3 4
+    2 3 4 X
+    
+    diag2:
+    7 8 9 X
+    6 7 8 9
+    5 6 7 8
+    X 5 6 7
+    
+    -1 will be used to denote diagonals to be ignored
+    
+    note that the diagonals do not necessarily need a queen on it
+    to make a valid board, but can have no more than 1 queen on any,
+    so these columns are considered "secondary" and have to be adjusted
+    for in Algorithm X
+    
+"""
+def initMatrixFile_NQueens(n):
+    n2 = pow(n, 2)
+    diag2_start_index = 2*n - 3
+
+    fileName = "dance/dq_%d.txt" % (n)
+    f = open(fileName, "w")
+
+    for i in range(n2):
+        row = i % n
+        col = i // n
+        if(row == 0 and col == 0) or (row == n-1 and col == n-1):
+            diag1 = -1
+            #print("X", end=" ")
+        else:
+            diag1 = row + col - 1
+            #print(diag1, end=" ")
+        if(row == 0 and col == n-1) or (row == n-1 and col == 0):
+            diag2 = -1
+            #print("X", end=" ")
+        else:
+            diag2 = diag2_start_index + (row + (n - col) - 1) - 1
+            #print(diag2, end=" ")
+
+        f.write("%d %d\n" % (i, row))
+        f.write("%d %d\n" % (i, col + n))
+        f.write("%d %d\n" % (i, diag1 + n*2))
+        f.write("%d %d\n" % (i, diag2 + n*2 + diag2_start_index))
+
+    f.close()
+
+
 def main():
-    initMatrixFileSudoku(x=2, y=4)
-    #initMatrixFileSudoku2(x=3, y=2)
+    #initMatrixFile_Sudoku(x=3, y=3)
+    #initMatrixFile_Sudoku2(x=2, y=2)
+    initMatrixFile_NQueens(n=4)
 
 if __name__ == "__main__":
     main()
