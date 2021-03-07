@@ -86,7 +86,7 @@ def initMatrixFile_Sudoku2(x, y):
                     coord = row * xy + col
                     coords.append(coord)
 
-            printLayout(coords, x, y)
+            #printLayout(coords, x, y)
 
             coords_list.append(coords)
 
@@ -219,16 +219,18 @@ def initMatrixFile_NQueens(n):
 
         f.write("%d %d\n" % (i, row))
         f.write("%d %d\n" % (i, col + n))
-        f.write("%d %d\n" % (i, diag1 + n*2))
-        f.write("%d %d\n" % (i, diag2 + n*2 + diag2_start_index))
+        if(diag1 != -1):
+            f.write("%d %d\n" % (i, diag1 + n*2))
+        if(diag2 != -1):
+            f.write("%d %d\n" % (i, diag2 + n*2 + diag2_start_index))
 
     f.close()
 
 
 def main():
     #initMatrixFile_Sudoku(x=3, y=3)
-    #initMatrixFile_Sudoku2(x=2, y=2)
-    initMatrixFile_NQueens(n=4)
+    initMatrixFile_Sudoku2(x=3, y=3)
+    #initMatrixFile_NQueens(n=4)
 
 if __name__ == "__main__":
     main()
