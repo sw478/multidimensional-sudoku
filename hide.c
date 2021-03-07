@@ -230,6 +230,10 @@ int hide_Sudoku2(Dance *d)
    h->hrows = realloc(h->hrows, ihide*sizeof(Doubly));
    d->ihide = ihide;
 
+   for(i = 0; i < xy; i++)
+      free(layout[i]);
+   free(layout);
+
    return 0;
 }
 
