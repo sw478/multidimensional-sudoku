@@ -2,6 +2,7 @@
 a.out
 *.swp
 /.idea/
+.idea/workspace.xml
 *.xml
 .vs/
 CppProperties.json
