@@ -201,7 +201,7 @@ def initMatrixFile_NQueens(n):
     fileName = "dance/dq_%d.txt" % (n)
     f = open(fileName, "w")
 
-    for i in range(n2):g
+    for i in range(n2):
         row = i % n
         col = i // n
         if(row == 0 and col == 0) or (row == n-1 and col == n-1):
