@@ -20,15 +20,12 @@ def initMatrixFile_Sudoku(x, y):
         sb = (sr // y) * y + sc // x
 
         for inum in range(xy):
-            icol = []
-            irow = igrid * xy + inum
-            icol.append(igrid)
-            icol.append(inum + sr*xy + gridSize)
-            icol.append(inum + sc*xy + gridSize * 2)
-            icol.append(inum + sb*xy + gridSize * 3)
+            mrow = igrid * xy + inum
 
-            for i in range(4):
-                f.write("%d %d\n" % (irow, icol[i]))
+            f.write("%d %d\n" % (mrow, igrid))
+            f.write("%d %d\n" % (mrow, inum + sr * xy + gridSize))
+            f.write("%d %d\n" % (mrow, inum + sc * xy + gridSize * 2))
+            f.write("%d %d\n" % (mrow, inum + sb * xy + gridSize * 3))
 
     rmax = xy*gridSize
     cmax = 4*gridSize
@@ -76,12 +73,12 @@ def initMatrixFile_Sudoku2(x, y):
                 for j, yfx in enumerate(yfx_perm):
                     col_coords[i][yfx] = j
 
-            for irow in range(x):
-                for icol in range(y):
-                    row = irow * y
-                    col = icol * x
-                    row += col_coords[irow][icol]
-                    col += row_coords[irow][icol]
+            for brow in range(x):
+                for bcol in range(y):
+                    row = brow * y
+                    col = bcol * x
+                    row += col_coords[brow][bcol]
+                    col += row_coords[brow][bcol]
 
                     coord = row * xy + col
                     coords.append(coord)
@@ -93,15 +90,15 @@ def initMatrixFile_Sudoku2(x, y):
     rmax = xy*len(coords_list)
     cmax = xy + xy*xy
 
-    irow = 0
+    mrow = 0
     for coords in coords_list:
         for j in range(xy):
-            f.write("%d %d\n" % (irow, j))
+            f.write("%d %d\n" % (mrow, j))
             for coord in coords:
-                icol = coord + xy
-                f.write("%d %d\n" % (irow, icol))
+                bcol = coord + xy
+                f.write("%d %d\n" % (mrow, bcol))
 
-            irow += 1
+            mrow += 1
 
     f.close()
 
@@ -201,36 +198,32 @@ def initMatrixFile_NQueens(n):
     fileName = "dance/dq_%d.txt" % (n)
     f = open(fileName, "w")
 
-    for i in range(n2):
-        row = i % n
-        col = i // n
-        if(row == 0 and col == 0) or (row == n-1 and col == n-1):
+    for mrow in range(n2):
+        rank = mrow % n
+        file = mrow // n
+        if(rank == 0 and file == 0) or (rank == n-1 and file == n-1):
             diag1 = -1
-            #print("X", end=" ")
         else:
-            diag1 = row + col - 1
-            #print(diag1, end=" ")
-        if(row == 0 and col == n-1) or (row == n-1 and col == 0):
+            diag1 = rank + file - 1
+        if(rank == 0 and file == n-1) or (rank == n-1 and file == 0):
             diag2 = -1
-            #print("X", end=" ")
         else:
-            diag2 = diag2_start_index + (row + (n - col) - 1) - 1
-            #print(diag2, end=" ")
+            diag2 = diag2_start_index + (rank + (n - file) - 1) - 1
 
-        f.write("%d %d\n" % (i, row))
-        f.write("%d %d\n" % (i, col + n))
+        f.write("%d %d\n" % (mrow, rank))
+        f.write("%d %d\n" % (mrow, file + n))
         if(diag1 != -1):
-            f.write("%d %d\n" % (i, diag1 + n*2))
+            f.write("%d %d\n" % (mrow, diag1 + n*2))
         if(diag2 != -1):
-            f.write("%d %d\n" % (i, diag2 + n*2 + diag2_start_index))
+            f.write("%d %d\n" % (mrow, diag2 + n*2 + diag2_start_index))
 
     f.close()
 
 
 def main():
-    #initMatrixFile_Sudoku(x=3, y=3)
-    initMatrixFile_Sudoku2(x=3, y=3)
-    #initMatrixFile_NQueens(n=4)
+    #initMatrixFile_Sudoku(x=2, y=2)
+    #initMatrixFile_Sudoku2(x=2, y=2)
+    initMatrixFile_NQueens(n=8)
 
 if __name__ == "__main__":
     main()
