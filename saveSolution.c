@@ -12,10 +12,7 @@ int saveSolution_Sudoku(Dance *d)
    int num, igrid, rowNum, xy = d->s->xy, *grid = d->s->grid;
 
    if(d->numSols > 1)
-   {
-      printf("\n%lu solutions found\n", d->numSols);
       return d->numSols;
-   }
    else if(d->numSols == 0)
       return 0;
 
@@ -40,10 +37,7 @@ int saveSolution_Sudoku2(Dance *d)
    Doubly *hrow, *xrow;
 
    if(d->numSols > 1)
-   {
-      printf("\n%lu solutions found\n", d->numSols);
       return d->numSols;
-   }
    else if(d->numSols == 0)
       return 0;
    

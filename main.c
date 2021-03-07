@@ -9,6 +9,7 @@
 #include "shuffle.h"
 #include "setMatrixDimensions.h"
 #include "hrowCover.h"
+#include "initHrowLayout.h"
 
 /*
  * argument format: a.out [mode: 1 for solve, 2 for gen] [file: empty to be
@@ -27,8 +28,8 @@
 int main(int argc, char *argv[])
 {
    srand(time(NULL));
-   //runSudoku(argc, argv);
-   runSudoku2(argc, argv);
+   runSudoku(argc, argv);
+   //runSudoku2(argc, argv);
 }
 
 int runSudoku(int argc, char *argv[])
@@ -136,9 +137,14 @@ int runSudoku2(int argc, char *argv[])
    
    //printHeur(d);
    //printMatrix(d);
+   initHrowLayout(d);
+   //printHrowLayout(d);
+   printf("finished hrow layout\n");
 
    hide_Sudoku2(d);
    printf("finished hide\n");
+
+   //printMatrix(d);
    
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished cover\n");

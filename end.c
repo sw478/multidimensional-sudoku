@@ -2,11 +2,14 @@
 #include "solTrie.h"
 #include "heuristic.h"
 #include "hide.h"
+#include "initHrowLayout.h"
 
 void freeDance(Dance *d)
 {
    Doubly *col, *temp;
 
+   freeHrowLayout(d);
+   
    for(col = d->root->right; col != d->root;)
    {
       freeColumn(col);
@@ -23,6 +26,7 @@ void freeDance(Dance *d)
    freeHide(d);
    freeHeur(d);
    free(d->sols);
+
 
    fclose(d->s->in);
    free(d->s->grid);

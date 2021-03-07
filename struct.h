@@ -7,9 +7,11 @@
 #include <limits.h>
 #include <assert.h>
 #include <time.h>
+#include <stdint.h>
 #include "unistd_io.h"
 #define BUFSIZE 1000
 #define F_OK 0
+#define MAX_64_MULT 5
 
 /*
  * a two dimensional linked list of heur headers
@@ -61,9 +63,11 @@ typedef struct doubly
    int drow, dcol;
    struct doubly *up, *down, *left, *right, *hcol, *hrow;
 
+   /* misc. data */
    /* could probably move to a struct made for headers that contain doubly */
    Heur *heur;
    int rowIsHidden;
+   uint16_t *rowLayout;
 } Doubly;
 
 /*
@@ -168,6 +172,8 @@ typedef struct
 
    Heur *heurRoot;
    FILE *init;
+
+   int max16mult;
 } Dance;
 
 #endif

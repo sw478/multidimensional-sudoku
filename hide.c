@@ -168,10 +168,12 @@ void saveGeneratedPuzzle(Dance *d)
 */
 int hide_Sudoku2(Dance *d)
 {
-   Doubly *doub, *hcol, *hrow;
+   Doubly *hcol, *hrow, *xrow;
    int *grid = d->s->grid, igrid, xy = d->s->xy, gridSize = d->s->gridSize;
-   int ihide, num, hideCap = 100;
+   int ihide = 0, num, hideCap = xy, i, shift, index;
    Hide *h;
+   uint16_t **layout, *partial_layout, *row_layout, and_res;
+   layout = malloc(xy*sizeof(uint16_t*));
 
    d->hideList = malloc(sizeof(Hide*));
    h = malloc(sizeof(Hide));
@@ -180,35 +182,47 @@ int hide_Sudoku2(Dance *d)
    ihide = 0;
    h->hrows = malloc(hideCap*sizeof(Doubly));
 
-   /* skip the first xy columns */
-   for(hcol = d->root->right; hcol->dcol < xy; hcol = hcol->right);
+   for(i = 0; i < xy; i++)
+      layout[i] = calloc(d->max16mult, sizeof(uint16_t));
 
-   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
-      hrow->rowIsHidden = 0;
-
-   for(igrid = 0; igrid < gridSize; hcol = hcol->right, igrid++)
+   /* save each partial layout of numbers */
+   for(igrid = 0; igrid < gridSize; igrid++)
    {
       num = grid[igrid];
       if(num == 0)
          continue;
-      num--; /* adjust for off-by-one error */
+      num--;
 
-      for(doub = hcol->down; doub != hcol; doub = doub->down)
+      shift = igrid % 16;
+      index = igrid / 16;
+      layout[num][index] |= (1 << shift);
+   }
+
+   /* use the first xy columns to loop through layouts */
+   for(num = 0, hcol = d->root->right; num < xy; num++, hcol = hcol->right)
+   {
+      partial_layout = layout[num];
+      for(xrow = hcol->down; xrow != hcol; xrow = xrow->down)
       {
-         if(doub->drow % xy == num)
-            continue;
-         hrow = doub->hrow;
-         if(hrow->rowIsHidden)
-            continue;
-         hrow->rowIsHidden = 1;
-         h->hrows[ihide] = hrow;
-         hideSingleRow(d, hrow);
-
-         ihide++;
-         if(ihide > hideCap)
+         hrow = xrow->hrow;
+         row_layout = hrow->rowLayout;
+         for(index = 0; index < d->max16mult; index++)
          {
-            hideCap *= 2;
-            h->hrows = realloc(h->hrows, hideCap*sizeof(Doubly));
+            and_res = row_layout[index] & partial_layout[index];
+            if(and_res != partial_layout[index])
+            {
+               hrow->rowIsHidden = 1;
+               h->hrows[ihide] = hrow;
+               hideSingleRow(d, hrow);
+
+               ihide++;
+               if(ihide > hideCap)
+               {
+                  hideCap *= 2;
+                  h->hrows = realloc(h->hrows, hideCap*sizeof(Doubly));
+               }
+               break;
+            }
          }
       }
    }
