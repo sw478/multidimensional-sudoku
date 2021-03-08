@@ -8,14 +8,14 @@ void freeDance(Dance *d)
 {
    freeMatrix(d);
 
-   freeSol(d->solRoot);
+   freeTree(d->solRoot);
+   free(d->sols);
 
    if(d->problem == 0 || d->problem == 1)
       freeHide(d);
 
    if(USE_HEUR)
       freeHeur(d);
-   free(d->sols);
 
    if(d->problem == 0 || d->problem == 1)
    {

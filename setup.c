@@ -19,7 +19,7 @@ int initDance(Dance *d)
       d->s->xy = d->s->x*d->s->y;
       d->s->gridSize = d->s->xy*d->s->xy;
    }
-   
+
    d->ilist = 0;
    d->initListCap = 1;
    d->initList = malloc(sizeof(Doubly*));
@@ -28,13 +28,14 @@ int initDance(Dance *d)
    d->root->drow = d->rmax;
    d->root->dcol = d->cmax;
    d->root->up = d->root->down = d->root->left = d->root->right = d->root;
-   d->xcol = d->xrow = d->root->hcol = d->root->hrow = d->root;
+   d->root->hcol = d->root->hrow = d->root;
 
    d->solRoot = initTrie(NULL);
    d->csol = d->solRoot->parent = d->solRoot;
    d->numSols = 0;
    d->solCap = 1;
-   d->sols = malloc(sizeof(SolTrie));
+   d->sols = malloc(d->solCap*sizeof(SolTrie));
+
    d->numCalls = 0;
 
    d->sec_hcol_index = d->cmax; /* default */

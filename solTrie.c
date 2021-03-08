@@ -38,13 +38,18 @@ void addChild(SolTrie *sol, SolTrie *new)
    new->parent = sol;
 }
 
-void freeSol(SolTrie *sol)
+void freeTree(SolTrie *sol)
 {
    int i;
 
    for(i = 0; i < sol->ichild; i++)
-      freeSol(sol->child[i]);
+      freeTree(sol->child[i]);
 
+   freeSol(sol);
+}
+
+void freeSol(SolTrie *sol)
+{
    free(sol->child);
    free(sol);
 }

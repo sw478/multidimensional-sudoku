@@ -75,7 +75,7 @@ void printSolutions_Sudoku(Dance *d)
 {
    int i;
 
-   printf("\n%lu solutions found\n", d->numSols);
+   printf("\n%d solutions found\n", d->numSols);
    if(d->numSols != 1)
       return;
 
@@ -92,7 +92,7 @@ void printSolutions_Sudoku2(Dance *d)
 {
    int i;
 
-   printf("\n%lu solutions found\n", d->numSols);
+   printf("\n%d solutions found\n", d->numSols);
    if(d->numSols != 1)
       return;
    
@@ -109,7 +109,7 @@ void printSolutions_NQueens(Dance *d)
 {
    int i;
    
-   printf("\n%lu solutions found\n", d->numSols);
+   printf("\n%d solutions found\n", d->numSols);
    
    for(i = 0; i < d->numSols; i++)
    {
@@ -204,7 +204,6 @@ void printSingleSol_NQueens(Dance *d, SolTrie *sol)
    {
       hrow = cur->row;
       pos = hrow->drow;
-      printf("%d\n", pos);
 
       if(pos < n2)
          board[pos] = 1;

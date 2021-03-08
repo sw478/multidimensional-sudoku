@@ -192,7 +192,7 @@ int runNQueens(Dance *d, int argc, char *argv[])
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
 
    unstitch_secondary(d);
-   printMatrix(d);
+   //printMatrix(d);
 
    printSolutions_NQueens(d);
 

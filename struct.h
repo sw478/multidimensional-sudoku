@@ -170,13 +170,13 @@ typedef struct
    int sec_hcol_index;
 
    int rmax, cmax, numCalls;
-   Doubly *root, *xrow, *xcol;
+   Doubly *root;
 
    Doubly **initList;
    int ilist, initListCap;
 
    SolTrie *solRoot, *csol, **sols;
-   long int numSols, solCap; 
+   int numSols, solCap; 
 
    Hide **hideList;
    int hidden, hideCap, ihide;

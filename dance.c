@@ -17,6 +17,7 @@ int algorithmX(Dance *d)
    if(d->root == d->root->right)
    {
       addLeaf(d);
+//printSingleSol_Matrix(d, d->csol);
       return 0;
    }
    d->numCalls++;
