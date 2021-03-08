@@ -56,8 +56,6 @@ int runSudoku(Dance *d, int argc, char *argv[])
    initDance(d); /* initialize dance struct */
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
    printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
-   
-   printMatrix(d);
 
    initHeurList(d, d->s->xy); /* initializes the heuristic helper structure */
    printf("finished heur\n");
@@ -134,7 +132,6 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    //printHrowLayout(d);
    printf("finished hrow layout\n");
 
-   printMatrix(d);
    hide_Sudoku2(d);
    printf("finished hide\n");
 
@@ -148,7 +145,6 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
    unhide_Sudoku2(d);
-   printMatrix(d);
 
    printSolutions_Sudoku2(d);
    saveSolution_Sudoku2(d);
