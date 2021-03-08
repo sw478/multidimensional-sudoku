@@ -14,9 +14,12 @@ int initDance(Dance *d)
 {
    assert(d != NULL);
 
-   d->s->xy = d->s->x*d->s->y;
-   d->s->gridSize = d->s->xy*d->s->xy;
-
+   if(d->problem == 0 || d->problem == 1)
+   {
+      d->s->xy = d->s->x*d->s->y;
+      d->s->gridSize = d->s->xy*d->s->xy;
+   }
+   
    d->ilist = 0;
    d->initListCap = 1;
    d->initList = malloc(sizeof(Doubly*));

@@ -59,7 +59,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
    
    //printMatrix(d);
 
-   initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
+   initHeurList(d, d->s->xy); /* initializes the heuristic helper structure */
    printf("finished heur\n");
 
    if(mode == 1)
@@ -130,7 +130,7 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    
    //printHeur(d);
    //printMatrix(d);
-   initHrowLayout(d);
+   initHrowLayout_Sudoku2(d);
    //printHrowLayout(d);
    printf("finished hrow layout\n");
 
@@ -179,7 +179,7 @@ int runNQueens(Dance *d, int argc, char *argv[])
 
    if(USE_HEUR)
    {
-      initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
+      initHeurList(d, d->nq); /* initializes the heuristic helper structure */
       printf("finished heur\n");
    }
 

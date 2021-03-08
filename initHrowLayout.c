@@ -5,7 +5,7 @@
 
     saves coordinates of layout in hrow using bits of rowLayout
 */
-void initHrowLayout(Dance *d)
+void initHrowLayout_Sudoku2(Dance *d)
 {
     Doubly *hrow, *xrow;
     int xy = d->s->xy, shift, index, igrid;
