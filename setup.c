@@ -20,10 +20,6 @@ int initDance(Dance *d)
       d->s->gridSize = d->s->xy*d->s->xy;
    }
 
-   d->ilist = 0;
-   d->initListCap = 1;
-   d->initList = malloc(sizeof(Doubly*));
-
    d->root = malloc(sizeof(Doubly));
    d->root->drow = d->rmax;
    d->root->dcol = d->cmax;

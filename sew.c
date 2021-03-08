@@ -12,6 +12,10 @@ int initMatrix(Dance *d)
    memset(buf, 0, BUFSIZE*sizeof(char));
 
    assert(fseek(d->init, 0, SEEK_SET) == 0);
+   
+   d->ilist = 0;
+   d->initListCap = 1;
+   d->initList = malloc(sizeof(Doubly*));
 
    while(!feof(d->init))
    {
