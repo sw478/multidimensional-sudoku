@@ -178,7 +178,7 @@ typedef struct
    Doubly **initList;
    int ilist, initListCap;
 
-   SolTree *solRoot, *csol, **sols;
+   SolTree *csol, **sols;
    int numSols, solCap;
 
    Hide **hideList;

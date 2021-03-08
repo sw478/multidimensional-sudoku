@@ -9,7 +9,8 @@ void freeDance(Dance *d)
    freeMatrix(d);
 
    free(d->sols);
-   freeTree(d->csol);
+   if(d->numSols == 0)
+      freeTree(d->csol);
 
    if(d->problem == SUDOKU || d->problem == SUDOKU2)
       freeHide(d);

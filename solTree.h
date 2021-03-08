@@ -7,6 +7,5 @@ void addLeaf(Dance *d, SolTree *sol);
 SolTree* initTree();
 void addChild(SolTree *parent, SolTree *child);
 void freeTree(SolTree *sol);
-void freeSol(SolTree *sol);
 
 #endif

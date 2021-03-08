@@ -28,8 +28,6 @@ int algorithmX(Dance *d)
    d->numCalls++;
 
    hcol = USE_HEUR ? heuristic(d) : heuristic2(d);
-//printHeur(d);
- 
    if(hcol == d->root)
       return NOT_FOUND;
    
@@ -60,6 +58,7 @@ int algorithmX(Dance *d)
             sol = initTree();
          }
          addChild(sol, d->csol);
+         d->csol = sol;
       }
 
       if(res == FOUND)
