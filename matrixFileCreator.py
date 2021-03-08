@@ -83,7 +83,7 @@ def initMatrixFile_Sudoku2(x, y):
                     coord = row * xy + col
                     coords.append(coord)
 
-            printLayout(coords, x, y)
+            #printLayout(coords, x, y)
 
             coords_list.append(coords)
 
@@ -235,7 +235,7 @@ def initMatrixFile_NQueens(n):
 
 def main():
     #initMatrixFile_Sudoku(x=2, y=2)
-    initMatrixFile_Sudoku2(x=2, y=2)
+    initMatrixFile_Sudoku2(x=3, y=2)
     #initMatrixFile_NQueens(n=i)
 
 if __name__ == "__main__":
