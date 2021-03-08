@@ -4,7 +4,7 @@ fact = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800]
 # to solve a custom exact cover problem, you have to write your own
 # initMatrixFile() function. it will have to return the dimensions
 # of the matrix (rmax, cmax) and change MATRIX_FILE to a custom file
-# location. once AlgorithmX is done running, solTrie will have the rows
+# location. once AlgorithmX is done running, solTree will have the rows
 # of your solution stored. you can use printSolutions() in auxil.c to
 # print out all your solutions
 
@@ -83,7 +83,7 @@ def initMatrixFile_Sudoku2(x, y):
                     coord = row * xy + col
                     coords.append(coord)
 
-            #printLayout(coords, x, y)
+            printLayout(coords, x, y)
 
             coords_list.append(coords)
 
@@ -235,9 +235,8 @@ def initMatrixFile_NQueens(n):
 
 def main():
     #initMatrixFile_Sudoku(x=2, y=2)
-    #initMatrixFile_Sudoku2(x=2, y=2)
-    for i in range(21):
-        initMatrixFile_NQueens(n=i)
+    initMatrixFile_Sudoku2(x=2, y=2)
+    #initMatrixFile_NQueens(n=i)
 
 if __name__ == "__main__":
     main()

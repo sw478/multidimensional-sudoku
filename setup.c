@@ -1,5 +1,5 @@
 #include "setup.h"
-#include "solTrie.h"
+#include "solTree.h"
 #include "dance.h"
 #include "heuristic.h"
 #include "hide.h"
@@ -14,7 +14,7 @@ int initDance(Dance *d)
 {
    assert(d != NULL);
 
-   if(d->problem == 0 || d->problem == 1)
+   if(d->problem == SUDOKU || d->problem == SUDOKU2)
    {
       d->s->xy = d->s->x*d->s->y;
       d->s->gridSize = d->s->xy*d->s->xy;
@@ -30,11 +30,9 @@ int initDance(Dance *d)
    d->root->up = d->root->down = d->root->left = d->root->right = d->root;
    d->root->hcol = d->root->hrow = d->root;
 
-   d->solRoot = initTrie(NULL);
-   d->csol = d->solRoot->parent = d->solRoot;
    d->numSols = 0;
-   d->solCap = 1;
-   d->sols = malloc(d->solCap*sizeof(SolTrie));
+   d->solCap = STARTING_CAP;
+   d->sols = malloc(d->solCap*sizeof(SolTree));
 
    d->numCalls = 0;
 

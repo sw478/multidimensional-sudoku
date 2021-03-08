@@ -8,7 +8,7 @@
 */
 int saveSolution_Sudoku(Dance *d)
 {
-   SolTrie *cur;
+   SolTree *cur;
    int num, igrid, rowNum, xy = d->s->xy, *grid = d->s->grid;
 
    if(d->numSols > 1)
@@ -32,7 +32,7 @@ int saveSolution_Sudoku(Dance *d)
 */
 int saveSolution_Sudoku2(Dance *d)
 {
-   SolTrie *cur;
+   SolTree *cur;
    int num, igrid, xy = d->s->xy, *grid = d->s->grid;
    Doubly *hrow, *xrow;
 

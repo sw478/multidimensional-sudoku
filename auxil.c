@@ -82,7 +82,7 @@ void printSolutions_Sudoku(Dance *d)
    for(i = 0; i < d->numSols; i++)
    {
       printf("\nsol %d: \n", i + 1);
-      //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
+      printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
       printSingleSol_Sudoku(d, d->sols[i]); /* prints the solution as a sudoku grid */
    }
    printf("\n");
@@ -99,7 +99,7 @@ void printSolutions_Sudoku2(Dance *d)
    for(i = 0; i < d->numSols; i++)
    {
       printf("\nsol %d: \n", i + 1);
-      //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
+      printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
       printSingleSol_Sudoku2(d, d->sols[i]);
    }
    printf("\n");
@@ -120,38 +120,34 @@ void printSolutions_NQueens(Dance *d)
    printf("\n");
 }
 
-void printSingleSol_Matrix(Dance *d, SolTrie *sol)
+void printSingleSol_Matrix(Dance *d, SolTree *sol)
 {
-   SolTrie *cur;
+   SolTree *cur;
    Doubly *xcol;
    int pcol, irow;
-   if(sol == d->solRoot)
-      return;
 
    //printColHeaders(d);
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {
-      printf("%3d: ", cur->row->drow);
+      printf("%4d: ", cur->row->drow);
       pcol = 0;
       irow = 0;
       xcol = cur->row->right;
       for(; pcol < cur->row->left->dcol; xcol = xcol->right, irow++, pcol++)
       {
-         for(; pcol < xcol->dcol; pcol++, printf("."));
+         for(; pcol < xcol->dcol; pcol++, printf("|"));
          printf("X");
       }
-      for(; pcol < d->cmax; pcol++, printf("."));
+      for(; pcol < d->cmax; pcol++, printf("|"));
       printf("\n");
    }
    printf("\n");
 }
 
-void printSingleSol_Sudoku(Dance *d, SolTrie *sol)
+void printSingleSol_Sudoku(Dance *d, SolTree *sol)
 {
-   SolTrie *cur;
+   SolTree *cur;
    int drow, num, igrid, xy = d->s->xy, *grid;
-   if(!sol->row)
-      return;
    grid = calloc(d->cmax, sizeof(int));
 
    for(cur = sol; cur->parent != cur; cur = cur->parent)
@@ -165,14 +161,12 @@ void printSingleSol_Sudoku(Dance *d, SolTrie *sol)
    free(grid);
 }
 
-void printSingleSol_Sudoku2(Dance *d, SolTrie *sol)
+void printSingleSol_Sudoku2(Dance *d, SolTree *sol)
 {
-   SolTrie *cur;
+   SolTree *cur;
    int num, igrid, xy = d->s->xy, *grid;
    Doubly *hrow, *xrow;
 
-   if(!sol->row)
-      return;
    grid = calloc(d->cmax, sizeof(int));
 
    for(cur = sol; cur->parent != cur; cur = cur->parent)
@@ -190,9 +184,9 @@ void printSingleSol_Sudoku2(Dance *d, SolTrie *sol)
    free(grid);
 }
 
-void printSingleSol_NQueens(Dance *d, SolTrie *sol)
+void printSingleSol_NQueens(Dance *d, SolTree *sol)
 {
-   SolTrie *cur;
+   SolTree *cur;
    Doubly *hrow;
    int n = d->nq, n2 = n*n, *board, pos;
 

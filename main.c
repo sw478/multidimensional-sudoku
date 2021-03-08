@@ -19,9 +19,9 @@ int main(int argc, char *argv[])
 
    switch(d->problem)
    {
-      case 0: runSudoku(d, argc, argv); break;
-      case 1: runSudoku2(d, argc, argv); break;
-      case 2: runNQueens(d, argc, argv); break;
+      case SUDOKU: runSudoku(d, argc, argv); break;
+      case SUDOKU2: runSudoku2(d, argc, argv); break;
+      case NQUEENS: runNQueens(d, argc, argv); break;
       default: break;
    }
 }
@@ -57,7 +57,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
    printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
    
-   //printMatrix(d);
+   printMatrix(d);
 
    initHeurList(d, d->s->xy); /* initializes the heuristic helper structure */
    printf("finished heur\n");
@@ -80,7 +80,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
    if(mode == 1)
       unhideAllCells(d); /* handles memory */
    printSolutions_Sudoku(d);
-   saveSolution_Sudoku(d); /* translates solTrie matrix rows to sudoku solution */
+   saveSolution_Sudoku(d); /* translates solTree matrix rows to sudoku solution */
 
    if(mode == 2)
    {
@@ -134,6 +134,7 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    //printHrowLayout(d);
    printf("finished hrow layout\n");
 
+   printMatrix(d);
    hide_Sudoku2(d);
    printf("finished hide\n");
 
@@ -147,6 +148,7 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
    unhide_Sudoku2(d);
+   printMatrix(d);
 
    printSolutions_Sudoku2(d);
    saveSolution_Sudoku2(d);
@@ -223,13 +225,13 @@ void parseArgs(Dance *d, int argc, char *argv[])
       numArgError();
    
    if(!strcmp(argv[1], "s"))
-      d->problem = 0;
+      d->problem = SUDOKU;
    else if(!strcmp(argv[1], "s2"))
-      d->problem = 1;
+      d->problem = SUDOKU2;
    else if(!strcmp(argv[1], "q"))
-      d->problem = 2;
+      d->problem = NQUEENS;
 
-   if(d->problem == 0 || d->problem == 1)
+   if(d->problem == SUDOKU || d->problem == SUDOKU2)
    {
       s = malloc(sizeof(Sudoku));
       if(argc != 4)
@@ -274,7 +276,7 @@ void parseArgs(Dance *d, int argc, char *argv[])
       }
       d->s = s;
    }
-   else if(d->problem == 2)
+   else if(d->problem == NQUEENS)
    {
       if(argc != 3){
          printf("argc: %d\n", argc);

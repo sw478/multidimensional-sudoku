@@ -121,14 +121,12 @@ note: rmax and cmax are just the dimensions of the matrix
 note: row headers aren't used for the computation itself, but are useful for printing and identifying solutions, and
 initializing the matrix
 
-#### solTrie
+#### solTree
 
-The solTrie objects are used to store the solution(s). Each row in the set of a solution will be pointed to by a solTrie
+The solTree objects are used to store the solution(s). Each row in the set of a solution will be pointed to by a solTree
 object. If a matrix has a single solution, the tree will just be a list, otherwise, it'll just be a normal tree with its
 leaves signifying a solution. There's also no necessary order to the list/tree.
 The tree grows along with the algorithm, since each call to Algorithm X is associated with a candidate matrix row.
-
-note: solTrie isn't technically a trie
 
 #### hide
 
@@ -181,7 +179,7 @@ so its commented out at the moment.
 The program takes in a file of a sudoku you want it to solve, and takes note of its dimensions, x and y.
 It then creates a file that lists the coordinates of elements in the initial matrix. hideAllCells() then covers
 the appropriate rows of the matrix according to the given clues in the sudoku. coverRowHeaders() covers all the
-row headers for the algorithm to run properly. Algorithm X is run on the matrix, creating a solTrie in the process.
+row headers for the algorithm to run properly. Algorithm X is run on the matrix, creating a solTree in the process.
 uncoverRowHeaders() uncovers all the row headers, and unhideAllCells() uncovers the previously covered rows. Another
 sudoku board with the same dimensions can also be run now without having to reinitialize the matrix.
 

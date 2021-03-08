@@ -13,6 +13,11 @@
 #define BUFSIZE 1000
 #define F_OK 0
 
+/* for d->problem */
+#define SUDOKU 0
+#define SUDOKU2 1
+#define NQUEENS 2
+
 /*
  * a two dimensional linked list of heur headers
  * 
@@ -87,26 +92,24 @@ typedef struct hide
 } Hide;
 
 /*
- * actually a tree not a trie
- *
  * when solving an exact cover problem, a set of rows constitute a solution,
  * and algorithm X finds these rows one at a time, but searches for them using
  * a depth first approach, so what you get is a tree with rows as the nodes,
- * and in this case, the struct solTrie acts as the node.
+ * and in this case, the struct solTree acts as the node.
  *
- * row: matrix row associated with the solTrie
+ * row: matrix row associated with the solTree
  * child: pointer array of child nodes
  * parent: each node's children's parent node points to this node
  * ichild: child array's next available index
  * cap: current array capacity
- * numSols: number of leaf nodes including and underneath this current solTrie
+ * numSols: number of leaf nodes including and underneath this current solTree
  */
-typedef struct solTrie
+typedef struct solTree
 {
    Doubly *row;
-   struct solTrie **child, *parent;
-   int ichild, cap, numSols;
-} SolTrie;
+   struct solTree **childList, *parent;
+   int ichild, cap;
+} SolTree;
 
 /*
  * grid: numbers of the sudoku board, indexed on the board from left to right
@@ -138,8 +141,8 @@ typedef struct
  * initListCap: capacity of initList
  *
  * storing solutions:
- * solRoot: root node for solTrie tree
- * csol: current solTrie being tracked
+ * solRoot: root node for solTree tree
+ * csol: current solTree being tracked
  * sols: list of leaf nodes, # of leaf nodes is # of distinct solutions
  * numSols: next available index in sols
  * solCap: current capacity of sols, doubles when reached
@@ -175,9 +178,8 @@ typedef struct
    Doubly **initList;
    int ilist, initListCap;
 
-   SolTrie *solRoot, *csol, **sols;
-   int numSols, solCap; 
-   Doubly *chrow;
+   SolTree *solRoot, *csol, **sols;
+   int numSols, solCap;
 
    Hide **hideList;
    int hidden, hideCap, ihide;

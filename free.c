@@ -1,5 +1,5 @@
 #include "free.h"
-#include "solTrie.h"
+#include "solTree.h"
 #include "heuristic.h"
 #include "hide.h"
 #include "initHrowLayout.h"
@@ -8,16 +8,16 @@ void freeDance(Dance *d)
 {
    freeMatrix(d);
 
-   freeTree(d->solRoot);
    free(d->sols);
+   freeTree(d->csol);
 
-   if(d->problem == 0 || d->problem == 1)
+   if(d->problem == SUDOKU || d->problem == SUDOKU2)
       freeHide(d);
 
    if(USE_HEUR)
       freeHeur(d);
 
-   if(d->problem == 0 || d->problem == 1)
+   if(d->problem == SUDOKU || d->problem == SUDOKU2)
    {
       fclose(d->s->in);
       free(d->s->grid);

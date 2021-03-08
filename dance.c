@@ -1,25 +1,29 @@
 #include "dance.h"
-#include "solTrie.h"
+#include "solTree.h"
 #include "auxil.h"
 #include "heuristic.h"
+#define FOUND 1
+#define NOT_FOUND 0
 
 /*
- * returns 0 if a solution was found
- * 1 if no solution found
+ * returns 1 if a solution was found
+ * 0 if no solution found
  */
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *candidateRow;
-   int x = 1, solCreated = 0;
+   int res = NOT_FOUND;
    int listSize, *hitList; /* used to randomize row picking */
-   SolTrie *sol;
+
+   /* storing information for the upper level */
+   int solCreated = 0;
+   SolTree *sol;
 
    if(d->root == d->root->right)
    {
-      d->csol = initTrie(d->chrow);
-      addLeaf(d); /* add d->csol to list of solutions */
-//printSingleSol_Matrix(d, d->csol);
-      return 0;
+      d->csol = initTree();
+      addLeaf(d, d->csol);
+      return FOUND;
    }
    d->numCalls++;
 
@@ -27,7 +31,7 @@ int algorithmX(Dance *d)
 //printHeur(d);
  
    if(hcol == d->root)
-      return 1;
+      return NOT_FOUND;
    
    if(RANDOMIZE_ROWS)
    {
@@ -40,40 +44,29 @@ int algorithmX(Dance *d)
    
    while(candidateRow != hcol)
    {
-      //sol = initTrie(candidateRow->hrow);
-      //addChild(d->csol, sol); /* add sol as a candidate sol to d->csol */
-      d->chrow = candidateRow->hrow; /* set in case next level is a leaf */
-      //d->csol = sol; /* set d->csol to sol to prepare for next algX call */
 //printMatrix(d);
       selectCandidateRow(d, candidateRow);
-      x = algorithmX(d);
+      res = algorithmX(d);
 //printMatrix(d);
       unselectCandidateRow(d, candidateRow);
-      //d->csol = d->csol->parent; /* set d->csol back to original */
 
-      if(x == 0)
+      /* if lower level candidate row(s) part of a solution */
+      if(res == FOUND)
       {
+         d->csol->row = candidateRow->hrow;
          if(solCreated == 0)
          {
-            sol = initTrie(candidateRow->hrow);
             solCreated = 1;
+            sol = initTree();
          }
          addChild(sol, d->csol);
-         d->csol = sol;
       }
 
-      /* if no solutions found in this row, delete sol */
-      //if(x == 1)
-      {
-         //d->csol->ichild--;
-         //freeSol(sol);
-      }
-
-      if(x == 0)
+      if(res == FOUND)
       {
          /* if you want to stop at the first solution found,
          break here */
-         if(d->problem == 0 && d->s->mode == 2) /* generating mode */
+         if(d->problem == SUDOKU && d->s->mode == 2) /* generating mode */
             break;
       }
 
@@ -82,10 +75,11 @@ int algorithmX(Dance *d)
       else
          candidateRow = candidateRow->down;
    }
+   d->csol = sol;
 
    if(RANDOMIZE_ROWS)
       free(hitList);
-   return x;
+   return res;
 }
 
 /*
