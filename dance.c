@@ -54,7 +54,7 @@ int algorithmX(Dance *d)
       if(x == 1)
       {
          d->csol->ichild--;
-         freeSol(sol);
+         //freeSol(sol);
       }
 
       if(x == 0)
