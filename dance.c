@@ -12,9 +12,9 @@
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *candidateRow;
-   int res = NOT_FOUND;
-   int listSize, *hitList; /* used to randomize row picking */
-
+   int res = NOT_FOUND, ret;
+   /* used to randomize row picking */
+   int listSize, *hitList;
    /* storing information for the upper level */
    int solCreated = 0;
    SolTree *sol;
@@ -44,12 +44,18 @@ int algorithmX(Dance *d)
    {
 //printMatrix(d);
       selectCandidateRow(d, candidateRow);
-      res = algorithmX(d);
+
+      /*
+         must keep res and ret like this
+      */
+      ret = algorithmX(d);
+      if(ret == FOUND)
+         res = FOUND;
+
 //printMatrix(d);
       unselectCandidateRow(d, candidateRow);
 
-      /* if lower level candidate row(s) part of a solution */
-      if(res == FOUND)
+      if(ret == FOUND)
       {
          d->csol->row = candidateRow->hrow;
          if(solCreated == 0)
@@ -59,11 +65,13 @@ int algorithmX(Dance *d)
          }
          addChild(sol, d->csol);
          d->csol = sol;
-         
+      }
+      if(res == FOUND)
+      {
          /* if you want to stop at the first solution found,
          break here */
-         //if(d->problem == SUDOKU && d->s->mode == 2) /* generating mode */
-         break;
+         if(d->problem == SUDOKU && d->s->mode == 2) /* generating mode */
+            break;
       }
 
       if(RANDOMIZE_ROWS)
