@@ -59,14 +59,11 @@ int algorithmX(Dance *d)
          }
          addChild(sol, d->csol);
          d->csol = sol;
-      }
-
-      if(res == FOUND)
-      {
+         
          /* if you want to stop at the first solution found,
          break here */
-         if(d->problem == SUDOKU && d->s->mode == 2) /* generating mode */
-            break;
+         //if(d->problem == SUDOKU && d->s->mode == 2) /* generating mode */
+         break;
       }
 
       if(RANDOMIZE_ROWS)
@@ -74,7 +71,6 @@ int algorithmX(Dance *d)
       else
          candidateRow = candidateRow->down;
    }
-   d->csol = sol;
 
    if(RANDOMIZE_ROWS)
       free(hitList);
