@@ -177,6 +177,7 @@ typedef struct
 
    SolTrie *solRoot, *csol, **sols;
    int numSols, solCap; 
+   Doubly *chrow;
 
    Hide **hideList;
    int hidden, hideCap, ihide;

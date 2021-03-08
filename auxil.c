@@ -204,9 +204,7 @@ void printSingleSol_NQueens(Dance *d, SolTrie *sol)
    {
       hrow = cur->row;
       pos = hrow->drow;
-
-      if(pos < n2)
-         board[pos] = 1;
+      board[pos] = 1;
    }
    printBoard_NQueens(d, board);
    free(board);

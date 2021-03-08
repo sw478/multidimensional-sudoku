@@ -10,12 +10,13 @@
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *candidateRow;
-   int x = 1;
+   int x = 1, solCreated = 0;
    int listSize, *hitList; /* used to randomize row picking */
    SolTrie *sol;
 
    if(d->root == d->root->right)
    {
+      d->csol = initTrie(d->chrow);
       addLeaf(d); /* add d->csol to list of solutions */
 //printSingleSol_Matrix(d, d->csol);
       return 0;
@@ -39,21 +40,32 @@ int algorithmX(Dance *d)
    
    while(candidateRow != hcol)
    {
-      sol = initTrie(candidateRow->hrow);
-      addChild(d->csol, sol); /* add sol as a candidate sol to d->csol */
-
-      d->csol = sol; /* set d->csol to sol to prepare for next algX call */
+      //sol = initTrie(candidateRow->hrow);
+      //addChild(d->csol, sol); /* add sol as a candidate sol to d->csol */
+      d->chrow = candidateRow->hrow; /* set in case next level is a leaf */
+      //d->csol = sol; /* set d->csol to sol to prepare for next algX call */
 //printMatrix(d);
       selectCandidateRow(d, candidateRow);
       x = algorithmX(d);
 //printMatrix(d);
       unselectCandidateRow(d, candidateRow);
-      d->csol = d->csol->parent; /* set d->csol back to original */
+      //d->csol = d->csol->parent; /* set d->csol back to original */
+
+      if(x == 0)
+      {
+         if(solCreated == 0)
+         {
+            sol = initTrie(candidateRow->hrow);
+            solCreated = 1;
+         }
+         addChild(sol, d->csol);
+         d->csol = sol;
+      }
 
       /* if no solutions found in this row, delete sol */
-      if(x == 1)
+      //if(x == 1)
       {
-         d->csol->ichild--;
+         //d->csol->ichild--;
          //freeSol(sol);
       }
 
