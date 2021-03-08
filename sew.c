@@ -63,8 +63,7 @@ int connectRows(Dance *d)
 {
    Doubly *hrow = d->root, *cur, *hnew;
    int irow, i, prev = -1;
-   /* coordinates should already be sorted so you don't need this */
-   /*qsort(d->initList, d->ilist, sizeof(Doubly*), compareRows);*/
+   qsort(d->initList, d->ilist, sizeof(Doubly*), compareRows);
 
    for(i = 0; i < d->ilist; i++)
    {
