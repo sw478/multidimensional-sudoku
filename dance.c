@@ -16,18 +16,18 @@ int algorithmX(Dance *d)
 
    if(d->root == d->root->right)
    {
-      addLeaf(d);
+      addLeaf(d); /* add d->csol to list of solutions */
 //printSingleSol_Matrix(d, d->csol);
       return 0;
    }
    d->numCalls++;
 
    hcol = USE_HEUR ? heuristic(d) : heuristic2(d);
+//printHeur(d);
+ 
    if(hcol == d->root)
       return 1;
    
-//printHeur(d);
- 
    if(RANDOMIZE_ROWS)
    {
       listSize = hcol->drow - d->rmax;
@@ -40,17 +40,17 @@ int algorithmX(Dance *d)
    while(candidateRow != hcol)
    {
       sol = initTrie(candidateRow->hrow);
-      addChild(d->csol, sol);
-      d->csol = sol;
+      addChild(d->csol, sol); /* add sol as a candidate sol to d->csol */
 
+      d->csol = sol; /* set d->csol to sol to prepare for next algX call */
 //printMatrix(d);
       selectCandidateRow(d, candidateRow);
       x = algorithmX(d);
 //printMatrix(d);
       unselectCandidateRow(d, candidateRow);
+      d->csol = d->csol->parent; /* set d->csol back to original */
 
       /* if no solutions found in this row, delete sol */
-      d->csol = d->csol->parent;
       if(x == 1)
       {
          d->csol->ichild--;
