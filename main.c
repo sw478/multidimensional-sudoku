@@ -11,16 +11,6 @@
 #include "hrowCover.h"
 #include "initHrowLayout.h"
 
-/*
- * right now generate option generates full boards, will change to have
- * empty slot to be solvable
- *
- * a filled text file should only contain positive integers, 0 denoting an
- * unknown space
- *
- * If a textfile contains less characters than required, a message will
- * display. Any extra characters will be ignored
- */
 int main(int argc, char *argv[])
 {
    Dance *d = malloc(sizeof(Dance));
@@ -36,6 +26,16 @@ int main(int argc, char *argv[])
    }
 }
 
+/*
+ * right now generate option generates full boards, will change to have
+ * empty slot to be solvable
+ *
+ * a filled text file should only contain positive integers, 0 denoting an
+ * unknown space
+ *
+ * If a textfile contains less characters than required, a message will
+ * display. Any extra characters will be ignored
+ */
 int runSudoku(Dance *d, int argc, char *argv[])
 {
    int mode;
@@ -172,9 +172,10 @@ int runNQueens(Dance *d, int argc, char *argv[])
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
    printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
-   //stitch_secondary(d, d->nq*2);
-   //printf("finished stitching secondary\n");
-   d->sec_hcol_index = 2 * d->nq*2;
+   /* declare index of start point of secondary hcols */
+   set_secondary_columns(d, 2 * d->nq);
+   stitch_secondary(d);
+   //printMatrix(d);
 
    if(USE_HEUR)
    {
@@ -190,7 +191,8 @@ int runNQueens(Dance *d, int argc, char *argv[])
    printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
 
-   //unstitch_secondary(d);
+   unstitch_secondary(d);
+   printMatrix(d);
 
    printSolutions_NQueens(d);
 

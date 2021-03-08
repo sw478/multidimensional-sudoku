@@ -4,18 +4,17 @@
 #include "heuristic.h"
 
 /*
- * returns 0 if a solution was found (not leaf)
+ * returns 0 if a solution was found
  * 1 if no solution found
- * 2 if solution was found and is a leaf
  */
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *candidateRow;
-   int x = 1, ret;
+   int x = 1;
    int listSize, *hitList; /* used to randomize row picking */
    SolTrie *sol;
 
-   if(d->root == d->root->right || d->root->right->dcol >= d->sec_hcol_index)
+   if(d->root == d->root->right)
    {
       addLeaf(d);
       return 0;
@@ -42,28 +41,29 @@ int algorithmX(Dance *d)
       sol = initTrie(candidateRow->hrow);
       addChild(d->csol, sol);
       d->csol = sol;
+
 //printMatrix(d);
       selectCandidateRow(d, candidateRow);
-      ret = algorithmX(d);
-      if(ret != 1)
-         x = 0;
+      x = algorithmX(d);
 //printMatrix(d);
       unselectCandidateRow(d, candidateRow);
 
+      /* if no solutions found in this row, delete sol */
       d->csol = d->csol->parent;
       if(x == 1)
       {
          d->csol->ichild--;
          freeSol(sol);
       }
-      /* if you want to stop at the first solution found,
-         break here */
+
       if(x == 0)
       {
-         if(d->problem == 0 || d->problem == 1)
-            if(d->s->mode == 2)
-               break;
+         /* if you want to stop at the first solution found,
+         break here */
+         if(d->problem == 0 && d->s->mode == 2) /* generating mode */
+            break;
       }
+
       if(RANDOMIZE_ROWS)
          candidateRow = nextRow(hcol, &listSize, &hitList);
       else
@@ -193,10 +193,10 @@ void coverRows(Dance *d, Doubly *doub)
       xrow->down->up = xrow->up;
       xrow->hcol->drow--;
       xrow->hrow->dcol--;
-      if(USE_HEUR)
+      if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
          decHeur(d, xrow->hcol->heur, 1);
    }
-   if(USE_HEUR)
+   if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
       decHeur(d, doub->hcol->heur, 1);
 }
 
@@ -236,9 +236,9 @@ void uncoverRows(Dance *d, Doubly *doub)
       xrow->down->up = xrow;
       xrow->hcol->drow++;
       xrow->hrow->dcol++;
-      if(USE_HEUR)
+      if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
          incHeur(d, xrow->hcol->heur, 1);
    }
-   if(USE_HEUR)
+   if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
       incHeur(d, doub->hcol->heur, 1);
 }

@@ -204,8 +204,10 @@ void printSingleSol_NQueens(Dance *d, SolTrie *sol)
    {
       hrow = cur->row;
       pos = hrow->drow;
+      printf("%d\n", pos);
 
-      board[pos] = 1;
+      if(pos < n2)
+         board[pos] = 1;
    }
    printBoard_NQueens(d, board);
    free(board);
@@ -217,14 +219,15 @@ void printBoard_NQueens(Dance *d, int *board)
    
    for(pos = 0; pos < n2; pos++)
    {
+      if(pos % n == 0)
+         printf("\n");
+
       if(board[pos] == 1)
          printf(" X");
       else
          printf(" _");
-      
-      if(pos % n == 0)
-         printf("\n");
    }
+   printf("\n");
 }
 
 void printHeur(Dance *d)

@@ -38,14 +38,6 @@ void addChild(SolTrie *sol, SolTrie *new)
    new->parent = sol;
 }
 
-void incNumSols(SolTrie *sol)
-{
-   SolTrie *temp;
-   for(temp = sol; temp->parent != temp; temp = temp->parent)
-      temp->numSols++;
-   temp->numSols++;
-}
-
 void freeSol(SolTrie *sol)
 {
    int i;

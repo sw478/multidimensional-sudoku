@@ -34,7 +34,7 @@ int initDance(Dance *d)
    d->sols = malloc(sizeof(SolTrie));
    d->numCalls = 0;
 
-   d->sec_hcol_index = d->cmax;
+   d->sec_hcol_index = d->cmax; /* default */
 
    return 0;
 }
@@ -107,6 +107,11 @@ int initMatrixFileSudoku(Dance *d)
    return 0;
 }
 
+void set_secondary_columns(Dance *d, int index)
+{
+   d->sec_hcol_index = index;
+}
+
 /*
    convert hcols
 
@@ -116,13 +121,14 @@ int initMatrixFileSudoku(Dance *d)
 
       root <> ... <> temp2 <> root
       hcol <> ... <> temp1 <> hcol
+
+   run this before initHeur to prevent heurs on secondary columns
 */
-void stitch_secondary(Dance *d, int dcol_sec)
+void stitch_secondary(Dance *d)
 {
    Doubly *hcol, *temp1, *temp2;
-   assert(dcol_sec < d->cmax);
 
-   for(hcol = d->root->right; hcol->dcol != dcol_sec; hcol = hcol->right);
+   for(hcol = d->root->right; hcol->dcol != d->sec_hcol_index; hcol = hcol->right);
    d->hcol_sec = hcol;
 
    temp1 = d->root->left;

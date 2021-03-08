@@ -165,6 +165,7 @@ typedef struct
    */
    int problem;
    
+   /* for secondary columns */
    Doubly *hcol_sec;
    int sec_hcol_index;
 

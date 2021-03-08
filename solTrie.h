@@ -7,6 +7,5 @@ void addLeaf(Dance *d);
 SolTrie* initTrie(Doubly *row);
 void addChild(SolTrie *sol, SolTrie *child);
 void freeSol(SolTrie *sol);
-void incNumSols(SolTrie *sol);
 
 #endif

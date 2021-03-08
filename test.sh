@@ -3,6 +3,7 @@ USAGE="usage: [ b:basic | m:make | q:quit | t:time]"
 
 while true; do
 
+echo
 echo "what type of test:"
 echo $USAGE
 read type

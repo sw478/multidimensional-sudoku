@@ -178,10 +178,10 @@ def swap(A, i, j):
     2 3 4 X
     
     diag2:
-    7 8 9 X
-    6 7 8 9
-    5 6 7 8
-    X 5 6 7
+    7 6 5 X
+    8 7 6 5
+    9 8 7 6
+    X 9 8 7
     
     -1 will be used to denote diagonals to be ignored
     
@@ -194,28 +194,41 @@ def swap(A, i, j):
 def initMatrixFile_NQueens(n):
     n2 = pow(n, 2)
     diag2_start_index = 2*n - 3
+    printDiag = 0
 
     fileName = "dance/dq_%d.txt" % (n)
     f = open(fileName, "w")
 
     for mrow in range(n2):
-        rank = mrow % n
-        file = mrow // n
+        rank = mrow // n
+        file = mrow % n
+        
+        if(mrow % n == 0):
+            if(printDiag > 0):
+                print("")
         if(rank == 0 and file == 0) or (rank == n-1 and file == n-1):
             diag1 = -1
+            if(printDiag == 1):
+                print("  X", end="")
         else:
             diag1 = rank + file - 1
+            if(printDiag == 1):
+                print(" %2d" % (diag1), end="")
         if(rank == 0 and file == n-1) or (rank == n-1 and file == 0):
             diag2 = -1
+            if(printDiag == 2):
+                print("  X", end="")
         else:
             diag2 = diag2_start_index + (rank + (n - file) - 1) - 1
+            if(printDiag == 2):
+                print(" %2d" % (diag2), end="")
 
         f.write("%d %d\n" % (mrow, rank))
-        f.write("%d %d\n" % (mrow, file + n))
+        f.write("%d %d\n" % (mrow, n + file))
         if(diag1 != -1):
-            f.write("%d %d\n" % (mrow, diag1 + n*2))
+            f.write("%d %d\n" % (mrow, n*2 + diag1))
         if(diag2 != -1):
-            f.write("%d %d\n" % (mrow, diag2 + n*2))
+            f.write("%d %d\n" % (mrow, n*2 + diag2))
 
     f.close()
 
