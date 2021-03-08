@@ -129,20 +129,20 @@ void printSingleSol_Matrix(Dance *d, SolTree *sol)
    //printColHeaders(d);
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {
+      xrow = cur->row;
       nrow = xrow->dcol - d->cmax;
       if(nrow == 0)
          continue;
-      xrow = cur->row;
       printf("%4d: ", xrow->drow);
       pcol = 0;
       irow = 0;
       xcol = xrow->right;
       for(; irow < nrow; xcol = xcol->right, irow++, pcol++)
       {
-         for(; pcol < xcol->dcol; pcol++, printf("."));
+         for(; pcol < xcol->dcol; pcol++, printf("|"));
          printf("X");
       }
-      for(; pcol < d->cmax; pcol++, printf("."));
+      for(; pcol < d->cmax; pcol++, printf("|"));
       printf("\n");
    }
    printf("\n");
