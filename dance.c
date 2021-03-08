@@ -10,43 +10,45 @@
  */
 int algorithmX(Dance *d)
 {
-   Doubly *hcol, *xrow;
+   Doubly *hcol, *candidateRow;
    int x = 1, ret;
-   //int listSize, *hitList; /* used to randomize row picking */
+   int listSize, *hitList; /* used to randomize row picking */
    SolTrie *sol;
 
-   if(d->root == d->root->right)
+   if(d->root == d->root->right || d->root->right->dcol >= d->sec_hcol_index)
    {
       addLeaf(d);
       return 0;
    }
    d->numCalls++;
 
-   hcol = heuristic(d);
-   //hcol = heuristic2(d);
+   hcol = USE_HEUR ? heuristic(d) : heuristic2(d);
    if(hcol == d->root)
       return 1;
    
 //printHeur(d);
  
-   //listSize = hcol->drow - d->rmax;
-   //hitList = calloc(listSize, sizeof(int));
-
-   //xrow = nextRow(hcol, &listSize, &hitList);
-   xrow = hcol->down;
-   for(; xrow != hcol; xrow = xrow->down)
-//nextRow(hcol, &listSize, &hitList))
+   if(RANDOMIZE_ROWS)
    {
-      sol = initTrie(xrow->hrow);
+      listSize = hcol->drow - d->rmax;
+      hitList = calloc(listSize, sizeof(int));
+      candidateRow = nextRow(hcol, &listSize, &hitList);
+   }
+   else
+      candidateRow = hcol->down;
+   
+   while(candidateRow != hcol)
+   {
+      sol = initTrie(candidateRow->hrow);
       addChild(d->csol, sol);
       d->csol = sol;
-printMatrix(d);
-      coverRow(d, xrow);
+//printMatrix(d);
+      selectCandidateRow(d, candidateRow);
       ret = algorithmX(d);
       if(ret != 1)
          x = 0;
-printMatrix(d);
-      uncoverRow(d, xrow);
+//printMatrix(d);
+      unselectCandidateRow(d, candidateRow);
 
       d->csol = d->csol->parent;
       if(x == 1)
@@ -54,114 +56,189 @@ printMatrix(d);
          d->csol->ichild--;
          freeSol(sol);
       }
-      if(x == 0 && d->s->mode == 2)
+      /* if you want to stop at the first solution found,
+         break here */
+      if(x == 0)
       {
-         /* if you want to stop at the first solution found,
-            break here */
-         break;
+         if(d->problem == 0 || d->problem == 1)
+            if(d->s->mode == 2)
+               break;
       }
+      if(RANDOMIZE_ROWS)
+         candidateRow = nextRow(hcol, &listSize, &hitList);
+      else
+         candidateRow = candidateRow->down;
    }
 
-   //free(hitList);
+   if(RANDOMIZE_ROWS)
+      free(hitList);
    return x;
 }
 
 /*
- * used to randomize board
- * keeps track of rows and records which have already been visited
+ * used to randomize order of candidate rows searched in column chosen
+ * in AlgX, keeps track of rows and records which have already been visited
+ * hitList[i] = 0 if not visited, 1 if visited
+ * 
+ * set RANDOMIZE_ROWS to 1 to use
  */
-Doubly *nextRow(Doubly *hcol, int *num, int **hitList)
+Doubly *nextRow(Doubly *hcol, int *listSize, int **hitList)
 {
    Doubly *row;
    int i, j, randInt;
-   if(*num == 0)
+   if(*listSize == 0)
       return hcol;
 
-   randInt = rand() % *num;
+   randInt = rand() % *listSize;
+   /* go to a random row */
    for(row = hcol->down, i = 0; i < randInt; i++, row = row->down);
+   /* continue going down row until unvisited row is found */
    for(j = i; (*hitList)[j] == 1; j++, row = row->down)
    {
+      /* skip if row is column header row */
       if(row == hcol)
          row = row->down;
    }
 
-   (*num)--;
+   (*listSize)--;
    (*hitList)[j] = 1;
    return row;
 }
 
-int coverRow(Dance *d, Doubly *node)
+/*
+   if candidateRow is row of a solution, we have to cover
+   all doubly that conflict with it being chosen
+
+   candidateRow is just one doubly in the candidate row,
+   coverColRows() is called on all doubly in the row, including
+   starting doubly
+
+      0  1  2  3  4  5  6
+      
+   0  _  X  X  _  _  X  _
+
+   1  _  X  _  X  _  _  X
+
+   2  X  _  _  _  X  _  _
+
+   ex. row 1 is the candidate row.
+   row 0 cannot be part of the solution too because both have a doubly in col 1
+
+   in the example, coverColRows() is called on (1, 1), (1, 3), and (1, 6)
+*/
+void selectCandidateRow(Dance *d, Doubly *candidateRow)
 {
-   Doubly *xrow;
+   Doubly *crow;
 
-   for(xrow = node->right; xrow != node; xrow = xrow->right)
-      coverCol(d, xrow);
-   coverCol(d, xrow);
-
-   return 0;
+   /* crow loops through all elements in the candidate row */
+   for(crow = candidateRow->right; crow != candidateRow; crow = crow->right)
+      coverColRows(d, crow);
+   coverColRows(d, candidateRow);
 }
 
-int coverCol(Dance *d, Doubly *xrow)
-{
-   Doubly *xcol, *xrow2, *hcol;
+/*
+   cover all rows in given column
 
-   hcol = xrow->hcol;
+   coverColRows() is called on (1, 1), so this searches for all other rows
+   that have a doubly in column 1, and covers those rows
+
+   it sees (0, 1), so coverRows() is called on (0, 1) and all doubly in
+   row 0 are covered
+
+   after call, resulting matrix will "look" like this:
+
+      0  2  4  5
+
+   2  X  _  X  _
+
+   row 1 hidden since it was a chosen candidate row, and row 0 hidden
+   since it conflicted with row 1
+
+   columns 1, 3, 6 are covered because of the doubly in row 1
+*/
+void coverColRows(Dance *d, Doubly *crow)
+{
+   Doubly *doub, *hcol;
+
+   /* cover crow's header column*/
+   hcol = crow->hcol;
    hcol->right->left = hcol->left;
    hcol->left->right = hcol->right;
-   d->root->dcol--;
+   d->root->dcol--; /* decrement hcol count */
 
-   for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
+   /*
+      doub traverses down the hcol's column
+
+      doub doesn't need to be covered since all the doubly in their rows
+      are covered from the rest of the matrix
+   */
+   for(doub = hcol->down; doub != hcol; doub = doub->down)
    {
-      xcol->hcol->drow--;
-      xcol->hrow->dcol--;
-      for(xrow2 = xcol->right; xrow2 != xcol; xrow2 = xrow2->right)
-      {
-         xrow2->up->down = xrow2->down;
-         xrow2->down->up = xrow2->up;
-         xrow2->hcol->drow--;
-         xrow2->hrow->dcol--;
-         decHeur(d, xrow2->hcol->heur, 1);
-      }
-      decHeur(d, xcol->hcol->heur, 1);
+      doub->hcol->drow--;
+      doub->hrow->dcol--;
+      coverRows(d, doub);
    }
-
-   return 0;
 }
 
-int uncoverRow(Dance *d, Doubly *node)
+/*
+   cover all doubly in doub's row vertically
+*/
+void coverRows(Dance *d, Doubly *doub)
 {
    Doubly *xrow;
 
-   uncoverCol(d, node);
-   for(xrow = node->left; xrow != node; xrow = xrow->left)
-      uncoverCol(d, xrow);
-
-   return 0;
+   for(xrow = doub->right; xrow != doub; xrow = xrow->right)
+   {
+      xrow->up->down = xrow->down;
+      xrow->down->up = xrow->up;
+      xrow->hcol->drow--;
+      xrow->hrow->dcol--;
+      if(USE_HEUR)
+         decHeur(d, xrow->hcol->heur, 1);
+   }
+   if(USE_HEUR)
+      decHeur(d, doub->hcol->heur, 1);
 }
 
-int uncoverCol(Dance *d, Doubly *xrow)
+void unselectCandidateRow(Dance *d, Doubly *candidateRow)
 {
-   Doubly *xcol, *xrow2, *hcol;
+   Doubly *crow;
 
-   hcol = xrow->hcol;
+   uncoverColRows(d, candidateRow);
+   for(crow = candidateRow->left; crow != candidateRow; crow = crow->left)
+      uncoverColRows(d, crow);
+}
+
+void uncoverColRows(Dance *d, Doubly *crow)
+{
+   Doubly *doub, *hcol;
+
+   hcol = crow->hcol;
    hcol->right->left = hcol;
    hcol->left->right = hcol;
    d->root->dcol++;
 
-   for(xcol = hcol->down; xcol != hcol; xcol = xcol->down)
+   for(doub = hcol->down; doub != hcol; doub = doub->down)
    {
-      xcol->hcol->drow++;
-      xcol->hrow->dcol++;
-      for(xrow2 = xcol->right; xrow2 != xcol; xrow2 = xrow2->right)
-      {
-         xrow2->up->down = xrow2;
-         xrow2->down->up = xrow2;
-         xrow2->hcol->drow++;
-         xrow2->hrow->dcol++;
-         incHeur(d, xrow2->hcol->heur, 1);
-      }
-      incHeur(d, xcol->hcol->heur, 1);
+      doub->hcol->drow++;
+      doub->hrow->dcol++;
+      uncoverRows(d, doub);
    }
+}
 
-   return 0;
+void uncoverRows(Dance *d, Doubly *doub)
+{
+   Doubly *xrow;
+   
+   for(xrow = doub->right; xrow != doub; xrow = xrow->right)
+   {
+      xrow->up->down = xrow;
+      xrow->down->up = xrow;
+      xrow->hcol->drow++;
+      xrow->hrow->dcol++;
+      if(USE_HEUR)
+         incHeur(d, xrow->hcol->heur, 1);
+   }
+   if(USE_HEUR)
+      incHeur(d, doub->hcol->heur, 1);
 }

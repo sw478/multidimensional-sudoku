@@ -265,7 +265,8 @@ int hideSingleRow(Dance *d, Doubly *hrow)
       doub->hrow->dcol--;
       doub->up->down = doub->down;
       doub->down->up = doub->up;
-      decHeur(d, doub->hcol->heur, 1);
+      if(USE_HEUR)
+         decHeur(d, doub->hcol->heur, 1);
    }
 
    hrow->up->down = hrow->down;
@@ -284,7 +285,8 @@ int unhideSingleRow(Dance *d, Doubly *hrow)
       doub->hrow->dcol++;
       doub->up->down = doub;
       doub->down->up = doub;
-      incHeur(d, doub->hcol->heur, 1);
+      if(USE_HEUR)
+         incHeur(d, doub->hcol->heur, 1);
    }
 
    hrow->up->down = hrow;

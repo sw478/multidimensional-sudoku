@@ -2,13 +2,16 @@
 #define DANCE_H
 #include "struct.h"
 
-Doubly *randHCol(Dance *d);
-int coverRow(Dance *d, Doubly *node);
-int coverCol(Dance *d, Doubly *xrow);
-int uncoverRow(Dance *d, Doubly *node);
-int uncoverCol(Dance *d, Doubly *xrow);
 int algorithmX(Dance *d);
+
+void selectCandidateRow(Dance *d, Doubly *node);
+void coverColRows(Dance *d, Doubly *xrow);
+void coverRows(Dance *d, Doubly *xcol);
+
+void unselectCandidateRow(Dance *d, Doubly *node);
+void uncoverColRows(Dance *d, Doubly *xrow);
+void uncoverRows(Dance *d, Doubly *xcol);
+
 Doubly *nextRow(Doubly *xrow, int *num, int **hitList);
-int storeSol(Dance *d, Doubly *hcol);
 
 #endif

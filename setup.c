@@ -34,6 +34,8 @@ int initDance(Dance *d)
    d->sols = malloc(sizeof(SolTrie));
    d->numCalls = 0;
 
+   d->sec_hcol_index = d->cmax;
+
    return 0;
 }
 
@@ -108,12 +110,12 @@ int initMatrixFileSudoku(Dance *d)
 /*
    convert hcols
 
-      root <---> temp2 <> hcol <---> temp1 <> root
+      root <> ... <> temp2 <> hcol <> ... <> temp1 <> root
 
    to
 
-      root <---> temp2 <> root
-      hcol <---> temp1 <> hcol
+      root <> ... <> temp2 <> root
+      hcol <> ... <> temp1 <> hcol
 */
 void stitch_secondary(Dance *d, int dcol_sec)
 {

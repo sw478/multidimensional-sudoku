@@ -35,6 +35,8 @@ int initMatrix(Dance *d)
    connectRows(d);
    connectCols(d);
 
+   free(d->initList);
+
    fclose(d->init);
    free(buf);
 

@@ -3,7 +3,7 @@
 #include "setup.h"
 #include "sew.h"
 #include "heuristic.h"
-#include "end.h"
+#include "free.h"
 #include "error.h"
 #include "hide.h"
 #include "shuffle.h"
@@ -20,7 +20,6 @@
  *
  * If a textfile contains less characters than required, a message will
  * display. Any extra characters will be ignored
- *
  */
 int main(int argc, char *argv[])
 {
@@ -58,7 +57,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
    printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
    
-   printMatrix(d);
+   //printMatrix(d);
 
    initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
    printf("finished heur\n");
@@ -152,6 +151,7 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    printSolutions_Sudoku2(d);
    saveSolution_Sudoku2(d);
 
+   freeHrowLayout(d);
    freeDance(d);
 
    return 0;
@@ -172,12 +172,16 @@ int runNQueens(Dance *d, int argc, char *argv[])
    initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
    printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
-   stitch_secondary(d, d->nq*2);
-   printf("finished stitching secondary\n");
+   //stitch_secondary(d, d->nq*2);
+   //printf("finished stitching secondary\n");
+   d->sec_hcol_index = 2 * d->nq*2;
 
-   initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
-   printf("finished heur\n");
-   
+   if(USE_HEUR)
+   {
+      initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
+      printf("finished heur\n");
+   }
+
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished cover\n");
 
@@ -186,7 +190,7 @@ int runNQueens(Dance *d, int argc, char *argv[])
    printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
 
-   unstitch_secondary(d);
+   //unstitch_secondary(d);
 
    printSolutions_NQueens(d);
 

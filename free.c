@@ -1,4 +1,4 @@
-#include "end.h"
+#include "free.h"
 #include "solTrie.h"
 #include "heuristic.h"
 #include "hide.h"
@@ -6,10 +6,31 @@
 
 void freeDance(Dance *d)
 {
+   freeMatrix(d);
+
+   freeSol(d->solRoot);
+
+   if(d->problem == 0 || d->problem == 1)
+      freeHide(d);
+
+   if(USE_HEUR)
+      freeHeur(d);
+   free(d->sols);
+
+   if(d->problem == 0 || d->problem == 1)
+   {
+      fclose(d->s->in);
+      free(d->s->grid);
+      free(d->s);
+   }
+
+   free(d);
+}
+
+void freeMatrix(Dance *d)
+{
    Doubly *col, *temp;
 
-   freeHrowLayout(d);
-   
    for(col = d->root->right; col != d->root;)
    {
       freeColumn(col);
@@ -19,20 +40,6 @@ void freeDance(Dance *d)
    }
    freeColumn(col);
    free(d->root);
-
-   freeSol(d->solRoot);
-   free(d->initList);
-
-   freeHide(d);
-   freeHeur(d);
-   free(d->sols);
-
-
-   fclose(d->s->in);
-   free(d->s->grid);
-   free(d->s);
-
-   free(d);
 }
 
 void freeColumn(Doubly *col)

@@ -8,10 +8,10 @@
 #include <assert.h>
 #include <time.h>
 #include <stdint.h>
-#include "unistd_io.h"
+#include "unistd_io.h" /* unistd for linux, io.h for windows */
+#include "config.h"
 #define BUFSIZE 1000
 #define F_OK 0
-#define MAX_64_MULT 5
 
 /*
  * a two dimensional linked list of heur headers
@@ -166,6 +166,7 @@ typedef struct
    int problem;
    
    Doubly *hcol_sec;
+   int sec_hcol_index;
 
    int rmax, cmax, numCalls;
    Doubly *root, *xrow, *xcol;
