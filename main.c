@@ -127,7 +127,7 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    printf("finished heur\n");
    
    //printHeur(d);
-   printMatrix(d);
+   //printMatrix(d);
    initHrowLayout_Sudoku2(d);
    //printHrowLayout(d);
    printf("finished hrow layout\n");

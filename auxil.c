@@ -35,7 +35,7 @@ void printMatrix(Dance *d)
       nrow = xrow->dcol - d->cmax;
       if(nrow == 0)
          continue;
-      printf("%3d: ", xrow->drow);
+      printf("%4d: ", xrow->drow);
       pcol = 0;
       irow = 0;
       xcol = xrow->right;
@@ -123,23 +123,26 @@ void printSolutions_NQueens(Dance *d)
 void printSingleSol_Matrix(Dance *d, SolTree *sol)
 {
    SolTree *cur;
-   Doubly *xcol;
-   int pcol, irow;
+   Doubly *xcol, *xrow;
+   int pcol, irow, nrow;
 
    //printColHeaders(d);
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {
-      assert(cur->row->hcol == d->root);
-      printf("%4d: ", cur->row->drow);
+      nrow = xrow->dcol - d->cmax;
+      if(nrow == 0)
+         continue;
+      xrow = cur->row;
+      printf("%4d: ", xrow->drow);
       pcol = 0;
       irow = 0;
-      xcol = cur->row->right;
-      for(; pcol < cur->row->left->dcol; xcol = xcol->right, irow++, pcol++)
+      xcol = xrow->right;
+      for(; irow < nrow; xcol = xcol->right, irow++, pcol++)
       {
-         for(; pcol < xcol->dcol; pcol++, printf("|"));
+         for(; pcol < xcol->dcol; pcol++, printf("."));
          printf("X");
       }
-      for(; pcol < d->cmax; pcol++, printf("|"));
+      for(; pcol < d->cmax; pcol++, printf("."));
       printf("\n");
    }
    printf("\n");
