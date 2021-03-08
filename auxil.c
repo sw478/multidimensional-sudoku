@@ -133,7 +133,7 @@ void printSingleSol_Matrix(Dance *d, SolTree *sol)
       pcol = 0;
       irow = 0;
       xcol = cur->row->right;
-      for(; pcol < cur->row->left->dcol; xcol = xcol->right, irow++, pcol++)
+      for(; pcol < cur->row->right->dcol; xcol = xcol->right, irow++, pcol++)
       {
          for(; pcol < xcol->dcol; pcol++, printf("|"));
          printf("X");
