@@ -99,7 +99,7 @@ void printSolutions_Sudoku2(Dance *d)
    for(i = 0; i < d->numSols; i++)
    {
       printf("\nsol %d: \n", i + 1);
-      printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
+      //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
       printSingleSol_Sudoku2(d, d->sols[i]);
    }
    printf("\n");
@@ -107,11 +107,13 @@ void printSolutions_Sudoku2(Dance *d)
 
 void printSolutions_NQueens(Dance *d)
 {
-   int i;
+   int i, maxPrint = 2;
    
    printf("\n%d solutions found\n", d->numSols);
    
-   for(i = 0; i < d->numSols; i++)
+   printf("printing first %d solutions\n", maxPrint);
+
+   for(i = 0; i < maxPrint; i++)//d->numSols; i++)
    {
       printf("\nsol %d: \n", i + 1);
       //printSingleSol_Matrix(d, d->sols[i]);
@@ -139,10 +141,10 @@ void printSingleSol_Matrix(Dance *d, SolTree *sol)
       xcol = xrow->right;
       for(; irow < nrow; xcol = xcol->right, irow++, pcol++)
       {
-         for(; pcol < xcol->dcol; pcol++, printf("|"));
+         for(; pcol < xcol->dcol; pcol++, printf("."));
          printf("X");
       }
-      for(; pcol < d->cmax; pcol++, printf("|"));
+      for(; pcol < d->cmax; pcol++, printf("."));
       printf("\n");
    }
    printf("\n");

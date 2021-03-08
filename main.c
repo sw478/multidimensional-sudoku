@@ -135,7 +135,7 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    hide_Sudoku2(d);
    printf("finished hide\n");
 
-   printMatrix(d);
+   //printMatrix(d);
    
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished cover\n");

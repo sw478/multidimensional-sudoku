@@ -5,29 +5,50 @@
 #define FOUND 1
 #define NOT_FOUND 0
 
-/*
- * returns 1 if a solution was found
- * 0 if no solution found
- */
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *candidateRow;
+   /*
+      res will be returned, so if there is at least one solution,
+      res must be set to FOUND
+      ret is just what algX returns from one candidate row, and is
+      used for knowing whether the level below found at least one
+      solution
+   */
    int res = NOT_FOUND, ret;
+
    /* used to randomize row picking */
    int listSize, *hitList;
+
    /* storing information for the upper level */
    int solCreated = 0;
    SolTree *sol;
 
+   /*
+      matrix is empty, a solution has been found
+      adds to the list of solutions
+   */
    if(d->root == d->root->right)
    {
       d->csol = initTree();
       addLeaf(d, d->csol);
       return FOUND;
    }
+
+   /* keeps track of non-trivial calls */
    d->numCalls++;
 
+   /*
+      chooses an hcol with a minimum number of
+      elements beneath
+   */
    hcol = USE_HEUR ? heuristic(d) : heuristic2(d);
+//printHeur(d); /* used to show status of the heurs */
+
+   /*
+      there are no possible solution if there are still
+      columns to fill, but no doubly left in the matrix
+   */
    if(hcol == d->root)
       return NOT_FOUND;
    
@@ -42,27 +63,40 @@ int algorithmX(Dance *d)
    
    while(candidateRow != hcol)
    {
+      /*
+         calling the pairs of printMatrix before and after
+         covering necessary doubly allows you to see the
+         algorithm in work
+      */
 //printMatrix(d);
       selectCandidateRow(d, candidateRow);
 
-      /*
-         must keep res and ret like this
-      */
       ret = algorithmX(d);
-      if(ret == FOUND)
-         res = FOUND;
+      res |= ret;
 
 //printMatrix(d);
       unselectCandidateRow(d, candidateRow);
 
+      /*
+         sol will refer to the candidate row above this
+         algX call, note that sol->row isn't assigned yet
+      */
       if(ret == FOUND)
       {
+         /*
+            if a solution has been found below, d->csol
+            will contain a solTree refering to that with
+            everything but the row assigned, and it's at
+            this level you assign the row to it
+         */
          d->csol->row = candidateRow->hrow;
+         /* malloc sol if haven't already */
          if(solCreated == 0)
          {
             solCreated = 1;
             sol = initTree();
          }
+         /* add solTree from below (d->csol) as child to sol */
          addChild(sol, d->csol);
          d->csol = sol;
       }
@@ -87,7 +121,9 @@ int algorithmX(Dance *d)
 
 /*
  * used to randomize order of candidate rows searched in column chosen
- * in AlgX, keeps track of rows and records which have already been visited
+ * in AlgX, otherwise algX will just go down the column
+ * 
+ * keeps track of rows and records which have already been visited
  * hitList[i] = 0 if not visited, 1 if visited
  * 
  * set RANDOMIZE_ROWS to 1 to use
@@ -203,6 +239,8 @@ void coverRows(Dance *d, Doubly *doub)
       xrow->down->up = xrow->up;
       xrow->hcol->drow--;
       xrow->hrow->dcol--;
+      
+      /* checks for secondary columns */
       if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
          decHeur(d, xrow->hcol->heur, 1);
    }
