@@ -5,7 +5,7 @@
     set to 1 for rows to be randomly chosen
     0 to choose rows in order
 */
-#define RANDOMIZE_ROWS 0
+#define RANDOMIZE_ROWS 1
 
 /*
     set to 1 to use heur system

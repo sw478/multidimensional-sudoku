@@ -16,6 +16,7 @@ void printSingleSol_Sudoku2(Dance *d, SolTree *sol);
 void printSolutions_NQueens(Dance *d);
 void printSingleSol_NQueens(Dance *d, SolTree *sol);
 void printBoard_NQueens(Dance *d, int *board);
+void printDistribution_NQueens(Dance *d);
 
 void printHeur(Dance *d);
 

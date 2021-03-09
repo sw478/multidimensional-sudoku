@@ -206,6 +206,39 @@ void printBoard_NQueens(Dance *d, int *board)
    printf("\n");
 }
 
+void printDistribution_NQueens(Dance *d)
+{
+   int i;
+   SolTree *cur;
+   Doubly *hrow;
+   int n = d->nq, n2 = n*n, *board, pos, numSols = d->numSols;
+   float percent;
+   board = calloc(n2, sizeof(int));
+
+   printf("printing distribution of queens on %d-queens board\n", n);
+
+   for(i = 0; i < numSols; i++)
+   {
+      for(cur = d->sols[i]; cur->parent != cur; cur = cur->parent)
+      {
+         hrow = cur->row;
+         pos = hrow->drow;
+         board[pos]++;
+      }
+   }
+
+   for(pos = 0; pos < n2; pos++)
+   {
+      if(pos % n == 0)
+         printf("\n\n");
+      percent = (float)board[pos] / numSols;
+      printf(" %1.3f", percent);
+   }
+   printf("\n");
+
+   free(board);
+}
+
 void printHeur(Dance *d)
 {
    Heur *head = d->heurRoot, *heur;

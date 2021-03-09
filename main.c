@@ -198,6 +198,9 @@ int runNQueens(Dance *d, int argc, char *argv[])
    unstitch_secondary(d);
 
    printSolutions_NQueens(d);
+   
+   /* print distribution of queen placements on board of all solutions */
+   //printDistribution_NQueens(d);
 
    freeDance(d);
 
