@@ -17,6 +17,7 @@
 #define SUDOKU 0
 #define SUDOKU2 1
 #define NQUEENS 2
+#define SGEN 3
 
 /*
  * a two dimensional linked list of heur headers
@@ -125,8 +126,8 @@ typedef struct solTree
  */
 typedef struct
 {
-   int *grid, x, y, xy, z, gridSize, mode;
-   FILE *in;
+   int *grid, x, y, xy, gridSize;
+   FILE *boardFile;
 } Sudoku;
 
 typedef struct

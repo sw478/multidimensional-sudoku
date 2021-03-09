@@ -13,10 +13,9 @@ void fileError(char *fileName)
    exit(EXIT_FAILURE);
 }
 
-void usage()
+void arg1Error()
 {
-   fprintf(stderr,
-      "Usage: ./a.out [mode: s to solve or g to generate] [sudoku file]\n");
+   fprintf(stderr, "Error: Invalid first argument");
    exit(EXIT_FAILURE);
 }
 

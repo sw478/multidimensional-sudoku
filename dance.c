@@ -105,7 +105,7 @@ int algorithmX(Dance *d)
       {
          /* if you want to stop at the first solution found,
          break here */
-         if(d->problem == SUDOKU && d->s->mode == 2) /* generating mode */
+         if(d->problem == SGEN)
             break;
       }
 

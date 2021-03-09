@@ -5,7 +5,7 @@
 void error();
 void invalidSudokuBoard();
 void fileError(char *fileName);
-void usage();
+void arg1Error();
 void numArgError();
 void heurNumError();
 void invalidN_NQueens();

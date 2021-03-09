@@ -20,7 +20,7 @@ void freeDance(Dance *d)
 
    if(d->problem == SUDOKU || d->problem == SUDOKU2)
    {
-      fclose(d->s->in);
+      fclose(d->s->boardFile);
       free(d->s->grid);
       free(d->s);
    }

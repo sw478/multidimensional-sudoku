@@ -25,31 +25,27 @@ int main(int argc, char *argv[])
       case SUDOKU: runSudoku(d, argc, argv); break;
       case SUDOKU2: runSudoku2(d, argc, argv); break;
       case NQUEENS: runNQueens(d, argc, argv); break;
+      case SGEN: runSudokuGenerate(d, argc, argv); break;
       default: break;
    }
 }
 
 /*
- * right now generate option generates full boards, will change to have
- * empty slot to be solvable
- *
- * a filled text file should only contain positive integers, 0 denoting an
- * unknown space
+ * A filled sudoku board file should have dimensions on first line
+ * and next xy*xy lines should be either 0 (empty) or 1 through xy
  *
  * If a textfile contains less characters than required, a message will
- * display. Any extra characters will be ignored
+ * display. Any extra numbers will be ignored
  */
 int runSudoku(Dance *d, int argc, char *argv[])
 {
-   int mode;
    char *matrixFile = malloc(BUFSIZE*sizeof(char));
 
-   mode = d->s->mode;
+   printSudokuBoard(d, d->s->grid);
 
-   if(mode == 1) /* if solving */
-      printSudokuBoard(d, d->s->grid);
+   /* outdated, just use matrixFileCreator.py for same results */
+   //initMatrixFileSudoku(d);
 
-   //initMatrixFileSudoku(d); /* using matrixFileCreator.py probably easier */
    sprintf(matrixFile, "dance/ds1_%dx%d.txt", d->s->y, d->s->x);
    d->matrixFile = fopen(matrixFile, "r+");
    free(matrixFile);
@@ -58,47 +54,35 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    /* initialize dance struct */
    initDance(d);
-   initMatrix(d); /* reads from d->matrixFile and creates the general matrix */
-   printf("finished matrix\n"); /* for larger boards everything prior takes a small but noticeable amount of time */
+
+   /* reads from d->matrixFile and creates the general matrix */
+   initMatrix(d);
+   printf("finished matrix\n");
 
    /* initializes the heuristic structure */
    initHeurList(d, d->s->xy);
    printf("finished heur\n");
 
-   if(mode == 1)
-   {
-      initHide_Sudoku(d);
-      hideAllCells(d); /* if solving, hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
-   }
+   /* hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
+   initHide_Sudoku(d);
+   hideAllCells(d);
    printf("finished hide\n");
    
-   coverRowHeaders(d); /* cover all row headers, necessary for program to work */
+   /* covers row headers from rest of matrix */
+   coverRowHeaders(d);
    printf("finished cover\n");
 
-   /* if mode == 2, will stop after one solution is found */
    algorithmX(d);
 
    printf("number of calls: %d\n", d->numCalls);
-   uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
+   uncoverRowHeaders(d);
 
-   if(mode == 1)
-      unhideAllCells(d); /* handles memory */
+   unhideAllCells(d);
+
    printSolutions_Sudoku(d);
-   saveSolution_Sudoku(d); /* translates solTree matrix rows to sudoku solution */
 
-   if(mode == 2)
-   {
-      initHide_Sudoku(d);
-      printf("finished initHide\n");
-      hideAllCells(d);
-
-      saveGeneratedPuzzle(d);
-      printSudokuBoard(d, d->s->grid);
-
-      shuffle(d);
-      printSudokuBoard(d, d->s->grid);
-      unhideAllCells(d);
-   }
+   /* translates solTree matrix rows to sudoku solution */
+   saveSolution_Sudoku(d);
 
    freeDance(d);
 
@@ -109,12 +93,6 @@ int runSudoku(Dance *d, int argc, char *argv[])
 int runSudoku2(Dance *d, int argc, char *argv[])
 {
    char *matrixFile = malloc(BUFSIZE*sizeof(char));
-
-   if(d->s->mode == 2)
-   {
-      fprintf(stderr, "Can't generate puzzles with layout setup\n");
-      error();
-   }
 
    printSudokuBoard(d, d->s->grid);
  
@@ -201,6 +179,54 @@ int runNQueens(Dance *d, int argc, char *argv[])
    
    /* print distribution of queen placements on board of all solutions */
    //printDistribution_NQueens(d);
+
+   freeDance(d);
+
+   return 0;
+}
+
+int runSudokuGenerate(Dance *d, int argc, char *argv[])
+{
+   char *matrixFile = malloc(BUFSIZE*sizeof(char));
+
+   sprintf(matrixFile, "dance/ds1_%dx%d.txt", d->s->y, d->s->x);
+   d->matrixFile = fopen(matrixFile, "r+");
+   free(matrixFile);
+
+   setMatrixDimensions_Sudoku(d);
+
+   /* initialize dance struct */
+   initDance(d);
+   initMatrix(d); /* reads from d->matrixFile and creates the general matrix */
+   printf("finished matrix\n"); /* for larger boards everything prior takes a small but noticeable amount of time */
+
+   /* initializes the heuristic structure */
+   initHeurList(d, d->s->xy);
+   printf("finished heur\n");
+   
+   coverRowHeaders(d); /* cover all row headers, necessary for program to work */
+   printf("finished cover\n");
+
+   /* will stop after one solution is found */
+   algorithmX(d);
+
+   printf("number of calls: %d\n", d->numCalls);
+   uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
+
+   printSolutions_Sudoku(d);
+   saveSolution_Sudoku(d); /* translates solTree matrix rows to sudoku solution */
+
+   
+   initHide_Sudoku(d);
+   printf("finished initHide\n");
+   hideAllCells(d);
+
+   saveGeneratedPuzzle(d);
+   printSudokuBoard(d, d->s->grid);
+
+   shuffle(d);
+   printSudokuBoard(d, d->s->grid);
+   unhideAllCells(d);
 
    freeDance(d);
 
