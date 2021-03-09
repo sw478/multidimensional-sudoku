@@ -30,6 +30,7 @@ void generate(Dance *d)
         }
         //printf("igrid: %d\n", igrid);
         fillSingleCell(d, igrid);
+        //checkMatrix(d);
 
         printSudokuBoard_Gen(d);
 

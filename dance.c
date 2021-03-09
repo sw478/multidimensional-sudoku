@@ -176,8 +176,6 @@ int algorithmX_SGen2(Dance *d)
       return FOUND;
    }
 
-   d->numCalls++;
-
    HEUR_HEURISTIC(d)
 
    if(hcol == d->root)
@@ -291,7 +289,7 @@ void coverColRows(Dance *d, Doubly *crow)
    hcol = crow->hcol;
    hcol->right->left = hcol->left;
    hcol->left->right = hcol->right;
-   d->root->dcol--; /* decrement hcol count */
+   //d->root->dcol--; /* decrement hcol count */
 
    /*
       doub traverses down the hcol's column
@@ -343,7 +341,7 @@ void uncoverColRows(Dance *d, Doubly *crow)
    hcol = crow->hcol;
    hcol->right->left = hcol;
    hcol->left->right = hcol;
-   d->root->dcol++;
+   //d->root->dcol++;
 
    for(doub = hcol->down; doub != hcol; doub = doub->down)
    {
