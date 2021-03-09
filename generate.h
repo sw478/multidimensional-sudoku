@@ -3,5 +3,6 @@
 #include "struct.h"
 
 void generate(Dance *d);
+void printToSudokuFile(Dance *d);
 
 #endif

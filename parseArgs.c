@@ -31,7 +31,7 @@ void parseArgs(Dance *d, int argc, char *argv[])
 void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
 {
     int i, c, test;
-    Sudoku *s = malloc(sizeof(Sudoku));;
+    Sudoku *s = malloc(sizeof(Sudoku));
     char *buf = malloc(BUFSIZE*sizeof(char));
     memset(buf, 0, BUFSIZE*sizeof(char));
 
@@ -77,9 +77,7 @@ void parseArgs_NQueens(Dance *d, int argc, char *argv[])
 /* a.out sg [file] [x] [y] */
 void parseArgs_SGen(Dance *d, int argc, char *argv[])
 {
-    Sudoku *s = malloc(sizeof(Sudoku));;
-    char *buf = malloc(BUFSIZE*sizeof(char));
-    memset(buf, 0, BUFSIZE*sizeof(char));
+    Sudoku *s = malloc(sizeof(Sudoku));
 
     if(argc != 5)
         numArgError();
@@ -96,7 +94,5 @@ void parseArgs_SGen(Dance *d, int argc, char *argv[])
     s->grid = calloc(s->gridSize, sizeof(int));
 
     /* print board dimensions at top of file */
-    sprintf(buf, "%d %d\n", s->x, s->y);
-    fwrite(buf, 1, BUFSIZE*sizeof(char), s->boardFile);
-    free(buf);
+    fprintf(d->s->boardFile, "%d %d\n", s->x, s->y);
 }

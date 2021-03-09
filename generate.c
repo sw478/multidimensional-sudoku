@@ -28,3 +28,16 @@ void generate(Dance *d)
         uncoverRowHeaders(d);
     }
 }
+
+void printToSudokuFile(Dance *d)
+{
+    int igrid, gridSize = d->s->gridSize, *grid = d->s->grid;
+
+    for(igrid = 0; igrid < gridSize; igrid++)
+    {
+        if(d->hideList[igrid]->filled)
+            fprintf(d->s->boardFile, "%d\n", grid[igrid] + 1);
+        else
+            fprintf(d->s->boardFile, "0\n");
+    }
+}
