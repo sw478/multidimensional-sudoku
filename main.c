@@ -210,12 +210,8 @@ int runSudokuGenerate(Dance *d, int argc, char *argv[])
    coverRowHeaders(d);
    printf("finished cover\n");
 
-   /* will stop after one solution is found */
-   d->stopAfterFirstSol = 1;
-
    printf("starting algX\n");
-   assert(RANDOMIZE_ROWS == 1);
-   algorithmX_RandRows(d);
+   algorithmX_SGen1(d);
    printf("number of calls: %d\n", d->numCalls);
 
    uncoverRowHeaders(d);

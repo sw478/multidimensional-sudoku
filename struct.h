@@ -144,13 +144,6 @@ typedef struct
    Sudoku *s;
    int nq;
    int max16mult;
-   int singleSolFound;
-
-   /*
-      set to 1 if you want algX to stop after finding
-      the first solution
-   */
-   int stopAfterFirstSol;
    
    /* for secondary columns */
    Doubly *hcol_sec;

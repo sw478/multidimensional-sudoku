@@ -3,8 +3,8 @@
 #include "struct.h"
 
 int algorithmX(Dance *d);
-int algorithmX_RandRows(Dance *d);
-int algorithmX_SGen(Dance *d);
+int algorithmX_SGen1(Dance *d);
+int algorithmX_SGen2(Dance *d);
 
 void selectCandidateRow(Dance *d, Doubly *node);
 void coverColRows(Dance *d, Doubly *xrow);

@@ -24,7 +24,7 @@ void generate(Dance *d)
 
         d->numSols = 0;
         coverRowHeaders(d);
-        algorithmX_SGen(d);
+        algorithmX_SGen2(d);
         uncoverRowHeaders(d);
     }
 }

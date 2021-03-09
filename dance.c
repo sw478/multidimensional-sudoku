@@ -90,9 +90,8 @@ int algorithmX(Dance *d)
          addChild(sol, d->csol);
          d->csol = sol;
 
-         /* if set, will exit after finding first solution */
-         if(d->stopAfterFirstSol)
-            break;
+         /* break here to stop after finding first solution */
+         //break;
       }
       crow = crow->down;
    }
@@ -103,8 +102,9 @@ int algorithmX(Dance *d)
 /*
    used for generating sudokus
    run first to get a random board
+   stops after finding first solution
 */
-int algorithmX_RandRows(Dance *d)
+int algorithmX_SGen1(Dance *d)
 {
    Doubly *hcol, *crow;
    int res = NOT_FOUND, ret;
@@ -137,7 +137,7 @@ int algorithmX_RandRows(Dance *d)
 //printMatrix(d);
       selectCandidateRow(d, crow);
 
-      ret = algorithmX_RandRows(d);
+      ret = algorithmX_SGen1(d);
       res |= ret;
 
 //printMatrix(d);
@@ -165,7 +165,7 @@ int algorithmX_RandRows(Dance *d)
 }
 
 /* checks if more than one solution exists */
-int algorithmX_SGen(Dance *d)
+int algorithmX_SGen2(Dance *d)
 {
    Doubly *hcol, *crow;
    int res = NOT_FOUND, ret;
@@ -186,7 +186,7 @@ int algorithmX_SGen(Dance *d)
    for(crow = hcol->down; crow != hcol; crow = crow->down)
    {
       selectCandidateRow(d, crow);
-      ret = algorithmX_SGen(d);
+      ret = algorithmX_SGen2(d);
       res |= ret;
       unselectCandidateRow(d, crow);
 
