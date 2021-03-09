@@ -13,7 +13,7 @@ void parseArgs(Dance *d, int argc, char *argv[])
         d->problem = SUDOKU2;
     else if(!strcmp(argv[1], "q"))
         d->problem = NQUEENS;
-    else if(!strcmp(argv[1], "sg"))
+    else if(!strcmp(argv[1], "g"))
         d->problem = SGEN;
     else
         arg1Error();

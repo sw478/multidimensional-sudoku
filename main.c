@@ -13,11 +13,13 @@
 #include "saveSolution.h"
 #include "secondaryColumns.h"
 #include "parseArgs.h"
+#include "test.h"
 
 int main(int argc, char *argv[])
 {
    Dance *d = malloc(sizeof(Dance));
    srand(time(NULL));
+   checkConfig();
    parseArgs(d, argc, argv);
 
    switch(d->problem)
@@ -28,6 +30,13 @@ int main(int argc, char *argv[])
       case SGEN: runSudokuGenerate(d, argc, argv); break;
       default: break;
    }
+}
+
+void checkConfig()
+{
+   assert(USE_HEUR == 0 || USE_HEUR == 1);
+   assert(RANDOMIZE_ROWS == 0 || RANDOMIZE_ROWS == 1);
+   assert(STARTING_CAP >= 1 && GROWTH_FACTOR > 1);
 }
 
 /*
@@ -60,12 +69,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
    initMatrix(d);
    printf("finished matrix\n");
 
-   if(USE_HEUR)
-   {
-      /* initializes the heuristic structure */
-      initHeurList(d, d->s->xy);
-      printf("finished heur\n");
-   }
+   HEUR_INIT(d, d->s->xy)
 
    /* hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    initHide_Sudoku(d);
@@ -111,11 +115,9 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    initMatrix(d);
    printf("finished matrix\n");
 
-   if(USE_HEUR)
-   {
-      initHeurList(d, d->rmax / d->s->xy);
-      printf("finished heur\n");
-   }
+   //testRandRows(d);
+
+   HEUR_INIT(d, (d->rmax / d->s->xy))
 
    //printHeur(d);
    //printMatrix(d);
@@ -165,11 +167,7 @@ int runNQueens(Dance *d, int argc, char *argv[])
    set_secondary_columns(d, 2 * d->nq);
    stitch_secondary(d);
 
-   if(USE_HEUR)
-   {
-      initHeurList(d, d->nq);
-      printf("finished heur\n");
-   }
+   HEUR_INIT(d, d->nq)
 
    coverRowHeaders(d);
    printf("finished cover\n");
@@ -206,35 +204,31 @@ int runSudokuGenerate(Dance *d, int argc, char *argv[])
    initMatrix(d);
    printf("finished matrix\n");
 
-   if(USE_HEUR)
-   {
-      /* initializes the heuristic structure */
-      initHeurList(d, d->s->xy);
-      printf("finished heur\n");
-   }
+   HEUR_INIT(d, d->s->xy)
    
    coverRowHeaders(d);
    printf("finished cover\n");
 
-   printf("starting algX\n");
    /* will stop after one solution is found */
-   algorithmX(d);
+   d->stopAfterFirstSol = 1;
+
+   printf("starting algX\n");
+   assert(RANDOMIZE_ROWS == 1);
+   algorithmX_RandRows(d);
    printf("number of calls: %d\n", d->numCalls);
 
    uncoverRowHeaders(d);
 
    printSolutions_Sudoku(d);
-   saveSolution_Sudoku(d);
 
    /* setup generating mechanic */
+   saveSolution_Sudoku(d);
    initHide_Sudoku(d);
    printf("finished initHide\n");
    hideAllCells(d);
 
    saveGeneratedPuzzle(d);
-   printSudokuBoard(d, d->s->grid);
 
-   shuffle(d);
    printSudokuBoard(d, d->s->grid);
    unhideAllCells(d);
 

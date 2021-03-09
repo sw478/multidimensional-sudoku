@@ -2,5 +2,5 @@
 
 void generate(Dance *d)
 {
-
+    
 }

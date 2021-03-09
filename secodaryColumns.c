@@ -1,5 +1,6 @@
 #include "secondaryColumns.h"
 
+/* run after initDance */
 void set_secondary_columns(Dance *d, int index)
 {
    d->sec_hcol_index = index;

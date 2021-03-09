@@ -30,7 +30,8 @@ int initMatrix(Dance *d)
       fgets(buf, BUFSIZE*sizeof(char), d->matrixFile);
       if(feof(d->matrixFile))
          break;
-      assert(2 == sscanf(buf, "%d %d\n", &irow, &icol));
+      sscanf(buf, "%d %d\n", &irow, &icol);
+      //assert(2 == sscanf(buf, "%d %d\n", &irow, &icol));
       doub = malloc(sizeof(Doubly));
       doub->drow = irow;
       doub->dcol = icol;
@@ -73,8 +74,8 @@ int compareCols(const void *a, const void *b)
 
 int connectRows(Dance *d)
 {
-   Doubly *hrow = d->root, *cur, *hnew;
-   int irow, i, prev = -1;
+   Doubly *hrow = d->root, *cur, *hnew, *root = d->root;
+   int irow, i, prev = -1, cmax = d->cmax;
    qsort(d->initList, d->ilist, sizeof(Doubly*), compareRows);
 
    for(i = 0; i < d->ilist; i++)
@@ -85,16 +86,16 @@ int connectRows(Dance *d)
       {
          hnew = malloc(sizeof(Doubly));
          hnew->drow = irow;
-         hnew->dcol = d->cmax;
+         hnew->dcol = cmax;
          hnew->right = hnew->left = hnew;
          hnew->down = hrow->down;
          hnew->up = hrow;
-         hnew->hcol = d->root;
+         hnew->hcol = root;
          hnew->hrow = hnew;
          hrow->down->up = hnew;
          hrow->down = hnew;
          hrow = hnew;
-         d->root->drow++;
+         root->drow++;
          prev = irow;
       }
       cur->right = hrow;
@@ -110,8 +111,8 @@ int connectRows(Dance *d)
 
 int connectCols(Dance *d)
 {
-   Doubly *hcol = d->root, *cur, *hnew;
-   int icol, i, prev = -1;
+   Doubly *hcol = d->root, *cur, *hnew, *root = d->root;
+   int icol, i, prev = -1, rmax = d->rmax;
    qsort(d->initList, d->ilist, sizeof(Doubly*), compareCols);
 
    for(i = 0; i < d->ilist; i++)
@@ -121,17 +122,17 @@ int connectCols(Dance *d)
       if(icol != prev)
       {
          hnew = malloc(sizeof(Doubly));
-         hnew->drow = d->rmax;
+         hnew->drow = rmax;
          hnew->dcol = icol;
          hnew->down = hnew->up = hnew;
          hnew->right = hcol->right;
          hnew->left = hcol;
          hnew->hcol = hnew;
-         hnew->hrow = d->root;
+         hnew->hrow = root;
          hcol->right->left = hnew;
          hcol->right = hnew;
          hcol = hnew;
-         d->root->dcol++;
+         root->dcol++;
          prev = icol;
       }
       cur->down = hcol;

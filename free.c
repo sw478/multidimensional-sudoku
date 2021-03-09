@@ -15,8 +15,7 @@ void freeDance(Dance *d)
    if(d->problem == SUDOKU || d->problem == SUDOKU2)
       freeHide(d);
 
-   if(USE_HEUR)
-      freeHeur(d);
+   HEUR_FREE(d)
 
    if(d->problem == SUDOKU || d->problem == SUDOKU2)
    {

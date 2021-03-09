@@ -11,7 +11,6 @@
 #include "unistd_io.h" /* unistd for linux, io.h for windows */
 #include "config.h"
 #define F_OK 0
-#define BUFSIZE 1000
 
 /* for d->problem */
 #define SUDOKU 0
@@ -72,7 +71,7 @@ typedef struct doubly
    /* misc. data */
    /* could probably move to a struct made for headers that contain doubly */
    Heur *heur;
-   int rowIsHidden;
+   uint8_t rowIsHidden:1;
    uint16_t *rowLayout;
 } Doubly;
 
@@ -89,7 +88,8 @@ typedef struct doubly
 typedef struct hide
 {
    Doubly **hrows;
-   int num, filled;
+   int num;
+   uint8_t filled:1;
 } Hide;
 
 /*
@@ -145,6 +145,12 @@ typedef struct
    Sudoku *s;
    int nq;
    int max16mult;
+
+   /*
+      set to 1 if you want algX to stop after finding
+      the first solution
+   */
+   int stopAfterFirstSol;
    
    /* for secondary columns */
    Doubly *hcol_sec;

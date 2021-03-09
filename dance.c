@@ -18,9 +18,6 @@ int algorithmX(Dance *d)
    */
    int res = NOT_FOUND, ret;
 
-   /* used to randomize row picking */
-   int listSize, *hitList;
-
    /* storing information for the upper level */
    int solCreated = 0;
    SolTree *sol;
@@ -43,7 +40,7 @@ int algorithmX(Dance *d)
       chooses an hcol with a minimum number of
       elements beneath
    */
-   hcol = USE_HEUR ? heuristic(d) : heuristic2(d);
+   HEUR_HEURISTIC(d)
 //printHeur(d); /* used to show status of the heurs */
 
    /*
@@ -53,15 +50,7 @@ int algorithmX(Dance *d)
    if(hcol == d->root)
       return NOT_FOUND;
    
-   if(RANDOMIZE_ROWS)
-   {
-      listSize = hcol->drow - d->rmax;
-      hitList = calloc(listSize, sizeof(int));
-      candidateRow = nextRow(hcol, &listSize, &hitList);
-   }
-   else
-      candidateRow = hcol->down;
-   
+   candidateRow = hcol->down;
    while(candidateRow != hcol)
    {
       /*
@@ -100,23 +89,132 @@ int algorithmX(Dance *d)
          /* add solTree from below (d->csol) as child to sol */
          addChild(sol, d->csol);
          d->csol = sol;
-      }
-      if(res == FOUND)
-      {
-         /* if you want to stop at the first solution found,
-         break here */
-         if(d->problem == SGEN)
+
+         /* if set, will exit after finding first solution */
+         if(d->stopAfterFirstSol)
             break;
       }
-
-      if(RANDOMIZE_ROWS)
-         candidateRow = nextRow(hcol, &listSize, &hitList);
-      else
-         candidateRow = candidateRow->down;
+      candidateRow = candidateRow->down;
    }
 
-   if(RANDOMIZE_ROWS)
-      free(hitList);
+   return res;
+}
+
+/*
+   used for generating sudokus
+   run first to get a random board
+*/
+int algorithmX_RandRows(Dance *d)
+{
+   Doubly *hcol, *candidateRow;
+   int res = NOT_FOUND, ret;
+   int solCreated = 0;
+   SolTree *sol;
+
+   /* used to randomize row picking */
+   int listSize, *hitList;
+
+   if(d->root == d->root->right)
+   {
+      d->csol = initTree();
+      addLeaf(d, d->csol);
+      return FOUND;
+   }
+
+   d->numCalls++;
+
+   HEUR_HEURISTIC(d)
+
+   if(hcol == d->root)
+      return NOT_FOUND;
+   
+   listSize = hcol->drow - d->rmax;
+   hitList = calloc(listSize, sizeof(int));
+   candidateRow = nextRow(hcol, &listSize, &hitList);
+   
+   while(candidateRow != hcol)
+   {
+//printMatrix(d);
+      selectCandidateRow(d, candidateRow);
+
+      ret = algorithmX_RandRows(d);
+      res |= ret;
+
+//printMatrix(d);
+      unselectCandidateRow(d, candidateRow);
+
+      if(ret == FOUND)
+      {
+         d->csol->row = candidateRow->hrow;
+         if(solCreated == 0)
+         {
+            solCreated = 1;
+            sol = initTree();
+         }
+         addChild(sol, d->csol);
+         d->csol = sol;
+
+         break;
+      }
+      candidateRow = nextRow(hcol, &listSize, &hitList);
+   }
+
+   free(hitList);
+
+   return res;
+}
+
+int algorithmX_SGen(Dance *d)
+{
+   Doubly *hcol, *candidateRow;
+   int res = NOT_FOUND, ret;
+   int solCreated = 0;
+   SolTree *sol;
+
+   if(d->root == d->root->right)
+   {
+      d->csol = initTree();
+      addLeaf(d, d->csol);
+      return FOUND;
+   }
+
+   d->numCalls++;
+
+   HEUR_HEURISTIC(d)
+
+   if(hcol == d->root)
+      return NOT_FOUND;
+   
+   candidateRow = hcol->down;
+   while(candidateRow != hcol)
+   {
+//printMatrix(d);
+      selectCandidateRow(d, candidateRow);
+
+      ret = algorithmX_SGen(d);
+      res |= ret;
+
+//printMatrix(d);
+      unselectCandidateRow(d, candidateRow);
+
+      if(ret == FOUND)
+      {
+         d->csol->row = candidateRow->hrow;
+         if(solCreated == 0)
+         {
+            solCreated = 1;
+            sol = initTree();
+         }
+         addChild(sol, d->csol);
+         d->csol = sol;
+
+         /* if set, will exit after finding first solution */
+         if(d->stopAfterFirstSol)
+            break;
+      }
+      candidateRow = candidateRow->down;
+   }
+
    return res;
 }
 
@@ -131,25 +229,28 @@ int algorithmX(Dance *d)
  */
 Doubly *nextRow(Doubly *hcol, int *listSize, int **hitList)
 {
-   Doubly *row;
+   Doubly *crow;
    int i, j, randInt;
    if(*listSize == 0)
       return hcol;
 
+   /* pick random number in range of number of elements left */
    randInt = rand() % *listSize;
+
    /* go to a random row */
-   for(row = hcol->down, i = 0; i < randInt; i++, row = row->down);
+   for(crow = hcol->down, i = 0; i < randInt; i++, crow = crow->down);
+   
    /* continue going down row until unvisited row is found */
-   for(j = i; (*hitList)[j] == 1; j++, row = row->down)
+   for(j = i; (*hitList)[j] == 1; j++, crow = crow->down)
    {
       /* skip if row is column header row */
-      if(row == hcol)
-         row = row->down;
+      if(crow == hcol)
+         crow = crow->down;
    }
 
    (*listSize)--;
    (*hitList)[j] = 1;
-   return row;
+   return crow;
 }
 
 /*
@@ -242,11 +343,9 @@ void coverRows(Dance *d, Doubly *doub)
       xrow->hrow->dcol--;
 
       /* checks for secondary columns */
-      if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
-         decHeur(d, xrow->hcol->heur, 1);
+      HEUR_DEC(d, xrow->hcol->dcol, d->sec_hcol_index, xrow->hcol->heur)
    }
-   if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
-      decHeur(d, doub->hcol->heur, 1);
+   HEUR_DEC(d, xrow->hcol->dcol, d->sec_hcol_index, xrow->hcol->heur)
 }
 
 void unselectCandidateRow(Dance *d, Doubly *candidateRow)
@@ -285,9 +384,7 @@ void uncoverRows(Dance *d, Doubly *doub)
       xrow->down->up = xrow;
       xrow->hcol->drow++;
       xrow->hrow->dcol++;
-      if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
-         incHeur(d, xrow->hcol->heur, 1);
+      HEUR_INC(d, xrow->hcol->dcol, d->sec_hcol_index, xrow->hcol->heur)
    }
-   if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
-      incHeur(d, doub->hcol->heur, 1);
+   HEUR_INC(d, xrow->hcol->dcol, d->sec_hcol_index, xrow->hcol->heur)
 }

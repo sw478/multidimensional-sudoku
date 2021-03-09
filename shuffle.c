@@ -9,6 +9,15 @@
  * swapping box rows and box cols: y! and x!
  * transposing: 2
  */
+
+/*
+   unecessary to use if already using RANDOMIZE ROWS
+   
+   purpose of this feature is if you have a single board and
+   you want to make multiple solutions from it that look different
+   but are fundamentally the same puzzle, without having to
+   run algX for each new puzzle
+*/
 void shuffle(Dance *d)
 {
    relabel(d);
@@ -29,7 +38,7 @@ void relabel(Dance *d)
    for(igrid = 0; igrid < gridSize; igrid++)
       grid[igrid] = nums[grid[igrid]-1]+1;
    free(nums);
-   printf("finished number relabeling\n");
+   //printf("finished number relabeling\n");
 }
 
 void shuffleRows(Dance *d)
@@ -51,7 +60,7 @@ void shuffleRows(Dance *d)
 
    free(grid);
    d->s->grid = newGrid;
-   printf("finished swapping rows within row boxes\n");
+   //printf("finished swapping rows within row boxes\n");
 }
 
 void shuffleCols(Dance *d)
@@ -73,7 +82,7 @@ void shuffleCols(Dance *d)
 
    free(grid);
    d->s->grid = newGrid;
-   printf("finished swapping cols within col boxes\n");
+   //printf("finished swapping cols within col boxes\n");
 }
 
 void shuffleRowBoxes(Dance *d)
@@ -93,7 +102,7 @@ void shuffleRowBoxes(Dance *d)
 
    free(grid);
    d->s->grid = newGrid;
-   printf("finished swapping row boxes\n");
+   //printf("finished swapping row boxes\n");
 }
 
 void shuffleColBoxes(Dance *d)
@@ -114,7 +123,7 @@ void shuffleColBoxes(Dance *d)
 
    free(grid);
    d->s->grid = newGrid;
-   printf("finished swapping col boxes\n");
+   //printf("finished swapping col boxes\n");
 }
 
 void transpose(Dance *d)

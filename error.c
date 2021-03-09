@@ -15,7 +15,13 @@ void fileError(char *fileName)
 
 void arg1Error()
 {
-   fprintf(stderr, "Error: Invalid first argument");
+   fprintf(stderr, "Error: Invalid first argument\n");
+   exit(EXIT_FAILURE);
+}
+
+void randomRowGenError()
+{
+   fprintf(stderr, "Error: RANDOMDIZE_ROWS must be set on\n");
    exit(EXIT_FAILURE);
 }
 

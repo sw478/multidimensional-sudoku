@@ -160,7 +160,7 @@ void printSolutions_NQueens(Dance *d)
    
    printf("printing first %d solutions\n", maxPrint);
 
-   for(i = 0; i < maxPrint; i++)//d->numSols; i++)
+   for(i = 0; i < maxPrint && i < d->numSols; i++)
    {
       printf("\nsol %d: \n", i + 1);
       //printSingleSol_Matrix(d, d->sols[i]);
