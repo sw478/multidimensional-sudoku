@@ -2,12 +2,6 @@
 #define CONFIG_H
 
 /*
-    set to 1 for rows to be randomly chosen
-    0 to choose rows in order
-*/
-#define RANDOMIZE_ROWS 1
-
-/*
     set to 1 to use heur system
 
     will call decHeur or incHeur each time
@@ -28,11 +22,7 @@
     #define HEUR_INC(d, dcol, index, heur)
     #define HEUR_FREE(d)
 #else
-    #define HEUR_HEURISTIC(d) { error(); }
-    #define HEUR_INIT(d, heur_max) { error(); }
-    #define HEUR_DEC(d, dcol, index, heur) { error(); }
-    #define HEUR_INC(d, dcol, index, heur) { error(); }
-    #define HEUR_FREE(d) { error(); }
+    /* checkConfig() should assert USE_HEUR is 0 or 1 */
 #endif
 
 /*

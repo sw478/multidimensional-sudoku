@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
 void checkConfig()
 {
    assert(USE_HEUR == 0 || USE_HEUR == 1);
-   assert(RANDOMIZE_ROWS == 0 || RANDOMIZE_ROWS == 1);
    assert(STARTING_CAP >= 1 && GROWTH_FACTOR > 1);
 }
 

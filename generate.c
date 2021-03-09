@@ -16,11 +16,22 @@ void generate(Dance *d)
     {
         /* pick a random cell to fill */
         randInt = rand() % gridSize;
-        for(igrid = randInt; d->hideList[igrid]->filled; igrid = (igrid + 1) % gridSize);
+        for(igrid = (randInt + 1) % gridSize; d->hideList[igrid]->filled; igrid = (igrid + 1) % gridSize)
+        {
+            if(igrid == randInt)
+            {
+                if(d->hideList[igrid]->filled)
+                {
+                    printf("All cells filled\n");
+                    return;
+                }
+                break;
+            }
+        }
         //printf("igrid: %d\n", igrid);
         fillSingleCell(d, igrid);
 
-        //printSudokuBoard_Gen(d);
+        printSudokuBoard_Gen(d);
 
         d->numSols = 0;
         coverRowHeaders(d);
