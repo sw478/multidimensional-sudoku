@@ -18,7 +18,6 @@ int initDance(Dance *d)
    d->sols = malloc(d->solCap*sizeof(SolTree));
 
    d->numCalls = 0;
-   d->stopAfterFirstSol = 0;
 
    d->sec_hcol_index = d->cmax; /* default */
 
