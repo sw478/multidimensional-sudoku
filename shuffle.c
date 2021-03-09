@@ -36,7 +36,7 @@ void shuffleRows(Dance *d)
 {
    int *grid = d->s->grid;
    int x = d->s->x, y = d->s->y, xy = d->s->xy;
-   int i, brow, row, *rows, *new = malloc(xy*xy*sizeof(int));
+   int i, brow, row, *rows, *newGrid = malloc(xy*xy*sizeof(int));
 
    for(brow = 0; brow < y; brow++)
    {
@@ -44,13 +44,13 @@ void shuffleRows(Dance *d)
       for(row = 0; row < x; row++)
       {
          for(i = 0; i < xy; i++)
-            new[brow*x*xy + row*xy + i] = grid[brow*x*xy + rows[row]*xy + i];
+            newGrid[brow*x*xy + row*xy + i] = grid[brow*x*xy + rows[row]*xy + i];
       }
       free(rows);
    }
 
    free(grid);
-   d->s->grid = new;
+   d->s->grid = newGrid;
    printf("finished swapping rows within row boxes\n");
 }
 
@@ -58,7 +58,7 @@ void shuffleCols(Dance *d)
 {
    int *grid = d->s->grid;
    int x = d->s->x, y = d->s->y, xy = d->s->xy;
-   int i, bcol, col, *cols, *new = malloc(xy*xy*sizeof(int));
+   int i, bcol, col, *cols, *newGrid = malloc(xy*xy*sizeof(int));
 
    for(bcol = 0; bcol < x; bcol++)
    {
@@ -66,13 +66,13 @@ void shuffleCols(Dance *d)
       for(col = 0; col < y; col++)
       {
          for(i = 0; i < xy; i++)
-            new[bcol*y + col + i*xy] = grid[bcol*y + cols[col] + i*xy];
+            newGrid[bcol*y + col + i*xy] = grid[bcol*y + cols[col] + i*xy];
       }
       free(cols);
    }
 
    free(grid);
-   d->s->grid = new;
+   d->s->grid = newGrid;
    printf("finished swapping cols within col boxes\n");
 }
 
@@ -80,19 +80,19 @@ void shuffleRowBoxes(Dance *d)
 {
    int *grid = d->s->grid, *rows;
    int x = d->s->x, y = d->s->y, xy = d->s->xy, gridSize = d->s->gridSize;
-   int igrid, isub, brow, *new = malloc(gridSize*sizeof(int));
+   int igrid, isub, brow, *newGrid = malloc(gridSize*sizeof(int));
 
    rows = shuffledList(y);
    for(igrid = 0; igrid < gridSize; igrid++)
    {
       brow = igrid / (xy*x);
       isub = igrid % (xy*x);
-      new[igrid] = grid[rows[brow]*xy*x + isub];
+      newGrid[igrid] = grid[rows[brow]*xy*x + isub];
    }
    free(rows);
 
    free(grid);
-   d->s->grid = new;
+   d->s->grid = newGrid;
    printf("finished swapping row boxes\n");
 }
 
@@ -100,7 +100,7 @@ void shuffleColBoxes(Dance *d)
 {
    int *grid = d->s->grid, *cols;
    int x = d->s->x, y = d->s->y, xy = d->s->xy, gridSize = d->s->gridSize;
-   int igrid, isub, bcol, row, *new = malloc(gridSize*sizeof(int));
+   int igrid, isub, bcol, row, *newGrid = malloc(gridSize*sizeof(int));
 
    cols = shuffledList(y);
    for(igrid = 0; igrid < gridSize; igrid++)
@@ -108,12 +108,12 @@ void shuffleColBoxes(Dance *d)
       row = igrid / xy;
       bcol = igrid % xy / x;
       isub = igrid % y;
-      new[igrid] = grid[row*xy + cols[bcol]*x + isub];
+      newGrid[igrid] = grid[row*xy + cols[bcol]*x + isub];
    }
    free(cols);
 
    free(grid);
-   d->s->grid = new;
+   d->s->grid = newGrid;
    printf("finished swapping col boxes\n");
 }
 
@@ -121,20 +121,20 @@ void transpose(Dance *d)
 {
    int *grid = d->s->grid, row, col;
    int igrid, xy = d->s->xy, gridSize = xy*xy;
-   int *new;
+   int *newGrid;
 
    if(rand() % 2)
       return;
-   new = malloc(gridSize*sizeof(int));
+   newGrid = malloc(gridSize*sizeof(int));
    for(igrid = 0; igrid < gridSize; igrid++)
    {
       row = igrid / xy;
       col = igrid % xy;
-      new[row*xy + col] = grid[col*xy + row];
+      newGrid[row*xy + col] = grid[col*xy + row];
    }
 
    free(grid);
-   d->s->grid = new;
+   d->s->grid = newGrid;
 }
 
 /*
@@ -153,12 +153,6 @@ int *shuffledList(int len)
       irand = rand() % (i + 1);
       swap(&nums[irand], &nums[i]);
    }
-
-/*
-   for(i = 0; i < len; i++)
-      printf("%d ", nums[i]);
-   printf("\n");
-*/
 
    return nums;
 }

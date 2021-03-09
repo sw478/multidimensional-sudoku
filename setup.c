@@ -4,27 +4,14 @@
 #include "heuristic.h"
 #include "hide.h"
 
-/*
- * initialize values and structures in the dance struct
- *
- * since d->rmax and d->cmax are defined/configured in
- * initMatrixFileSudoku, this has to follow that function
- */
+/* initialize values and structures in the dance struct */
 int initDance(Dance *d)
 {
-   assert(d != NULL);
-
    if(d->problem == SUDOKU || d->problem == SUDOKU2)
    {
       d->s->xy = d->s->x*d->s->y;
       d->s->gridSize = d->s->xy*d->s->xy;
    }
-
-   d->root = malloc(sizeof(Doubly));
-   d->root->drow = d->rmax;
-   d->root->dcol = d->cmax;
-   d->root->up = d->root->down = d->root->left = d->root->right = d->root;
-   d->root->hcol = d->root->hrow = d->root;
 
    d->numSols = 0;
    d->solCap = STARTING_CAP;
@@ -76,11 +63,11 @@ int initMatrixFileSudoku(Dance *d)
 
    if(access(matrixFile, F_OK) != -1)
    {
-      d->init = fopen(matrixFile, "r+");
+      d->matrixFile = fopen(matrixFile, "r+");
       free(matrixFile);
       return 1;
    }
-   d->init = fopen(matrixFile, "w+");
+   d->matrixFile = fopen(matrixFile, "w+");
 
    for(igrid = 0; igrid < gridSize; igrid++)
    {
@@ -97,60 +84,10 @@ int initMatrixFileSudoku(Dance *d)
          icol[3] = inum + sb*xy + gridSize * 3;
 
          for(i = 0; i < 4; i++)
-            fprintf(d->init, "%d %d\n", irow, icol[i]);
+            fprintf(d->matrixFile, "%d %d\n", irow, icol[i]);
       }
    }
 
    free(matrixFile);
    return 0;
-}
-
-void set_secondary_columns(Dance *d, int index)
-{
-   d->sec_hcol_index = index;
-}
-
-/*
-   convert hcols
-
-      root <> ... <> temp2 <> hcol <> ... <> temp1 <> root
-
-   to
-
-      root <> ... <> temp2 <> root
-      hcol <> ... <> temp1 <> hcol
-
-   run this before initHeur to prevent heurs on secondary columns
-*/
-void stitch_secondary(Dance *d)
-{
-   Doubly *hcol, *temp1, *temp2;
-
-   for(hcol = d->root->right; hcol->dcol != d->sec_hcol_index; hcol = hcol->right);
-   d->hcol_sec = hcol;
-
-   temp1 = d->root->left;
-   temp2 = hcol->left;
-
-   d->root->left = temp2;
-   temp2->right = d->root;
-
-   hcol->left = temp1;
-   temp1->right = hcol;
-}
-
-void unstitch_secondary(Dance *d)
-{
-   Doubly *hcol, *temp1, *temp2;
-
-   hcol = d->hcol_sec;
-
-   temp1 = hcol->left;
-   temp2 = d->root->left;
-
-   d->root->left = temp1;
-   temp1->right = d->root;
-
-   hcol->left = temp2;
-   temp2->right = hcol;
 }

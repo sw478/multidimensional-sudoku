@@ -1,11 +1,13 @@
 #include "setMatrixDimensions.h"
 
+/* call after sudoku board is initialized */
 void setMatrixDimensions_Sudoku(Dance *d)
 {
    d->rmax = d->s->xy*d->s->gridSize;
    d->cmax = 4*d->s->gridSize;
 }
 
+/* call after sudoku board is initialized */
 void setMatrixDimensions_Sudoku2(Dance *d)
 {
    int x, y, xy, xf, yf, xfy, yfx;

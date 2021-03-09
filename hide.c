@@ -56,7 +56,6 @@ int initHide_Sudoku(Dance *d)
          xrow = xrow->down;
     
    }
-   assert(xrow == d->root);
    d->ihide = d->s->gridSize;
 
    return 0;
@@ -218,7 +217,7 @@ int hide_Sudoku2(Dance *d)
                ihide++;
                if(ihide > hideCap)
                {
-                  hideCap *= 2;
+                  hideCap = hideCap * GROWTH_FACTOR + 1;
                   h->hrows = realloc(h->hrows, hideCap*sizeof(Doubly));
                }
                break;

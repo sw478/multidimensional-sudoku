@@ -73,7 +73,6 @@ void initHeurList(Dance *d, int maxColElements)
       // find the correct heur header
       heurHeader = d->heurRoot;
       for(; heur->num > heurHeader->num; heurHeader = heurHeader->hnext);
-      assert(heur->num == heurHeader->num);
 
       // add heur to heur header
       heur->next = heurHeader;

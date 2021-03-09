@@ -8,30 +8,38 @@ int initMatrix(Dance *d)
 {
    char *buf = malloc(BUFSIZE*sizeof(char));
    int irow, icol;
-   Doubly *new;
+   Doubly *doub;
    memset(buf, 0, BUFSIZE*sizeof(char));
 
-   assert(fseek(d->init, 0, SEEK_SET) == 0);
+   assert(fseek(d->matrixFile, 0, SEEK_SET) == 0);
    
+   /* list of disconnected doubly */
    d->ilist = 0;
    d->initListCap = 1;
    d->initList = malloc(sizeof(Doubly*));
 
-   while(!feof(d->init))
+   /* initialize all aspects of root doubly */
+   d->root = malloc(sizeof(Doubly));
+   d->root->drow = d->rmax;
+   d->root->dcol = d->cmax;
+   d->root->up = d->root->down = d->root->left = d->root->right = d->root;
+   d->root->hcol = d->root->hrow = d->root;
+
+   while(!feof(d->matrixFile))
    {
-      fgets(buf, BUFSIZE*sizeof(char), d->init);
-      if(feof(d->init))
+      fgets(buf, BUFSIZE*sizeof(char), d->matrixFile);
+      if(feof(d->matrixFile))
          break;
       assert(2 == sscanf(buf, "%d %d\n", &irow, &icol));
-      new = malloc(sizeof(Doubly));
-      new->drow = irow;
-      new->dcol = icol;
+      doub = malloc(sizeof(Doubly));
+      doub->drow = irow;
+      doub->dcol = icol;
       if(d->ilist >= d->initListCap)
       {
-         d->initListCap *= 2;
+         d->initListCap = d->initListCap * GROWTH_FACTOR + 1;
          d->initList = realloc(d->initList, d->initListCap*sizeof(Doubly*));
       }
-      d->initList[d->ilist] = new;
+      d->initList[d->ilist] = doub;
       d->ilist++;
    }
    d->initList = realloc(d->initList, d->ilist*sizeof(Doubly*));
@@ -41,7 +49,7 @@ int initMatrix(Dance *d)
 
    free(d->initList);
 
-   fclose(d->init);
+   fclose(d->matrixFile);
    free(buf);
 
    return 0;

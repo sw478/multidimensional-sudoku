@@ -11,6 +11,7 @@ int algorithmX(Dance *d)
    /*
       res will be returned, so if there is at least one solution,
       res must be set to FOUND
+
       ret is just what algX returns from one candidate row, and is
       used for knowing whether the level below found at least one
       solution
@@ -46,8 +47,8 @@ int algorithmX(Dance *d)
 //printHeur(d); /* used to show status of the heurs */
 
    /*
-      there are no possible solution if there are still
-      columns to fill, but no doubly left in the matrix
+      there are no possible solutions left in matrix if there
+      are still columns to fill, but no doubly uncovered in the matrix
    */
    if(hcol == d->root)
       return NOT_FOUND;
@@ -64,7 +65,7 @@ int algorithmX(Dance *d)
    while(candidateRow != hcol)
    {
       /*
-         calling the pairs of printMatrix before and after
+         calling this pair of printMatrix before and after
          covering necessary doubly allows you to see the
          algorithm in work
       */
@@ -239,7 +240,7 @@ void coverRows(Dance *d, Doubly *doub)
       xrow->down->up = xrow->up;
       xrow->hcol->drow--;
       xrow->hrow->dcol--;
-      
+
       /* checks for secondary columns */
       if(USE_HEUR && xrow->hcol->dcol < d->sec_hcol_index)
          decHeur(d, xrow->hcol->heur, 1);

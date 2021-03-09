@@ -1,8 +1,8 @@
 #include "error.h"
 
-void invalidInput()
+void invalidSudokuBoard()
 {
-   fprintf(stderr, "Input file contains invalid game board\n");
+   fprintf(stderr, "Error: Input file contains invalid sudoku board\n");
    exit(EXIT_FAILURE);
 }
 
@@ -22,19 +22,19 @@ void usage()
 
 void numArgError()
 {
-   fprintf(stderr, "Num Arg Error\n");
+   fprintf(stderr, "Error: Invalid number of arguments\n");
    exit(EXIT_FAILURE);
 }
 
 void heurNumError()
 {
-   fprintf(stderr, "Heur Num Error\n");
+   fprintf(stderr, "Error: Heur num does not match hcol drow\n");
    exit(EXIT_FAILURE);
 }
 
-void invalidN()
+void invalidN_NQueens()
 {
-   fprintf(stderr, "Invalid value for n\n");
+   fprintf(stderr, "Error: Invalid value for n\n");
    exit(EXIT_FAILURE);
 }
 

@@ -3,11 +3,11 @@
 #include "struct.h"
 
 void error();
-void invalidInput();
+void invalidSudokuBoard();
 void fileError(char *fileName);
 void usage();
 void numArgError();
 void heurNumError();
-void invalidN();
+void invalidN_NQueens();
 
 #endif

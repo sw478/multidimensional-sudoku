@@ -2,7 +2,7 @@
 #include "solTree.h"
 #include "heuristic.h"
 #include "hide.h"
-#include "initHrowLayout.h"
+#include "initHrowLayout_Sudoku2.h"
 
 void freeDance(Dance *d)
 {

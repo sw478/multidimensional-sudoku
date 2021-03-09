@@ -10,8 +10,8 @@
 #include <stdint.h>
 #include "unistd_io.h" /* unistd for linux, io.h for windows */
 #include "config.h"
-#define BUFSIZE 1000
 #define F_OK 0
+#define BUFSIZE 1000
 
 /* for d->problem */
 #define SUDOKU 0
@@ -129,65 +129,41 @@ typedef struct
    FILE *in;
 } Sudoku;
 
-/*
- * rmax, cmax: dimensions of matrix
- * numCalls: # of times algorithm X is called
- * root: entry point for matrix
- * xrow & xcol: used for tracking doubly
- *
- * sewing:
- * initList: list of all the Doubly when initializing the matrix. used for sorting
- * ilist: next available index in initList
- * initListCap: capacity of initList
- *
- * storing solutions:
- * solRoot: root node for solTree tree
- * csol: current solTree being tracked
- * sols: list of leaf nodes, # of leaf nodes is # of distinct solutions
- * numSols: next available index in sols
- * solCap: current capacity of sols, doubles when reached
- * 
- * typical case for solving sudokus is to have only one solution
- * which is why solCap usually stays at 1, and would make the tree behave
- * as doubly linked list
- *
- * hideList: list of pointers to Hide structs
- * hidden: number of cells currently hidden
- * heurRoot: dummy node/entry point for heuristic structure
- *
- * init: file pointer for matrix text file (not to be confused with sudoku text file)
- */
 typedef struct
 {
+   /* root of matrix */
+   Doubly *root;
+   /* matrix dimensions */
+   int rmax, cmax;
+   /* number of times AlgX is called */
+   int numCalls;
+   FILE *matrixFile;
+
+   /* problem specific data */
+   int problem;
    Sudoku *s;
    int nq;
-   /* 
-      0 for sudoku
-      1 for sudoku2
-      2 for n queens
-   */
-   int problem;
+   int max16mult;
    
    /* for secondary columns */
    Doubly *hcol_sec;
    int sec_hcol_index;
-
-   int rmax, cmax, numCalls;
-   Doubly *root;
-
+   
+   /* for initializing matrix */
    Doubly **initList;
    int ilist, initListCap;
 
+   /* for storing solutions */
    SolTree *csol, **sols;
    int numSols, solCap;
 
+   /* for optional pre processed row covering */
    Hide **hideList;
    int hidden, hideCap, ihide;
 
+   /* for column heuristic */
    Heur *heurRoot;
-   FILE *init;
 
-   int max16mult;
 } Dance;
 
 #endif

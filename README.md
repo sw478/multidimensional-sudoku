@@ -11,6 +11,10 @@ program can be used to solve those other problems, such as pentomino tiling and 
 
 ![seppuku](images/sudoku_seppuku.png)
 
+## unistd_io.h
+
+Create a file of this name that includes io.h if running on windows or unistd.h if on linux
+
 ## logic
 
 Given a list of coordinates for an exact cover matrix, solution(s) are found by finding a set of disjoint rows with coordinates that
@@ -153,28 +157,28 @@ heur headers are created and destroyed when a new column is needed or when a heu
     
 heurList:
 
-    root - h(2) - h(3) - h(4)
-            |      |      |
-           col1   col4   col7
-            |
-           col2
-            |
-           col3
-            |
-           col5
-            |
-           col6
+    root - h(1) - h(2) - h(3) - h(4)
+                   |      |      |
+                  col1   col4   col7
+                   |
+                  col2
+                   |
+                  col3
+                   |
+                  col5
+                   |
+                  col6
 
 This enables you to get a column header with minimal elements underneath in O(1) time.
 
-    min_hcol = root->hnext->next
+    while(heurHeader->next == heurHeader)
+        min_hcol = heurHeader->next
 
 The incrementing and decrementing operations are also in O(1) time.
 Choosing a column with minimal elements, while a heuristic, doesn't guarantee a faster solve though.
-For some cases, The program can be faster if it chose a random column or the first uncovered column,
-so its commented out at the moment.
+For some cases, The program can be faster if it chose a random column.
 
-## process
+## process (sudoku)
 
 The program takes in a file of a sudoku you want it to solve, and takes note of its dimensions, x and y.
 It then creates a file that lists the coordinates of elements in the initial matrix. hideAllCells() then covers
@@ -186,23 +190,12 @@ sudoku board with the same dimensions can also be run now without having to rein
 If you wanted to use this for another exact cover problem, the code has been made modular so you can just swap out and
 create your own function that writes to a matrix coordinate file. The overall process is the same.
 
-## matrixFile creation
+## possible paths to take
 
-While difficult to implement pointers in python effectively, it can be used for writing to the matrixFile
-
-## todo
-
-#### short term goals
-
-improve user interface\
 add boards for higher dimensions, ex. 2x2x2, 2x3x4, 3x3x3x3\
 figure out an efficient way to generate boards
 
-#### long term goals
-
-design an app/web app for this program
-
-## data
+## data (sudoku)
 
 longest recorded time to create a random fully populated board of varying sizes:\
 (rows are chosen nondeterministically)\

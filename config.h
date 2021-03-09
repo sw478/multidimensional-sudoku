@@ -15,4 +15,11 @@
 */
 #define USE_HEUR 1
 
+/*
+    used for list memmory allocation
+    growth factor must be > 1
+*/
+#define STARTING_CAP 1
+#define GROWTH_FACTOR 2
+
 #endif

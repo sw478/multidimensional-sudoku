@@ -1,4 +1,4 @@
-#include "struct.h"
+#include "saveSolution.h"
 
 /*
     for custom exact cover:

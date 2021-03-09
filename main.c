@@ -9,7 +9,10 @@
 #include "shuffle.h"
 #include "setMatrixDimensions.h"
 #include "hrowCover.h"
-#include "initHrowLayout.h"
+#include "initHrowLayout_Sudoku2.h"
+#include "saveSolution.h"
+#include "secondaryColumns.h"
+#include "parseArgs.h"
 
 int main(int argc, char *argv[])
 {
@@ -44,20 +47,22 @@ int runSudoku(Dance *d, int argc, char *argv[])
    mode = d->s->mode;
 
    if(mode == 1) /* if solving */
-      printBoard(d, d->s->grid);
+      printSudokuBoard(d, d->s->grid);
 
    //initMatrixFileSudoku(d); /* using matrixFileCreator.py probably easier */
    sprintf(matrixFile, "dance/ds1_%dx%d.txt", d->s->y, d->s->x);
-   d->init = fopen(matrixFile, "r+");
+   d->matrixFile = fopen(matrixFile, "r+");
    free(matrixFile);
 
    setMatrixDimensions_Sudoku(d);
 
-   initDance(d); /* initialize dance struct */
-   initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
-   printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
+   /* initialize dance struct */
+   initDance(d);
+   initMatrix(d); /* reads from d->matrixFile and creates the general matrix */
+   printf("finished matrix\n"); /* for larger boards everything prior takes a small but noticeable amount of time */
 
-   initHeurList(d, d->s->xy); /* initializes the heuristic helper structure */
+   /* initializes the heuristic structure */
+   initHeurList(d, d->s->xy);
    printf("finished heur\n");
 
    if(mode == 1)
@@ -70,6 +75,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished cover\n");
 
+   /* if mode == 2, will stop after one solution is found */
    algorithmX(d);
 
    printf("number of calls: %d\n", d->numCalls);
@@ -87,10 +93,10 @@ int runSudoku(Dance *d, int argc, char *argv[])
       hideAllCells(d);
 
       saveGeneratedPuzzle(d);
-      printBoard(d, d->s->grid);
+      printSudokuBoard(d, d->s->grid);
 
       shuffle(d);
-      printBoard(d, d->s->grid);
+      printSudokuBoard(d, d->s->grid);
       unhideAllCells(d);
    }
 
@@ -110,17 +116,17 @@ int runSudoku2(Dance *d, int argc, char *argv[])
       error();
    }
 
-   printBoard(d, d->s->grid);
+   printSudokuBoard(d, d->s->grid);
  
    /* can set to custom matrixFile here */
    sprintf(matrixFile, "dance/ds2_%dx%d.txt", d->s->y, d->s->x);
-   d->init = fopen(matrixFile, "r+");
+   d->matrixFile = fopen(matrixFile, "r+");
    free(matrixFile);
 
    setMatrixDimensions_Sudoku2(d);
 
    initDance(d); /* initialize dance struct */
-   initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
+   initMatrix(d); /* reads from d->matrixFile and creates the general matrix for the given dimensions */
    printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
    initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
@@ -161,13 +167,13 @@ int runNQueens(Dance *d, int argc, char *argv[])
  
    /* can set to custom matrixFile here */
    sprintf(matrixFile, "dance/dq_%d.txt", d->nq);
-   d->init = fopen(matrixFile, "r+");
+   d->matrixFile = fopen(matrixFile, "r+");
    free(matrixFile);
 
    setMatrixDimensions_NQueens(d);
 
    initDance(d); /* initialize dance struct */
-   initMatrix(d); /* reads from d->init and creates the general matrix for the given dimensions */
+   initMatrix(d); /* reads from d->matrixFile and creates the general matrix for the given dimensions */
    printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
 
    /* declare index of start point of secondary hcols */
@@ -190,96 +196,10 @@ int runNQueens(Dance *d, int argc, char *argv[])
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
 
    unstitch_secondary(d);
-   //printMatrix(d);
 
    printSolutions_NQueens(d);
 
    freeDance(d);
 
    return 0;
-}
-
-/*
- * argument format: a.out [problem (s/s2/q)] ...
- * 
- * sudoku/sudoku2:
- * a.out [s/s2] [mode: s for solve, g for gen] [file: empty to be
- * filled with only dimensions if generating, filled if solving]
- * 
- * n queens:
- * a.out [q] [n]
- */
-void parseArgs(Dance *d, int argc, char *argv[])
-{
-   int i, c, test;
-   Sudoku *s;
-   char *buf = malloc(BUFSIZE*sizeof(char)), temp;
-
-   memset(buf, 0, BUFSIZE*sizeof(char));
-
-   if(argc < 1)
-      numArgError();
-   
-   if(!strcmp(argv[1], "s"))
-      d->problem = SUDOKU;
-   else if(!strcmp(argv[1], "s2"))
-      d->problem = SUDOKU2;
-   else if(!strcmp(argv[1], "q"))
-      d->problem = NQUEENS;
-
-   if(d->problem == SUDOKU || d->problem == SUDOKU2)
-   {
-      s = malloc(sizeof(Sudoku));
-      if(argc != 4)
-         numArgError();
-      if(!strcmp(argv[2], "s")) /* solve */
-         s->mode = 1;
-      else if(!strcmp(argv[2], "g")) /* generate */
-         s->mode = 2;
-      else
-         usage();
-      if(s->mode == 1)
-      {
-         s->in = fopen(argv[3], "r+");
-         if(!s->in)
-            fileError(argv[3]);
-      }
-      if(s->mode == 2)
-         s->in = fopen(argv[3], "w+");
-
-      assert(3 == sscanf(argv[3], "tests/%c/%dx%d.in", &temp, &s->x, &s->y));
-      s->xy = s->x*s->y;
-      s->gridSize = s->xy*s->xy;
-      s->grid = calloc(s->gridSize, sizeof(int));
-
-      assert(fseek(s->in, 0, SEEK_SET) == 0);
-      if(s->mode == 2)
-      {
-         sprintf(buf, "%d %d\n", s->x, s->y);
-         fwrite(buf, 1, BUFSIZE*sizeof(char), s->in);
-         free(buf);
-         return;
-      }
-
-      fgets(buf, BUFSIZE*sizeof(char), s->in);
-      for(i = 0; i < s->gridSize; i++)
-      {
-         fgets(buf, BUFSIZE, s->in);
-         test = sscanf(buf, "%d", &c);
-         if(test < 1 || c < 0 || c > s->xy)
-            invalidInput();
-         s->grid[i] = c;
-      }
-      d->s = s;
-   }
-   else if(d->problem == NQUEENS)
-   {
-      if(argc != 3){
-         printf("argc: %d\n", argc);
-         numArgError();}
-      if(1 != sscanf(argv[2], "%d", &d->nq))
-         invalidN();
-   }
-   
-   free(buf);
 }

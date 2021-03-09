@@ -1,4 +1,4 @@
-#include "initHrowLayout.h"
+#include "initHrowLayout_Sudoku2.h"
 
 /*
     used for sudoku 2
