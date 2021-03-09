@@ -71,7 +71,7 @@ typedef struct doubly
    /* misc. data */
    /* could probably move to a struct made for headers that contain doubly */
    Heur *heur;
-   uint8_t rowIsHidden:1;
+   int rowIsHidden;
    uint16_t *rowLayout;
 } Doubly;
 
@@ -88,8 +88,7 @@ typedef struct doubly
 typedef struct hide
 {
    Doubly **hrows;
-   int num;
-   uint8_t filled:1;
+   int num, filled;
 } Hide;
 
 /*
@@ -145,7 +144,7 @@ typedef struct
    Sudoku *s;
    int nq;
    int max16mult;
-   uint8_t singleSolFound:1;
+   int singleSolFound;
 
    /*
       set to 1 if you want algX to stop after finding

@@ -31,30 +31,28 @@ void parseArgs(Dance *d, int argc, char *argv[])
 void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
 {
     int i, c, test;
-    Sudoku *s;
+    Sudoku *s = malloc(sizeof(Sudoku));;
     char *buf = malloc(BUFSIZE*sizeof(char));
     memset(buf, 0, BUFSIZE*sizeof(char));
 
     if(argc != 3)
         numArgError();
     
-    s = malloc(sizeof(Sudoku));
     d->s = s;
     s->boardFile = fopen(argv[2], "r+");
     if(!s->boardFile)
         fileError(argv[2]);
-
+    assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
     assert(2 == sscanf(argv[2], "tests/s/%dx%d.in", &s->x, &s->y));
     s->xy = s->x*s->y;
     s->gridSize = s->xy*s->xy;
     s->grid = calloc(s->gridSize, sizeof(int));
 
-    assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
 
     fgets(buf, BUFSIZE*sizeof(char), s->boardFile);
     for(i = 0; i < s->gridSize; i++)
     {
-        fgets(buf, BUFSIZE, s->boardFile);
+        fgets(buf, BUFSIZE*sizeof(char), s->boardFile);
         test = sscanf(buf, "%d", &c);
         /*
             board is invalid if sudoku numbers are not
@@ -79,24 +77,23 @@ void parseArgs_NQueens(Dance *d, int argc, char *argv[])
 /* a.out sg [file] [x] [y] */
 void parseArgs_SGen(Dance *d, int argc, char *argv[])
 {
-    Sudoku *s;
+    Sudoku *s = malloc(sizeof(Sudoku));;
     char *buf = malloc(BUFSIZE*sizeof(char));
     memset(buf, 0, BUFSIZE*sizeof(char));
 
     if(argc != 5)
         numArgError();
 
-    s = malloc(sizeof(Sudoku));
     d->s = s;
+    if(!s->boardFile)
+        fileError(argv[2]);
     s->boardFile = fopen(argv[2], "w+");
-
+    assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
     assert(1 == sscanf(argv[3], "%d", &s->x));
     assert(1 == sscanf(argv[4], "%d", &s->y));
     s->xy = s->x*s->y;
     s->gridSize = s->xy*s->xy;
     s->grid = calloc(s->gridSize, sizeof(int));
-
-    assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
 
     /* print board dimensions at top of file */
     sprintf(buf, "%d %d\n", s->x, s->y);
