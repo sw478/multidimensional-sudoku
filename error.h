@@ -10,5 +10,6 @@ void numArgError();
 void heurNumError();
 void invalidN_NQueens();
 void randomRowGenError();
+void checkDoublyError(int drow, int dcol);
 
 #endif

@@ -145,6 +145,7 @@ typedef struct
    Sudoku *s;
    int nq;
    int max16mult;
+   uint8_t singleSolFound:1;
 
    /*
       set to 1 if you want algX to stop after finding

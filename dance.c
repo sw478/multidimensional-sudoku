@@ -7,7 +7,7 @@
 
 int algorithmX(Dance *d)
 {
-   Doubly *hcol, *candidateRow;
+   Doubly *hcol, *crow;
    /*
       res will be returned, so if there is at least one solution,
       res must be set to FOUND
@@ -50,8 +50,8 @@ int algorithmX(Dance *d)
    if(hcol == d->root)
       return NOT_FOUND;
    
-   candidateRow = hcol->down;
-   while(candidateRow != hcol)
+   crow = hcol->down;
+   while(crow != hcol)
    {
       /*
          calling this pair of printMatrix before and after
@@ -59,13 +59,13 @@ int algorithmX(Dance *d)
          algorithm in work
       */
 //printMatrix(d);
-      selectCandidateRow(d, candidateRow);
+      selectCandidateRow(d, crow);
 
       ret = algorithmX(d);
       res |= ret;
 
 //printMatrix(d);
-      unselectCandidateRow(d, candidateRow);
+      unselectCandidateRow(d, crow);
 
       /*
          sol will refer to the candidate row above this
@@ -79,7 +79,7 @@ int algorithmX(Dance *d)
             everything but the row assigned, and it's at
             this level you assign the row to it
          */
-         d->csol->row = candidateRow->hrow;
+         d->csol->row = crow->hrow;
          /* malloc sol if haven't already */
          if(solCreated == 0)
          {
@@ -94,7 +94,7 @@ int algorithmX(Dance *d)
          if(d->stopAfterFirstSol)
             break;
       }
-      candidateRow = candidateRow->down;
+      crow = crow->down;
    }
 
    return res;
@@ -106,7 +106,7 @@ int algorithmX(Dance *d)
 */
 int algorithmX_RandRows(Dance *d)
 {
-   Doubly *hcol, *candidateRow;
+   Doubly *hcol, *crow;
    int res = NOT_FOUND, ret;
    int solCreated = 0;
    SolTree *sol;
@@ -130,22 +130,22 @@ int algorithmX_RandRows(Dance *d)
    
    listSize = hcol->drow - d->rmax;
    hitList = calloc(listSize, sizeof(int));
-   candidateRow = nextRow(hcol, &listSize, &hitList);
+   crow = nextRow(hcol, &listSize, &hitList);
    
-   while(candidateRow != hcol)
+   while(crow != hcol)
    {
 //printMatrix(d);
-      selectCandidateRow(d, candidateRow);
+      selectCandidateRow(d, crow);
 
       ret = algorithmX_RandRows(d);
       res |= ret;
 
 //printMatrix(d);
-      unselectCandidateRow(d, candidateRow);
+      unselectCandidateRow(d, crow);
 
       if(ret == FOUND)
       {
-         d->csol->row = candidateRow->hrow;
+         d->csol->row = crow->hrow;
          if(solCreated == 0)
          {
             solCreated = 1;
@@ -156,7 +156,7 @@ int algorithmX_RandRows(Dance *d)
 
          break;
       }
-      candidateRow = nextRow(hcol, &listSize, &hitList);
+      crow = nextRow(hcol, &listSize, &hitList);
    }
 
    free(hitList);
@@ -164,17 +164,15 @@ int algorithmX_RandRows(Dance *d)
    return res;
 }
 
+/* checks if more than one solution exists */
 int algorithmX_SGen(Dance *d)
 {
-   Doubly *hcol, *candidateRow;
+   Doubly *hcol, *crow;
    int res = NOT_FOUND, ret;
-   int solCreated = 0;
-   SolTree *sol;
 
    if(d->root == d->root->right)
    {
-      d->csol = initTree();
-      addLeaf(d, d->csol);
+      d->numSols++;
       return FOUND;
    }
 
@@ -185,34 +183,15 @@ int algorithmX_SGen(Dance *d)
    if(hcol == d->root)
       return NOT_FOUND;
    
-   candidateRow = hcol->down;
-   while(candidateRow != hcol)
+   for(crow = hcol->down; crow != hcol; crow = crow->down)
    {
-//printMatrix(d);
-      selectCandidateRow(d, candidateRow);
-
+      selectCandidateRow(d, crow);
       ret = algorithmX_SGen(d);
       res |= ret;
+      unselectCandidateRow(d, crow);
 
-//printMatrix(d);
-      unselectCandidateRow(d, candidateRow);
-
-      if(ret == FOUND)
-      {
-         d->csol->row = candidateRow->hrow;
-         if(solCreated == 0)
-         {
-            solCreated = 1;
-            sol = initTree();
-         }
-         addChild(sol, d->csol);
-         d->csol = sol;
-
-         /* if set, will exit after finding first solution */
-         if(d->stopAfterFirstSol)
-            break;
-      }
-      candidateRow = candidateRow->down;
+      if(ret == FOUND && d->numSols > 1)
+         break;
    }
 
    return res;

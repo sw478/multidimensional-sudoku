@@ -6,17 +6,17 @@
 void printMatrix(Dance *d)
 {
    int pcol = 0, irow, nrow;
-   Doubly *xcol, *xrow;
+   Doubly *xcol, *hrow;
 
-   for(xrow = d->root->down; xrow != d->root; xrow = xrow->down)
+   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
    {
-      nrow = xrow->dcol - d->cmax;
+      nrow = hrow->dcol - d->cmax;
       if(nrow == 0)
          continue;
-      printf("%4d: ", xrow->drow);
+      printf("%4d: ", hrow->drow);
       pcol = 0;
       irow = 0;
-      xcol = xrow->right;
+      xcol = hrow->right;
       for(; irow < nrow; xcol = xcol->right, irow++, pcol++)
       {
          for(; pcol < xcol->dcol; pcol++, printf("."));
@@ -104,6 +104,34 @@ void printSudokuBoard(Dance *d, int *grid)
             printf(" ");
          if(grid[row*xy + col] != 0)
             printf(" %2d", grid[row*xy + col]);
+         else
+            printf(" __");
+      }
+      printf("\n");
+   }
+   printf("\n");
+}
+
+/*
+   prints numbers based on whether or not
+   d->hideList[igrid]->filled == 1
+*/
+void printSudokuBoard_Gen(Dance *d)
+{
+   int x = d->s->x, y = d->s->y;
+   int row, col, xy = x*y, igrid;
+
+   for(row = 0; row < xy; row++)
+   {
+      if(row % y == 0)
+         printf("\n");
+      for(col = 0; col < xy; col++)
+      {
+         igrid = row*xy + col;
+         if(col % x == 0)
+            printf(" ");
+         if(d->hideList[igrid]->filled)
+            printf(" %2d", d->hideList[igrid]->num);
          else
             printf(" __");
       }
@@ -272,4 +300,30 @@ void printHeur(Dance *d)
       printf("\n");
    }
    printf("\n");
+}
+
+void checkMatrix(Dance *d)
+{
+   Doubly *hcol, *hrow, *doub;
+   for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
+   {
+      if(!(hcol->left->right == hcol && hcol->right->left == hcol))
+         checkDoublyError(hcol->drow, hcol->dcol);
+      for(doub = hcol->down; doub != hcol; doub = doub->down)
+         checkDoubly(doub);
+   }
+   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
+   {
+      if(!(hrow->up->down == hrow && hrow->down->up == hrow))
+         checkDoublyError(hrow->drow, hrow->dcol);
+   }
+}
+
+void checkDoubly(Doubly *doub)
+{
+   if(!(doub->left->right == doub &&
+         doub->right->left == doub &&
+         doub->up->down == doub &&
+         doub->down->up == doub))
+      checkDoublyError(doub->drow, doub->dcol);
 }

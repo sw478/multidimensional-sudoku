@@ -61,7 +61,7 @@ int initHide_Sudoku(Dance *d)
    return 0;
 }
 
-int hideSingleCell(Dance *d, int igrid)
+int fillSingleCell(Dance *d, int igrid)
 {
    Hide *h = d->hideList[igrid];
    Doubly *hrow, *xrow;
@@ -75,11 +75,14 @@ int hideSingleCell(Dance *d, int igrid)
    for(ihide = 0; ihide < xy1; ihide++)
    {
       hrow = h->hrows[ihide];
+      hrow->up->down = hrow->down;
+      hrow->down->up = hrow->up;
       for(xrow = hrow->right; xrow != hrow; xrow = xrow->right)
       {
          xrow->up->down = xrow->down;
          xrow->down->up = xrow->up;
          xrow->hcol->drow--;
+         xrow->hrow->dcol--;
          HEUR_DEC(d, 0, 1, xrow->hcol->heur)
       }
    }
@@ -88,7 +91,7 @@ int hideSingleCell(Dance *d, int igrid)
    return 0;
 }
 
-int unhideSingleCell(Dance *d, int igrid)
+int unfillSingleCell(Dance *d, int igrid)
 {
    Hide *h = d->hideList[igrid];
    Doubly *hrow, *xrow;
@@ -103,11 +106,14 @@ int unhideSingleCell(Dance *d, int igrid)
    for(ihide = 0; ihide < xy1; ihide++)
    {
       hrow = h->hrows[ihide];
+      hrow->up->down = hrow;
+      hrow->down->up = hrow;
       for(xrow = hrow->right; xrow != hrow; xrow = xrow->right)
       {
          xrow->up->down = xrow;
          xrow->down->up = xrow;
          xrow->hcol->drow++;
+         xrow->hrow->dcol++;
          HEUR_INC(d, 0, 1, xrow->hcol->heur)
       }
    }
@@ -116,20 +122,20 @@ int unhideSingleCell(Dance *d, int igrid)
    return 0;
 }
 
-void hideAllCells(Dance *d)
+void fillAllCells(Dance *d)
 {
    int igrid, gridSize = d->s->gridSize;
 
    for(igrid = 0; igrid < gridSize; igrid++)
-      hideSingleCell(d, igrid);
+      fillSingleCell(d, igrid);
 }
 
-void unhideAllCells(Dance *d)
+void unfillAllCells(Dance *d)
 {
    int igrid, gridSize = d->s->gridSize;
 
    for(igrid = 0; igrid < gridSize; igrid++)
-      unhideSingleCell(d, igrid);
+      unfillSingleCell(d, igrid);
 }
 
 void freeHide(Dance *d)

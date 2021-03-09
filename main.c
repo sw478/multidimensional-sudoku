@@ -14,6 +14,7 @@
 #include "secondaryColumns.h"
 #include "parseArgs.h"
 #include "test.h"
+#include "generate.h"
 
 int main(int argc, char *argv[])
 {
@@ -73,7 +74,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    /* hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    initHide_Sudoku(d);
-   hideAllCells(d);
+   fillAllCells(d);
    printf("finished hide\n");
    
    /* covers row headers from rest of matrix */
@@ -86,7 +87,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    uncoverRowHeaders(d);
 
-   unhideAllCells(d);
+   unfillAllCells(d);
 
    printSolutions_Sudoku(d);
 
@@ -225,13 +226,12 @@ int runSudokuGenerate(Dance *d, int argc, char *argv[])
    saveSolution_Sudoku(d);
    initHide_Sudoku(d);
    printf("finished initHide\n");
-   hideAllCells(d);
 
+   generate(d);
    saveGeneratedPuzzle(d);
-
    printSudokuBoard(d, d->s->grid);
-   unhideAllCells(d);
 
+   unfillAllCells(d);
    freeDance(d);
 
    return 0;

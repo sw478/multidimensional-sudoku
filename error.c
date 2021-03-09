@@ -43,6 +43,12 @@ void invalidN_NQueens()
    exit(EXIT_FAILURE);
 }
 
+void checkDoublyError(int drow, int dcol)
+{
+   fprintf(stderr, "Error: Warped doubly: (drow: %d dcol: %d)\n", drow, dcol);
+   exit(EXIT_FAILURE);
+}
+
 void error()
 {
    perror(NULL);
