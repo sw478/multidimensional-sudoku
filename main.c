@@ -225,7 +225,6 @@ int runSudokuGenerate(Dance *d, int argc, char *argv[])
 
    generate(d);
    printf("finished generate\n");
-   printSudokuBoard_Gen(d);
    saveGeneratedPuzzle(d);
    printSudokuBoard(d, d->s->grid);
    printToSudokuFile(d);
