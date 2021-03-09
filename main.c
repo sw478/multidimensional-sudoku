@@ -43,9 +43,10 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    printSudokuBoard(d, d->s->grid);
 
-   /* outdated, just use matrixFileCreator.py for same results */
+   /* outdated, can use matrixFileCreator.py for same results */
    //initMatrixFileSudoku(d);
 
+   /* can set to custom matrixFile here */
    sprintf(matrixFile, "dance/ds1_%dx%d.txt", d->s->y, d->s->x);
    d->matrixFile = fopen(matrixFile, "r+");
    free(matrixFile);
@@ -59,9 +60,12 @@ int runSudoku(Dance *d, int argc, char *argv[])
    initMatrix(d);
    printf("finished matrix\n");
 
-   /* initializes the heuristic structure */
-   initHeurList(d, d->s->xy);
-   printf("finished heur\n");
+   if(USE_HEUR)
+   {
+      /* initializes the heuristic structure */
+      initHeurList(d, d->s->xy);
+      printf("finished heur\n");
+   }
 
    /* hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    initHide_Sudoku(d);
@@ -72,9 +76,10 @@ int runSudoku(Dance *d, int argc, char *argv[])
    coverRowHeaders(d);
    printf("finished cover\n");
 
+   printf("starting algX\n");
    algorithmX(d);
-
    printf("number of calls: %d\n", d->numCalls);
+
    uncoverRowHeaders(d);
 
    unhideAllCells(d);
@@ -96,20 +101,22 @@ int runSudoku2(Dance *d, int argc, char *argv[])
 
    printSudokuBoard(d, d->s->grid);
  
-   /* can set to custom matrixFile here */
    sprintf(matrixFile, "dance/ds2_%dx%d.txt", d->s->y, d->s->x);
    d->matrixFile = fopen(matrixFile, "r+");
    free(matrixFile);
 
    setMatrixDimensions_Sudoku2(d);
 
-   initDance(d); /* initialize dance struct */
-   initMatrix(d); /* reads from d->matrixFile and creates the general matrix for the given dimensions */
-   printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
+   initDance(d);
+   initMatrix(d);
+   printf("finished matrix\n");
 
-   initHeurList(d, d->rmax / d->s->xy); /* initializes the heuristic helper structure */
-   printf("finished heur\n");
-   
+   if(USE_HEUR)
+   {
+      initHeurList(d, d->rmax / d->s->xy);
+      printf("finished heur\n");
+   }
+
    //printHeur(d);
    //printMatrix(d);
    initHrowLayout_Sudoku2(d);
@@ -124,9 +131,10 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
    printf("finished cover\n");
 
+   printf("starting algX\n");
    algorithmX(d);
-
    printf("number of calls: %d\n", d->numCalls);
+
    uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
    unhide_Sudoku2(d);
 
@@ -143,35 +151,34 @@ int runNQueens(Dance *d, int argc, char *argv[])
 {
    char *matrixFile = malloc(BUFSIZE*sizeof(char));
  
-   /* can set to custom matrixFile here */
    sprintf(matrixFile, "dance/dq_%d.txt", d->nq);
    d->matrixFile = fopen(matrixFile, "r+");
    free(matrixFile);
 
    setMatrixDimensions_NQueens(d);
 
-   initDance(d); /* initialize dance struct */
-   initMatrix(d); /* reads from d->matrixFile and creates the general matrix for the given dimensions */
-   printf("finished matrix\n"); /*for larger boards everything prior takes a small but noticeable amount of time */
+   initDance(d);
+   initMatrix(d);
+   printf("finished matrix\n");
 
    /* declare index of start point of secondary hcols */
    set_secondary_columns(d, 2 * d->nq);
    stitch_secondary(d);
-   //printMatrix(d);
 
    if(USE_HEUR)
    {
-      initHeurList(d, d->nq); /* initializes the heuristic helper structure */
+      initHeurList(d, d->nq);
       printf("finished heur\n");
    }
 
-   coverRowHeaders(d); /* cover all row headers, necessary for program to work */
+   coverRowHeaders(d);
    printf("finished cover\n");
 
+   printf("starting algX\n");
    algorithmX(d);
-
    printf("number of calls: %d\n", d->numCalls);
-   uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
+
+   uncoverRowHeaders(d);
 
    unstitch_secondary(d);
 
@@ -195,28 +202,31 @@ int runSudokuGenerate(Dance *d, int argc, char *argv[])
 
    setMatrixDimensions_Sudoku(d);
 
-   /* initialize dance struct */
    initDance(d);
-   initMatrix(d); /* reads from d->matrixFile and creates the general matrix */
-   printf("finished matrix\n"); /* for larger boards everything prior takes a small but noticeable amount of time */
+   initMatrix(d);
+   printf("finished matrix\n");
 
-   /* initializes the heuristic structure */
-   initHeurList(d, d->s->xy);
-   printf("finished heur\n");
+   if(USE_HEUR)
+   {
+      /* initializes the heuristic structure */
+      initHeurList(d, d->s->xy);
+      printf("finished heur\n");
+   }
    
-   coverRowHeaders(d); /* cover all row headers, necessary for program to work */
+   coverRowHeaders(d);
    printf("finished cover\n");
 
+   printf("starting algX\n");
    /* will stop after one solution is found */
    algorithmX(d);
-
    printf("number of calls: %d\n", d->numCalls);
-   uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
+
+   uncoverRowHeaders(d);
 
    printSolutions_Sudoku(d);
-   saveSolution_Sudoku(d); /* translates solTree matrix rows to sudoku solution */
+   saveSolution_Sudoku(d);
 
-   
+   /* setup generating mechanic */
    initHide_Sudoku(d);
    printf("finished initHide\n");
    hideAllCells(d);
