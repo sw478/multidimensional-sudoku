@@ -85,9 +85,9 @@ void parseArgs_SGen(Dance *d, int argc, char *argv[])
         numArgError();
 
     d->s = s;
+    s->boardFile = fopen(argv[2], "w+");
     if(!s->boardFile)
         fileError(argv[2]);
-    s->boardFile = fopen(argv[2], "w+");
     assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
     assert(1 == sscanf(argv[3], "%d", &s->x));
     assert(1 == sscanf(argv[4], "%d", &s->y));
