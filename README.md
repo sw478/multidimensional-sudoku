@@ -22,11 +22,7 @@ to work, like how n-queens is currently implemented.
 
 ## possible project paths to take
 
-use unavoidable hitting sets to generate sudokus
+use unavoidable hitting sets to generate sudokus\
 enable processing boards of higher dimensions, ex. 2x2x2, 2x3x4, 3x3x3x3\
-create an ML model to uncover and identify features of essentially different sudoku boards
+create an ML model to uncover and identify features of essentially different sudoku boards\
 write side program to enumerate polynominos
-
-## unistd_io.h
-
-Create a file of this name that includes io.h if running on windows or unistd.h if on linux
