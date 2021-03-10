@@ -52,7 +52,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    printSudokuBoard(d, d->s->grid);
 
-   /* outdated, can use matrixFileCreator.py for same results */
+   /* outdated, use matrixFileCreator.py for same results */
    //initMatrixFileSudoku(d);
 
    /* can set to custom matrixFile here */
@@ -113,9 +113,6 @@ int runSudoku2(Dance *d, int argc, char *argv[])
 
    initDance(d);
    initMatrix(d);
-   //printf("finished matrix\n");
-
-   //testRandRows(d);
 
    HEUR_INIT(d, (d->rmax / d->s->xy))
 
@@ -123,21 +120,16 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    //printMatrix(d);
    initHrowLayout_Sudoku2(d);
    //printHrowLayout(d);
-   //printf("finished hrow layout\n");
 
    hide_Sudoku2(d);
-   //printf("finished hide\n");
 
    //printMatrix(d);
    
-   coverRowHeaders(d); /* cover all row headers, necessary for program to work */
-   //printf("finished cover\n");
-
-   //printf("starting algX\n");
+   coverRowHeaders(d);
    algorithmX(d);
    printf("number of calls: %d\n", d->numCalls);
+   uncoverRowHeaders(d);
 
-   uncoverRowHeaders(d); /* handles memory allocated from coverRowHeaders */
    unhide_Sudoku2(d);
 
    printSolutions_Sudoku2(d);
@@ -218,9 +210,9 @@ int runSudokuGenerate(Dance *d, int argc, char *argv[])
 
    initHide_Sudoku(d);
 
+   /* maximum number of clues you want for this puzzle */
    d->numClues = d->s->gridSize / 2;
    generate(d);
-   saveGeneratedPuzzle(d);
    printSudokuBoard(d, d->s->grid);
    printToSudokuFile(d);
 

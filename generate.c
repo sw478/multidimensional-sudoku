@@ -19,24 +19,24 @@ int generate(Dance *d)
     h = nextHide(d, &hitList);
     while(h != d->hideRoot)
     {
-        d->numSols = 0;
         fillSingleCell(d, h);
-        printSudokuBoard_Gen(d);
 
+        d->numSols = 0;
         coverRowHeaders(d);
         algorithmX_SGen2(d);
         uncoverRowHeaders(d);
         if(d->numSols == 1)
         {
+            saveGeneratedPuzzle(d);
             res = FOUND;
-            break;
         }
+        else
+            res = generate(d);
         
-        res = generate(d);
+        unfillSingleCell(d, h);
         if(res == FOUND)
             break;
 
-        unfillSingleCell(d, h);
         h = nextHide(d, &hitList);
     }
 

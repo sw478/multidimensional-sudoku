@@ -11,7 +11,7 @@
 
 #if USE_HEUR == 1
     #define HEUR_HEURISTIC(d) { hcol = heuristic((d));}
-    #define HEUR_INIT(d, heur_max) { initHeurList((d), (heur_max)); printf("finished heur\n"); }
+    #define HEUR_INIT(d, heur_max) { initHeurList((d), (heur_max)); }
     #define HEUR_DEC(d, dcol, index, heur) { if((dcol) < (index)) { decHeur((d), (heur)); } }
     #define HEUR_INC(d, dcol, index, heur) { if((dcol) < (index)) { incHeur((d), (heur)); } }
     #define HEUR_FREE(d) { freeHeur((d)); }
