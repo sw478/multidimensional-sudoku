@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
       case SUDOKU: runSudoku(d, argc, argv); break;
       case SUDOKU2: runSudoku2(d, argc, argv); break;
       case NQUEENS: runNQueens(d, argc, argv); break;
-      case SGEN: runSudokuGenerate(d, argc, argv); break;
+      case SGEN: runSudokuGen(d, argc, argv); break;
       default: break;
    }
 }
@@ -36,10 +36,13 @@ int main(int argc, char *argv[])
 void checkConfig()
 {
    assert(USE_HEUR == 0 || USE_HEUR == 1);
-   assert(STARTING_CAP >= 1 && GROWTH_FACTOR > 1);
+   assert(STARTING_CAP >= 1);
+   assert(GROWTH_FACTOR > 1);
 }
 
 /*
+ * Run generator first to create a puzzle in /tests
+ * 
  * A filled sudoku board file should have dimensions on first line
  * and next xy*xy lines should be either 0 (empty) or 1 through xy
  *
@@ -182,7 +185,7 @@ int runNQueens(Dance *d, int argc, char *argv[])
    return 0;
 }
 
-int runSudokuGenerate(Dance *d, int argc, char *argv[])
+int runSudokuGen(Dance *d, int argc, char *argv[])
 {
    char *matrixFile = malloc(BUFSIZE*sizeof(char));
 

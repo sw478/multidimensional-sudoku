@@ -10,4 +10,4 @@ workspace.code-workspace
 .vscode/
 unistd_io.h
 test.sh
-/tests/g
+/tests

@@ -59,10 +59,11 @@ Hide *nextHide(Dance *d, int **hitList)
     for(h = d->hideRoot->next, i = 0; i < randInt; h = h->next, i++);
 
     /* continue going through list of uncovered hides until unvisited hide is found */
-    for(j = i; (*hitList)[j] == 1; j++, h = h->next)
+    for(j = i; (*hitList)[j] == 1; h = h->next)
     {
         if(h == d->hideRoot)
             continue;
+        j = (j + 1) % listSize;
     }
 
     (*hitList)[j] = 1;
