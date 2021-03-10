@@ -78,7 +78,10 @@ int fillSingleCell(Dance *d, Hide *h)
    int ihide, xy1 = d->s->xy - 1;
 
    if(h->num == 0)
+   {
+      h->filled = 1;
       return 0;
+   }
    /* check when generating */
    if(h->filled)
       return 1;
@@ -113,7 +116,10 @@ int unfillSingleCell(Dance *d, Hide *h)
    int ihide, xy1 = d->s->xy - 1;
 
    if(h->num == 0)
+   {
+      h->filled = 0;
       return 0;
+   }
    /* check when generating */
    if(!h->filled)
       return 1;

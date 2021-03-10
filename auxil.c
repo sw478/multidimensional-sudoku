@@ -1,7 +1,7 @@
 #include "auxil.h"
 #include "error.h"
 
-#define PRINT_MEM(doubly) { printf("drow: %3d dcol: %3d mem: %p\n", (doubly)->drow, (doubly)->dcol, ((void*)(doubly))); }
+#define PRINT_MEM_DOUBLY(doubly) { printf("drow: %3d dcol: %3d mem: %p\n", (doubly)->drow, (doubly)->dcol, ((void*)(doubly))); }
 
 /* this file contains functions useful for debugging and displaying data */
 
@@ -334,13 +334,13 @@ void printMatrixDoublyMemory(Dance *d)
 {
    Doubly *hcol, *hrow, *doub;
 
-   PRINT_MEM(d->root)
+   PRINT_MEM_DOUBLY(d->root)
    for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
    {
-      PRINT_MEM(hcol)
+      PRINT_MEM_DOUBLY(hcol)
       for(doub = hcol->down; doub != hcol; doub = doub->down)
-         PRINT_MEM(doub)
+         PRINT_MEM_DOUBLY(doub)
    }
    for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
-      PRINT_MEM(hrow)
+      PRINT_MEM_DOUBLY(hrow)
 }
