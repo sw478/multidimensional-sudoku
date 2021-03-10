@@ -146,18 +146,18 @@ int unfillSingleCell(Dance *d, Hide *h)
 
 void fillAllCells(Dance *d)
 {
-   Hide *h;
+   int igrid, gridSize = d->s->gridSize;
 
-   for(h = d->hideRoot->next; h != d->hideRoot; h = h->next)
-      fillSingleCell(d, h);
+   for(igrid = 0; igrid < gridSize; igrid++)
+      fillSingleCell(d, d->hideList[igrid]);
 }
 
 void unfillAllCells(Dance *d)
 {
-   Hide *h;
+   int igrid, gridSize = d->s->gridSize;
 
-   for(h = d->hideRoot->next; h != d->hideRoot; h = h->next)
-      unfillSingleCell(d, h);
+   for(igrid = 0; igrid < gridSize; igrid++)
+      unfillSingleCell(d, d->hideList[igrid]);
 }
 
 void freeHide(Dance *d)
