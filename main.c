@@ -101,6 +101,8 @@ int runSudoku(Dance *d, int argc, char *argv[])
    /* translates solTree matrix rows to sudoku solution */
    saveSolution_Sudoku(d);
 
+   printMatrixDoublyMemory(d);
+
    freeDance(d);
 
    return 0;

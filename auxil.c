@@ -1,6 +1,8 @@
 #include "auxil.h"
 #include "error.h"
 
+#define PRINT_MEM(doubly) { printf("drow: %3d dcol: %3d mem: %p\n", (doubly)->drow, (doubly)->dcol, ((void*)(doubly))); }
+
 /* this file contains functions useful for debugging and displaying data */
 
 void printMatrix(Dance *d)
@@ -326,4 +328,17 @@ void checkDoubly(Doubly *doub)
          doub->up->down == doub &&
          doub->down->up == doub))
       checkDoublyError(doub->drow, doub->dcol);
+}
+
+void printMatrixDoublyMemory(Dance *d)
+{
+   Doubly *hcol, *hrow, *doub;
+   for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
+   {
+      PRINT_MEM(hcol)
+      for(doub = hcol->down; doub != hcol; doub = doub->down)
+         PRINT_MEM(doub)
+   }
+   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
+      PRINT_MEM(hrow)
 }

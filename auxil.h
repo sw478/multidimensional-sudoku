@@ -23,5 +23,6 @@ void printHeur(Dance *d);
 
 void checkMatrix(Dance *d);
 void checkDoubly(Doubly *doub);
+void printMatrixDoublyMemory(Dance *d);
 
 #endif
