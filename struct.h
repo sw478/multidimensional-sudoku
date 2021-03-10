@@ -126,7 +126,9 @@ typedef struct solTree
  */
 typedef struct
 {
-   int *grid, x, y, xy, gridSize;
+   int *sudoku, x, y, xy, gridSize;
+   int *dim, n, boxSize, sudokuSize;
+   int subBoxSize, subGridSize, superSize;
    FILE *boardFile;
 } Sudoku;
 

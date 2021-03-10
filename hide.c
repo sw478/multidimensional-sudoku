@@ -2,6 +2,8 @@
 #include "heuristic.h"
 #include "auxil.h"
 
+/* TODO */
+
 /*
  * initializes hide structure
  *
@@ -24,7 +26,7 @@
 int initHide_Sudoku(Dance *d)
 {
    Doubly *xrow;
-   int *grid = d->s->grid, igrid, xy = d->s->xy, gridSize = d->s->gridSize;
+   int *grid = d->s->sudoku, igrid, xy = d->s->xy, gridSize = d->s->gridSize;
    int ihide, num;
    Hide *h;
 
@@ -174,6 +176,7 @@ void freeHide(Dance *d)
    free(d->hideRoot);
 }
 
+/* translates filled status of cells to d->s */
 void saveGeneratedPuzzle(Dance *d)
 {
    int igrid;
@@ -181,143 +184,6 @@ void saveGeneratedPuzzle(Dance *d)
    for(igrid = 0; igrid < d->s->gridSize; igrid++)
    {
       if(d->hideList[igrid]->filled == 0)
-         d->s->grid[igrid] = 0;
+         d->s->sudoku[igrid] = 0;
    }
-}
-
-/*
-   in this variation, there will only be one hide struct in d->hideList,
-   and its hrows will contain all the rows to be hidden.
-
-   in the original, we traversed down the row headers, but in this, we traverse
-   the column headers by grid number
-
-   h->num and h->filled aren't used in this
-*/
-int hide_Sudoku2(Dance *d)
-{
-   Doubly *hcol, *hrow, *xrow;
-   int *grid = d->s->grid, igrid, xy = d->s->xy, gridSize = d->s->gridSize;
-   int ihide = 0, num, hideCap = xy, i, shift, index;
-   Hide *h;
-   uint16_t **layout, *partial_layout, *row_layout, and_res;
-   layout = malloc(xy*sizeof(uint16_t*));
-
-   d->hideRoot = malloc(0);
-   d->hideList = malloc(sizeof(Hide*));
-   h = malloc(sizeof(Hide));
-   d->hideList[0] = h;
-   
-   ihide = 0;
-   h->hrows = malloc(hideCap*sizeof(Doubly));
-
-   for(i = 0; i < xy; i++)
-      layout[i] = calloc(d->max16mult, sizeof(uint16_t));
-
-   /* save each partial layout of numbers */
-   for(igrid = 0; igrid < gridSize; igrid++)
-   {
-      num = grid[igrid];
-      if(num == 0)
-         continue;
-      num--;
-
-      shift = igrid % 16;
-      index = igrid / 16;
-      layout[num][index] |= (1 << shift);
-   }
-
-   /* use the first xy columns to loop through layouts */
-   for(num = 0, hcol = d->root->right; num < xy; num++, hcol = hcol->right)
-   {
-      partial_layout = layout[num];
-      for(xrow = hcol->down; xrow != hcol; xrow = xrow->down)
-      {
-         hrow = xrow->hrow;
-         row_layout = hrow->rowLayout;
-         for(index = 0; index < d->max16mult; index++)
-         {
-            and_res = row_layout[index] & partial_layout[index];
-            if(and_res != partial_layout[index])
-            {
-               hrow->rowIsHidden = 1;
-               h->hrows[ihide] = hrow;
-               hideSingleRow(d, hrow);
-
-               ihide++;
-               if(ihide > hideCap)
-               {
-                  hideCap = hideCap * GROWTH_FACTOR + 1;
-                  h->hrows = realloc(h->hrows, hideCap*sizeof(Doubly));
-               }
-               break;
-            }
-         }
-      }
-   }
-
-   h->hrows = realloc(h->hrows, ihide*sizeof(Doubly));
-   d->ihide = ihide;
-
-   for(i = 0; i < xy; i++)
-      free(layout[i]);
-   free(layout);
-
-   return 0;
-}
-
-int unhide_Sudoku2(Dance *d)
-{
-   Doubly *hrow;
-   int i;
-   Hide *h;
-
-   h = d->hideList[0];
-   for(i = 0; i < d->ihide; i++)
-   {
-      hrow = h->hrows[i];
-      hrow->rowIsHidden = 0;
-      unhideSingleRow(d, hrow);
-   }
-   d->ihide = 1; /* have freeHide clean up memory */
-
-   return 0;
-}
-
-int hideSingleRow(Dance *d, Doubly *hrow)
-{
-   Doubly *doub;
-
-   for(doub = hrow->right; doub != hrow; doub = doub->right)
-   {
-      doub->hcol->drow--;
-      doub->hrow->dcol--;
-      doub->up->down = doub->down;
-      doub->down->up = doub->up;
-      HEUR_DEC(d, 0, 1, doub->hcol->heur)
-   }
-
-   hrow->up->down = hrow->down;
-   hrow->down->up = hrow->up;
-
-   return 0;
-}
-
-int unhideSingleRow(Dance *d, Doubly *hrow)
-{
-   Doubly *doub;
-
-   for(doub = hrow->right; doub != hrow; doub = doub->right)
-   {
-      doub->hcol->drow++;
-      doub->hrow->dcol++;
-      doub->up->down = doub;
-      doub->down->up = doub;
-      HEUR_INC(d, 0, 1, doub->hcol->heur)
-   }
-
-   hrow->up->down = hrow;
-   hrow->down->up = hrow;
-
-   return 0;
 }

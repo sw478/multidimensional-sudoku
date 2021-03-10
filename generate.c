@@ -109,7 +109,7 @@ int generate2(Dance *d)
 
 void printToSudokuFile(Dance *d)
 {
-    int igrid, gridSize = d->s->gridSize, *grid = d->s->grid;
+    int igrid, gridSize = d->s->gridSize, *grid = d->s->sudoku;
 
     for(igrid = 0; igrid < gridSize; igrid++)
         fprintf(d->s->boardFile, "%d\n", grid[igrid]);

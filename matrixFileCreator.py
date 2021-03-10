@@ -234,9 +234,7 @@ def initMatrixFile_NQueens(n):
 
 
 def main():
-    #initMatrixFile_Sudoku(x=2, y=2)
-    initMatrixFile_Sudoku2(x=3, y=2)
-    #initMatrixFile_NQueens(n=i)
+    initMatrixFile_Sudoku(x=2, y=2)
 
 if __name__ == "__main__":
     main()

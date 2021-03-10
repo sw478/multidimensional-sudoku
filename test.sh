@@ -17,13 +17,11 @@ elif [ "$type" = "m" ]; then
 elif [ "$type" = "b" ] || [ "$type" = "t" ] || [ "$type" = "v" ]; then
    echo "problem:"
    echo "\"s\" for sudoku"
-   echo "\"s2\" for sudoku2"
-   echo "\"q\" for n queens"
    echo "\"g\" for generating sudoku"
    read problem
 
-   if [ "$problem" = "s" ] || [ "$problem" = "s2" ]; then
-      echo "dimension? \"x\" \"y\""
+   if [ "$problem" = "s" ]; then
+      echo "dimensions?"
       read x y
       
       if [ "$type" = "t" ]; then
@@ -38,24 +36,9 @@ elif [ "$type" = "b" ] || [ "$type" = "t" ] || [ "$type" = "v" ]; then
          make
          ./a.out ${problem} tests/${x}x${y}.txt
       fi
-
-   elif [ "$problem" = "q" ]; then
-      echo "n?"
-      read n
-
-      if [ "$type" = "t" ]; then
-         time ./a.out ${problem} ${n}
-
-      elif [ "$type" = "v" ]; then
-         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out q ${n}
-
-      elif [ "$type" = "b" ]; then
-         make
-         ./a.out q ${n}
-      fi
    
    elif [ "$problem" = "g" ]; then
-      echo "dimension? \"x\" \"y\""
+      echo "dimensions?"
       read x y
       
       if [ "$type" = "t" ]; then

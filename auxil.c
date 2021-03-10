@@ -74,6 +74,7 @@ void printSolutions_Sudoku(Dance *d)
    printf("\n");
 }
 
+/* TODO */
 void printSingleSol_Sudoku(Dance *d, SolTree *sol)
 {
    SolTree *cur;
@@ -87,25 +88,51 @@ void printSingleSol_Sudoku(Dance *d, SolTree *sol)
       igrid = drow / xy;
       grid[igrid] = num + 1;
    }
-   printSudokuBoard(d, grid);
+   printSudoku(d->s);
    free(grid);
 }
 
-void printSudokuBoard(Dance *d, int *grid)
+/*
+   2D representation will be printed using the first two inner dimensions
+   iSub: index of 2d grid, range is 0 to superSize
+*/
+void printSudoku(Sudoku *s)
 {
-   int x = d->s->x, y = d->s->y;
-   int row, col, xy = x*y;
+   int iSub, superSize = s->superSize;
 
-   for(row = 0; row < xy; row++)
+   for(iSub = 0; iSub < superSize; iSub++)
+      printSudoku_2D(s, iSub, s->dim[0], s->dim[1]);
+   printf("\n");
+}
+
+/*
+   currently treats dim0 and dim1 as the innermost dimensions
+   later should be able to print using any two dimensions
+
+   subBoxSize: dim0*dim1 (size of box in 2D grid)
+   subGridSize: subBoxSize^2 (size of grid to be printed)
+   superSize: sudokuSize / subGridSize (number of 2D grids)
+   iSudoku: index of cell in sudoku
+   iStart: index of first cell of this specific 2D grid in sudoku
+   iGrid: index of cell in this specific 2D grid
+*/
+void printSudoku_2D(Sudoku *s, int iSub, int dim0, int dim1)
+{
+   int subBoxSize = dim0*dim1, subGridSize = pow(subBoxSize, 2);
+   int row, col, iStart = subGridSize * iSub, iGrid, val;
+
+   for(row = 0; row < subBoxSize; row++)
    {
-      if(row % y == 0)
+      if(row % dim1 == 0)
          printf("\n");
-      for(col = 0; col < xy; col++)
+      for(col = 0; col < subBoxSize; col++)
       {
-         if(col % x == 0)
+         iGrid = row*subBoxSize + col;
+         val = s->sudoku[iStart + iGrid];
+         if(col % dim0 == 0)
             printf(" ");
-         if(grid[row*xy + col] != 0)
-            printf(" %2d", grid[row*xy + col]);
+         if(val != 0)
+            printf(" %2d", val);
          else
             printf(" __");
       }
@@ -140,133 +167,6 @@ void printSudokuBoard_Gen(Dance *d)
       printf("\n");
    }
    printf("\n");
-}
-
-void printSolutions_Sudoku2(Dance *d)
-{
-   int i;
-
-   printf("\n%d solutions found\n", d->numSols);
-   if(d->numSols != 1)
-      return;
-   
-   for(i = 0; i < d->numSols; i++)
-   {
-      printf("\nsol %d: \n", i + 1);
-      //printSingleSol_Matrix(d, d->sols[i]);
-      printSingleSol_Sudoku2(d, d->sols[i]);
-   }
-   printf("\n");
-}
-
-void printSingleSol_Sudoku2(Dance *d, SolTree *sol)
-{
-   SolTree *cur;
-   int num, igrid, xy = d->s->xy, *grid;
-   Doubly *hrow, *xrow;
-
-   grid = calloc(d->cmax, sizeof(int));
-
-   for(cur = sol; cur->parent != cur; cur = cur->parent)
-   {
-      hrow = cur->row;
-      num = hrow->drow % xy;
-
-      for(xrow = hrow->right->right; xrow != hrow; xrow = xrow->right)
-      {
-         igrid = xrow->dcol - xy;
-         grid[igrid] = num + 1;
-      }
-   }
-   printSudokuBoard(d, grid);
-   free(grid);
-}
-
-void printSolutions_NQueens(Dance *d)
-{
-   int i, maxPrint = 2;
-   
-   printf("\n%d solutions found\n", d->numSols);
-   
-   printf("printing first %d solutions\n", maxPrint);
-
-   for(i = 0; i < maxPrint && i < d->numSols; i++)
-   {
-      printf("\nsol %d: \n", i + 1);
-      //printSingleSol_Matrix(d, d->sols[i]);
-      printSingleSol_NQueens(d, d->sols[i]);
-   }
-   printf("\n");
-}
-
-void printSingleSol_NQueens(Dance *d, SolTree *sol)
-{
-   SolTree *cur;
-   Doubly *hrow;
-   int n = d->nq, n2 = n*n, *board, pos;
-
-   if(!sol->row)
-      return;
-   board = calloc(n2, sizeof(int));
-
-   for(cur = sol; cur->parent != cur; cur = cur->parent)
-   {
-      hrow = cur->row;
-      pos = hrow->drow;
-      board[pos] = 1;
-   }
-   printBoard_NQueens(d, board);
-   free(board);
-}
-
-void printBoard_NQueens(Dance *d, int *board)
-{
-   int n = d->nq, n2 = n*n, pos;
-   
-   for(pos = 0; pos < n2; pos++)
-   {
-      if(pos % n == 0)
-         printf("\n");
-
-      if(board[pos] == 1)
-         printf(" X");
-      else
-         printf(" _");
-   }
-   printf("\n");
-}
-
-void printDistribution_NQueens(Dance *d)
-{
-   int i;
-   SolTree *cur;
-   Doubly *hrow;
-   int n = d->nq, n2 = n*n, *board, pos, numSols = d->numSols;
-   float percent;
-   board = calloc(n2, sizeof(int));
-
-   printf("printing distribution of queens on %d-queens board\n", n);
-
-   for(i = 0; i < numSols; i++)
-   {
-      for(cur = d->sols[i]; cur->parent != cur; cur = cur->parent)
-      {
-         hrow = cur->row;
-         pos = hrow->drow;
-         board[pos]++;
-      }
-   }
-
-   for(pos = 0; pos < n2; pos++)
-   {
-      if(pos % n == 0)
-         printf("\n\n");
-      percent = (float)board[pos] / numSols;
-      printf(" %1.3f", percent);
-   }
-   printf("\n");
-
-   free(board);
 }
 
 void printHeur(Dance *d)
@@ -343,4 +243,17 @@ void printMatrixDoublyMemory(Dance *d)
    }
    for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
       PRINT_MEM_DOUBLY(hrow)
+}
+
+void printBinary(uint64_t num)
+{
+    int bit, ibit;
+
+    printf(" ");
+    for(ibit = 0; ibit < 16; ibit++)
+    {
+        bit = num % 2;
+        num = num / 2;
+        printf("%d", bit);
+    }
 }

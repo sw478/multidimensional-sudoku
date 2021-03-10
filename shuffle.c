@@ -31,7 +31,7 @@ void shuffle(Dance *d)
 void relabel(Dance *d)
 {
    int xy = d->s->xy;
-   int *grid = d->s->grid, igrid, gridSize = xy*xy;
+   int *grid = d->s->sudoku, igrid, gridSize = xy*xy;
    int *nums;
 
    nums = shuffledList(xy);
@@ -43,7 +43,7 @@ void relabel(Dance *d)
 
 void shuffleRows(Dance *d)
 {
-   int *grid = d->s->grid;
+   int *grid = d->s->sudoku;
    int x = d->s->x, y = d->s->y, xy = d->s->xy;
    int i, brow, row, *rows, *newGrid = malloc(xy*xy*sizeof(int));
 
@@ -59,13 +59,13 @@ void shuffleRows(Dance *d)
    }
 
    free(grid);
-   d->s->grid = newGrid;
+   d->s->sudoku = newGrid;
    //printf("finished swapping rows within row boxes\n");
 }
 
 void shuffleCols(Dance *d)
 {
-   int *grid = d->s->grid;
+   int *grid = d->s->sudoku;
    int x = d->s->x, y = d->s->y, xy = d->s->xy;
    int i, bcol, col, *cols, *newGrid = malloc(xy*xy*sizeof(int));
 
@@ -81,13 +81,13 @@ void shuffleCols(Dance *d)
    }
 
    free(grid);
-   d->s->grid = newGrid;
+   d->s->sudoku = newGrid;
    //printf("finished swapping cols within col boxes\n");
 }
 
 void shuffleRowBoxes(Dance *d)
 {
-   int *grid = d->s->grid, *rows;
+   int *grid = d->s->sudoku, *rows;
    int x = d->s->x, y = d->s->y, xy = d->s->xy, gridSize = d->s->gridSize;
    int igrid, isub, brow, *newGrid = malloc(gridSize*sizeof(int));
 
@@ -101,13 +101,13 @@ void shuffleRowBoxes(Dance *d)
    free(rows);
 
    free(grid);
-   d->s->grid = newGrid;
+   d->s->sudoku = newGrid;
    //printf("finished swapping row boxes\n");
 }
 
 void shuffleColBoxes(Dance *d)
 {
-   int *grid = d->s->grid, *cols;
+   int *grid = d->s->sudoku, *cols;
    int x = d->s->x, y = d->s->y, xy = d->s->xy, gridSize = d->s->gridSize;
    int igrid, isub, bcol, row, *newGrid = malloc(gridSize*sizeof(int));
 
@@ -122,13 +122,13 @@ void shuffleColBoxes(Dance *d)
    free(cols);
 
    free(grid);
-   d->s->grid = newGrid;
+   d->s->sudoku = newGrid;
    //printf("finished swapping col boxes\n");
 }
 
 void transpose(Dance *d)
 {
-   int *grid = d->s->grid, row, col;
+   int *grid = d->s->sudoku, row, col;
    int igrid, xy = d->s->xy, gridSize = xy*xy;
    int *newGrid;
 
@@ -143,7 +143,7 @@ void transpose(Dance *d)
    }
 
    free(grid);
-   d->s->grid = newGrid;
+   d->s->sudoku = newGrid;
 }
 
 /*

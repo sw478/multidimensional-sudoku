@@ -2,7 +2,6 @@
 #include "solTree.h"
 #include "heuristic.h"
 #include "hide.h"
-#include "initHrowLayout_Sudoku2.h"
 
 void freeDance(Dance *d)
 {
@@ -12,15 +11,15 @@ void freeDance(Dance *d)
    if(d->numSols > 0)
       freeTree(d->csol);
 
-   if(d->problem == SUDOKU || d->problem == SUDOKU2 || d->problem == SGEN)
+   if(d->problem == SUDOKU || d->problem == SGEN)
       freeHide(d);
 
    HEUR_FREE(d)
 
-   if(d->problem == SUDOKU || d->problem == SUDOKU2 || d->problem == SGEN)
+   if(d->problem == SUDOKU || d->problem == SGEN)
    {
       fclose(d->s->boardFile);
-      free(d->s->grid);
+      free(d->s->sudoku);
       free(d->s);
    }
 
