@@ -2,8 +2,6 @@
 #include "solTree.h"
 #include "auxil.h"
 #include "heuristic.h"
-#define FOUND 1
-#define NOT_FOUND 0
 
 int algorithmX(Dance *d)
 {

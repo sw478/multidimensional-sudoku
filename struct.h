@@ -18,6 +18,10 @@
 #define NQUEENS 2
 #define SGEN 3
 
+/* for algX and generate */
+#define FOUND 1
+#define NOT_FOUND 0
+
 /*
  * a two dimensional linked list of heur headers
  * 

@@ -55,6 +55,11 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    printSudokuBoard(d, d->s->grid);
 
+   printf("size of hide: %d\n", sizeof(Hide));
+   printf("size of doubly: %d\n", sizeof(Doubly));
+   printf("size of heur: %d\n", sizeof(Heur));
+   printf("size of solTree: %d\n", sizeof(SolTree));
+
    /* outdated, use matrixFileCreator.py for same results */
    //initMatrixFileSudoku(d);
 
@@ -215,7 +220,8 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
 
    /* maximum number of clues you want for this puzzle */
    d->numClues = d->s->gridSize / 2;
-   generate(d);
+   if(generate(d) == NOT_FOUND)
+      printf("No puzzles found\n");
    printSudokuBoard(d, d->s->grid);
    printToSudokuFile(d);
 

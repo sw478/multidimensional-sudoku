@@ -3,8 +3,6 @@
 #include "dance.h"
 #include "auxil.h"
 #include "hrowCover.h"
-#define FOUND 1
-#define NOT_FOUND 0
 
 int generate(Dance *d)
 {
