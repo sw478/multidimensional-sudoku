@@ -201,6 +201,7 @@ int hide_Sudoku2(Dance *d)
    uint16_t **layout, *partial_layout, *row_layout, and_res;
    layout = malloc(xy*sizeof(uint16_t*));
 
+   d->hideRoot = malloc(0);
    d->hideList = malloc(sizeof(Hide*));
    h = malloc(sizeof(Hide));
    d->hideList[0] = h;
