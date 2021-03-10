@@ -249,7 +249,7 @@ Doubly *nextRow(Doubly *hcol, int *listSize, int **hitList)
    ex. row 1 is the candidate row.
    row 0 cannot be part of the solution too because both have a doubly in col 1
 
-   in the example, coverColRows() is called on (1, 1), (1, 3), and (1, 6)
+   in the example, coverColRows() is called on (r:1, c:1), (1, 3), and (1, 6)
 */
 void selectCandidateRow(Dance *d, Doubly *candidateRow)
 {
@@ -276,20 +276,18 @@ void selectCandidateRow(Dance *d, Doubly *candidateRow)
 
    2  X  _  X  _
 
-   row 1 hidden since it was a chosen candidate row, and row 0 hidden
+   row 1 is hidden since it was a chosen candidate row, and row 0 is hidden
    since it conflicted with row 1
 
    columns 1, 3, 6 are covered because of the doubly in row 1
 */
 void coverColRows(Dance *d, Doubly *crow)
 {
-   Doubly *doub, *hcol;
+   Doubly *doub, *hcol = crow->hcol;
 
    /* cover crow's header column*/
-   hcol = crow->hcol;
    hcol->right->left = hcol->left;
    hcol->left->right = hcol->right;
-   //d->root->dcol--; /* decrement hcol count */
 
    /*
       doub traverses down the hcol's column
@@ -319,7 +317,6 @@ void coverRows(Dance *d, Doubly *doub)
       xrow->hcol->drow--;
       xrow->hrow->dcol--;
 
-      /* checks for secondary columns */
       HEUR_DEC(d, xrow->hcol->dcol, d->sec_hcol_index, xrow->hcol->heur)
    }
    HEUR_DEC(d, xrow->hcol->dcol, d->sec_hcol_index, xrow->hcol->heur)
@@ -336,12 +333,10 @@ void unselectCandidateRow(Dance *d, Doubly *candidateRow)
 
 void uncoverColRows(Dance *d, Doubly *crow)
 {
-   Doubly *doub, *hcol;
+   Doubly *doub, *hcol = crow->hcol;
 
-   hcol = crow->hcol;
    hcol->right->left = hcol;
    hcol->left->right = hcol;
-   //d->root->dcol++;
 
    for(doub = hcol->down; doub != hcol; doub = doub->down)
    {

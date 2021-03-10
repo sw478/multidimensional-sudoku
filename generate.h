@@ -2,7 +2,9 @@
 #define GENERATE_H
 #include "struct.h"
 
-void generate(Dance *d);
+int generate(Dance *d);
+int generate2(Dance *d);
 void printToSudokuFile(Dance *d);
+Hide *nextHide(Dance *d, int **hitList);
 
 #endif

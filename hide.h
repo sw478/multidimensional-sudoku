@@ -4,9 +4,9 @@
 
 int initHide_Sudoku(Dance *d);
 void fillAllCells(Dance *d);
-int fillSingleCell(Dance *d, int igrid);
+int fillSingleCell(Dance *d, Hide *h);
 void unfillAllCells(Dance *d);
-int unfillSingleCell(Dance *d, int igrid);
+int unfillSingleCell(Dance *d, Hide *h);
 void freeHide(Dance *d);
 void saveGeneratedPuzzle(Dance *d);
 

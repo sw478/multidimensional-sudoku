@@ -18,6 +18,8 @@
  * doesn't hide any cell rows, just sets everything up
  *
  * d->hideList is allocated memory in initDance
+ * 
+ * all cells are initialized unfilled
  */
 int initHide_Sudoku(Dance *d)
 {
@@ -27,16 +29,25 @@ int initHide_Sudoku(Dance *d)
    Hide *h;
 
    d->hideList = malloc(d->s->gridSize*sizeof(Hide*));
+   d->hideRoot = malloc(sizeof(Hide));
+   d->hideRoot->prev = d->hideRoot->next = d->hideRoot;
+   d->hideRoot->num = 0; /* number of cells filled in grid */
 
    xrow = d->root->down;
    
    for(igrid = 0; igrid < gridSize; igrid++)
    {
       h = malloc(sizeof(Hide));
+      h->next = d->hideRoot;
+      h->prev = d->hideRoot->prev;
+      d->hideRoot->prev->next = h;
+      d->hideRoot->prev = h;
+
       h->num = grid[igrid];
       d->hideList[igrid] = h;
       h->hrows = malloc((xy-1)*sizeof(Doubly));
       h->filled = 0;
+      h->igrid = igrid;
 
       if(grid[igrid] == 0)
       {
@@ -61,9 +72,8 @@ int initHide_Sudoku(Dance *d)
    return 0;
 }
 
-int fillSingleCell(Dance *d, int igrid)
+int fillSingleCell(Dance *d, Hide *h)
 {
-   Hide *h = d->hideList[igrid];
    Doubly *hrow, *xrow;
    int ihide, xy1 = d->s->xy - 1;
 
@@ -72,6 +82,12 @@ int fillSingleCell(Dance *d, int igrid)
    /* check when generating */
    if(h->filled)
       return 1;
+   
+   /* cover hide */
+   h->next->prev = h->prev;
+   h->prev->next = h->next;
+   d->hideRoot->num++;
+
    for(ihide = 0; ihide < xy1; ihide++)
    {
       hrow = h->hrows[ihide];
@@ -91,9 +107,8 @@ int fillSingleCell(Dance *d, int igrid)
    return 0;
 }
 
-int unfillSingleCell(Dance *d, int igrid)
+int unfillSingleCell(Dance *d, Hide *h)
 {
-   Hide *h = d->hideList[igrid];
    Doubly *hrow, *xrow;
    int ihide, xy1 = d->s->xy - 1;
 
@@ -102,6 +117,11 @@ int unfillSingleCell(Dance *d, int igrid)
    /* check when generating */
    if(!h->filled)
       return 1;
+   
+   /* cover hide */
+   h->next->prev = h;
+   h->prev->next = h;
+   d->hideRoot->num--;
 
    for(ihide = 0; ihide < xy1; ihide++)
    {
@@ -124,18 +144,18 @@ int unfillSingleCell(Dance *d, int igrid)
 
 void fillAllCells(Dance *d)
 {
-   int igrid, gridSize = d->s->gridSize;
+   Hide *h;
 
-   for(igrid = 0; igrid < gridSize; igrid++)
-      fillSingleCell(d, igrid);
+   for(h = d->hideRoot->next; h != d->hideRoot; h = h->next)
+      fillSingleCell(d, h);
 }
 
 void unfillAllCells(Dance *d)
 {
-   int igrid, gridSize = d->s->gridSize;
+   Hide *h;
 
-   for(igrid = 0; igrid < gridSize; igrid++)
-      unfillSingleCell(d, igrid);
+   for(h = d->hideRoot->next; h != d->hideRoot; h = h->next)
+      unfillSingleCell(d, h);
 }
 
 void freeHide(Dance *d)
@@ -149,6 +169,7 @@ void freeHide(Dance *d)
    }
 
    free(d->hideList);
+   free(d->hideRoot);
 }
 
 void saveGeneratedPuzzle(Dance *d)

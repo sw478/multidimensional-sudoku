@@ -3,8 +3,73 @@
 #include "dance.h"
 #include "auxil.h"
 #include "hrowCover.h"
+#define FOUND 1
+#define NOT_FOUND 0
 
-void generate(Dance *d)
+int generate(Dance *d)
+{
+    int *hitList, res = NOT_FOUND;
+    Hide *h;
+
+    if(d->hideRoot->num >= d->numClues)
+        return NOT_FOUND;
+    
+    hitList = calloc(d->s->gridSize - d->hideRoot->num, sizeof(int));
+
+    h = nextHide(d, &hitList);
+    while(h != d->hideRoot)
+    {
+        d->numSols = 0;
+        fillSingleCell(d, h);
+        printSudokuBoard_Gen(d);
+
+        coverRowHeaders(d);
+        algorithmX_SGen2(d);
+        uncoverRowHeaders(d);
+        if(d->numSols == 1)
+        {
+            res = FOUND;
+            break;
+        }
+        
+        res = generate(d);
+        if(res == FOUND)
+            break;
+
+        unfillSingleCell(d, h);
+        h = nextHide(d, &hitList);
+    }
+
+    free(hitList);
+    return res;
+}
+
+/* returns a random igrid without hiding anything */
+Hide *nextHide(Dance *d, int **hitList)
+{
+    Hide *h;
+    int i, j, randInt, listSize = d->s->gridSize - d->hideRoot->num;
+    if(listSize == 0)
+        return d->hideRoot;
+
+    /* pick random number in range of number of elements left */
+    randInt = rand() % listSize;
+
+    /* go to a random uncovered hide */
+    for(h = d->hideRoot->next, i = 0; i < randInt; h = h->next, i++);
+
+    /* continue going through list of uncovered hides until unvisited hide is found */
+    for(j = i; (*hitList)[j] == 1; j++, h = h->next)
+    {
+        if(h == d->hideRoot)
+            continue;
+    }
+
+    (*hitList)[j] = 1;
+    return h;
+}
+
+int generate2(Dance *d)
 {
     int igrid, randInt;
     int gridSize = d->s->gridSize;
@@ -23,13 +88,13 @@ void generate(Dance *d)
                 if(d->hideList[igrid]->filled)
                 {
                     printf("All cells filled\n");
-                    return;
+                    return 0;
                 }
                 break;
             }
         }
         //printf("igrid: %d\n", igrid);
-        fillSingleCell(d, igrid);
+        fillSingleCell(d, d->hideList[igrid]);
         //checkMatrix(d);
 
         printSudokuBoard_Gen(d);
@@ -39,6 +104,8 @@ void generate(Dance *d)
         algorithmX_SGen2(d);
         uncoverRowHeaders(d);
     }
+
+    return 0;
 }
 
 void printToSudokuFile(Dance *d)

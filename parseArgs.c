@@ -43,7 +43,7 @@ void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
     if(!s->boardFile)
         fileError(argv[2]);
     assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
-    assert(2 == sscanf(argv[2], "tests/s/%dx%d.in", &s->x, &s->y));
+    assert(2 == sscanf(argv[2], "tests/%dx%d.txt", &s->x, &s->y));
     s->xy = s->x*s->y;
     s->gridSize = s->xy*s->xy;
     s->grid = calloc(s->gridSize, sizeof(int));

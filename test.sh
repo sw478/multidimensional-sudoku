@@ -28,15 +28,15 @@ elif [ "$type" = "b" ] || [ "$type" = "t" ] || [ "$type" = "v" ]; then
       
       if [ "$type" = "t" ]; then
          make
-         time ./a.out ${problem} tests/s/${x}x${y}.in
+         time ./a.out ${problem} tests/${x}x${y}.txt
 
       elif [ "$type" = "v" ]; then
          make
-         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${problem} tests/s/${x}x${y}.in
+         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${problem} tests/${x}x${y}.txt
 
       elif [ "$type" = "b" ]; then
          make
-         ./a.out ${problem} tests/s/${x}x${y}.in
+         ./a.out ${problem} tests/${x}x${y}.txt
       fi
 
    elif [ "$problem" = "q" ]; then
@@ -59,14 +59,14 @@ elif [ "$type" = "b" ] || [ "$type" = "t" ] || [ "$type" = "v" ]; then
       read x y
       
       if [ "$type" = "t" ]; then
-         time ./a.out g tests/g/${x}x${y}.in ${x} ${y}
+         time ./a.out g tests/${x}x${y}.txt ${x} ${y}
 
       elif [ "$type" = "v" ]; then
-         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g tests/g/${x}x${y}.in ${x} ${y}
+         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g tests/${x}x${y}.txt ${x} ${y}
 
       elif [ "$type" = "b" ]; then
          make
-         ./a.out g tests/g/${x}x${y}.in ${x} ${y}
+         ./a.out g tests/${x}x${y}.txt ${x} ${y}
       fi
 
    fi

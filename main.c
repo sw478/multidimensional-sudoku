@@ -67,20 +67,20 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    /* reads from d->matrixFile and creates the general matrix */
    initMatrix(d);
-   printf("finished matrix\n");
+   //printf("finished matrix\n");
 
    HEUR_INIT(d, d->s->xy)
 
    /* hides the necessary rows in the matrix to define the puzzle, reading from sudoku file */
    initHide_Sudoku(d);
    fillAllCells(d);
-   printf("finished hide\n");
+   //printf("finished hide\n");
    
    /* covers row headers from rest of matrix */
    coverRowHeaders(d);
-   printf("finished cover\n");
+   //printf("finished cover\n");
 
-   printf("starting algX\n");
+   //printf("starting algX\n");
    algorithmX(d);
    printf("number of calls: %d\n", d->numCalls);
 
@@ -113,7 +113,7 @@ int runSudoku2(Dance *d, int argc, char *argv[])
 
    initDance(d);
    initMatrix(d);
-   printf("finished matrix\n");
+   //printf("finished matrix\n");
 
    //testRandRows(d);
 
@@ -123,17 +123,17 @@ int runSudoku2(Dance *d, int argc, char *argv[])
    //printMatrix(d);
    initHrowLayout_Sudoku2(d);
    //printHrowLayout(d);
-   printf("finished hrow layout\n");
+   //printf("finished hrow layout\n");
 
    hide_Sudoku2(d);
-   printf("finished hide\n");
+   //printf("finished hide\n");
 
    //printMatrix(d);
    
    coverRowHeaders(d); /* cover all row headers, necessary for program to work */
-   printf("finished cover\n");
+   //printf("finished cover\n");
 
-   printf("starting algX\n");
+   //printf("starting algX\n");
    algorithmX(d);
    printf("number of calls: %d\n", d->numCalls);
 
@@ -161,7 +161,7 @@ int runNQueens(Dance *d, int argc, char *argv[])
 
    initDance(d);
    initMatrix(d);
-   printf("finished matrix\n");
+   //printf("finished matrix\n");
 
    /* declare index of start point of secondary hcols */
    set_secondary_columns(d, 2 * d->nq);
@@ -170,9 +170,9 @@ int runNQueens(Dance *d, int argc, char *argv[])
    HEUR_INIT(d, d->nq)
 
    coverRowHeaders(d);
-   printf("finished cover\n");
+   //printf("finished cover\n");
 
-   printf("starting algX\n");
+   //printf("starting algX\n");
    algorithmX(d);
    printf("number of calls: %d\n", d->numCalls);
 
@@ -202,14 +202,11 @@ int runSudokuGenerate(Dance *d, int argc, char *argv[])
 
    initDance(d);
    initMatrix(d);
-   printf("finished matrix\n");
 
    HEUR_INIT(d, d->s->xy)
    
    coverRowHeaders(d);
-   printf("finished cover\n");
 
-   printf("starting algX\n");
    algorithmX_SGen1(d);
    printf("number of calls: %d\n", d->numCalls);
 
@@ -220,10 +217,9 @@ int runSudokuGenerate(Dance *d, int argc, char *argv[])
    printSudokuBoard(d, d->s->grid);
 
    initHide_Sudoku(d);
-   printf("finished initHide\n");
 
+   d->numClues = d->s->gridSize / 2;
    generate(d);
-   printf("finished generate\n");
    saveGeneratedPuzzle(d);
    printSudokuBoard(d, d->s->grid);
    printToSudokuFile(d);

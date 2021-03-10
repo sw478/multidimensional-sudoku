@@ -29,12 +29,8 @@
  * incHeur and decHeur are the main operations
  * when a doubly under a column header is covered or uncovered, the
  * column header's element count is appropriately incremented or
- * decremented, the heur it's linked to is moved from one heur list
- * to another, and a heur headers are created and destroyed when a
- * new column is needed or when a heur column no longer has elements
- *
- * probably plan to refactor later since hcol heurs and heur headers'
- * data can be separated into two distinct structs
+ * decremented and the heur it's linked to is moved from one heur list
+ * to another
  */
 typedef struct heur
 {
@@ -88,7 +84,8 @@ typedef struct doubly
 typedef struct hide
 {
    Doubly **hrows;
-   int num, filled;
+   int num, filled, igrid;
+   struct hide *next, *prev;
 } Hide;
 
 /*
@@ -144,6 +141,7 @@ typedef struct
    Sudoku *s;
    int nq;
    int max16mult;
+   int numClues;
    
    /* for secondary columns */
    Doubly *hcol_sec;
@@ -158,7 +156,7 @@ typedef struct
    int numSols, solCap;
 
    /* for optional pre processed row covering */
-   Hide **hideList;
+   Hide **hideList, *hideRoot;
    int hidden, hideCap, ihide;
 
    /* for column heuristic */
