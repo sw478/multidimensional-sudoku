@@ -30,39 +30,3 @@ write side program to enumerate polynominos
 ## unistd_io.h
 
 Create a file of this name that includes io.h if running on windows or unistd.h if on linux
-
-## logic
-
-Given a list of coordinates for an exact cover matrix, solution(s) are found by finding a set of disjoint rows with coordinates that
-span all columns.
-
-Example from wikipedia:
-
-        1   2   3   4   5   6   7
-    A   X   .   .   X   .   .   X
-    B   X   .   .   X   .   .   .
-    C   .   .   .   X   X   .   X
-    D   .   .   X   .   X   X   .
-    E   .   X   X   .   .   X   X
-    F   .   X   .   .   .   .   X
-
-If the above is the input matrix, a solution would be the set of rows { B, D, F }:
-
-        1   2   3   4   5   6   7
-    B   X   .   .   X   .   .   .
-    D   .   .   X   .   X   X   .
-    F   .   X   .   .   .   .   X
-
-As you can see, each column has exactly one X.
-
-For sudokus, we can model them by seeing that for a board with:
-
-    box dimensions = x & y,
-    row, col, and box size = xy
-    gridSize = xy*xy
-    
-There are 4 types of "constraints": numbers 1 through xy must be in a row, column, and box, and no more than one number can be in a
-single cell. These constraints are what define the matrix's columns (4\*gridSize), and its rows represent the possible placement
-of a number and the value of the number itself (xy\*gridSize).
-
-Solving the matrix in this way allows us to easily and quickly find a solution for a sudoku puzzle.
