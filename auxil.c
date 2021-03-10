@@ -333,6 +333,8 @@ void checkDoubly(Doubly *doub)
 void printMatrixDoublyMemory(Dance *d)
 {
    Doubly *hcol, *hrow, *doub;
+
+   PRINT_MEM(d->root)
    for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
    {
       PRINT_MEM(hcol)
