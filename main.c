@@ -55,10 +55,10 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    printSudokuBoard(d, d->s->grid);
 
-   printf("size of hide: %d\n", sizeof(Hide));
-   printf("size of doubly: %d\n", sizeof(Doubly));
-   printf("size of heur: %d\n", sizeof(Heur));
-   printf("size of solTree: %d\n", sizeof(SolTree));
+   printf("size of hide: %d\n", ((int)sizeof(Hide)));
+   printf("size of doubly: %d\n", ((int)sizeof(Doubly)));
+   printf("size of heur: %d\n", ((int)sizeof(Heur)));
+   printf("size of solTree: %d\n", ((int)sizeof(SolTree)));
 
    /* outdated, use matrixFileCreator.py for same results */
    //initMatrixFileSudoku(d);

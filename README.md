@@ -22,7 +22,7 @@ to work, like how n-queens is currently implemented.
 
 ## possible project paths to take
 
-use unavoidable hitting sets to generate sudokus\
-enable processing boards of higher dimensions, ex. 2x2x2, 2x3x4, 3x3x3x3\
-create an ML model to uncover and identify features of essentially different sudoku boards\
-write side program to enumerate polynominos
+* use unavoidable hitting sets to generate sudokus
+* enable processing boards of higher dimensions, ex. 2x2x2, 2x3x4, 3x3x3x3
+* create an ML model to uncover and identify features of essentially different sudoku boards
+* write side program to enumerate polynominos
