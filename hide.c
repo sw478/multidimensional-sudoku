@@ -77,11 +77,6 @@ int fillSingleCell(Dance *d, Hide *h)
    Doubly *hrow, *xrow;
    int ihide, xy1 = d->s->xy - 1;
 
-   if(h->num == 0)
-   {
-      h->filled = 1;
-      return 0;
-   }
    /* check when generating */
    if(h->filled)
       return 1;
@@ -90,6 +85,9 @@ int fillSingleCell(Dance *d, Hide *h)
    h->next->prev = h->prev;
    h->prev->next = h->next;
    d->hideRoot->num++;
+
+   if(h->num == 0)
+      return 0;
 
    for(ihide = 0; ihide < xy1; ihide++)
    {
@@ -115,11 +113,6 @@ int unfillSingleCell(Dance *d, Hide *h)
    Doubly *hrow, *xrow;
    int ihide, xy1 = d->s->xy - 1;
 
-   if(h->num == 0)
-   {
-      h->filled = 0;
-      return 0;
-   }
    /* check when generating */
    if(!h->filled)
       return 1;
@@ -128,6 +121,9 @@ int unfillSingleCell(Dance *d, Hide *h)
    h->next->prev = h;
    h->prev->next = h;
    d->hideRoot->num--;
+
+   if(h->num == 0)
+      return 0;
 
    for(ihide = 0; ihide < xy1; ihide++)
    {
