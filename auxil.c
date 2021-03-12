@@ -108,9 +108,16 @@ void printSudoku(Sudoku *s)
    int subGridSize = pow(containerSize, 2);
    int superSize = s->sudokuSize / subGridSize;
    int row, col, iSub, iStart, iSudoku, iLine, val;
-   int dim0 = s->dim[0], dim1 = s->dim[1];
+   int dim0, dim1;
 
-   assert(s->n >= 2);
+   if(s->n < 2)
+   {
+      printf("not printing, dimension too low\n");
+      return;
+   }
+   dim0 = s->dim[0];
+   dim1 = s->dim[1];
+
    printf(LINE);
 
    for(iSub = 0; iSub < superSize; iSub++)
