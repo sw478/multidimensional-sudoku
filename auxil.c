@@ -110,9 +110,9 @@ void printSudoku(Sudoku *s)
    int row, col, iSub, iStart, iSudoku, iLine, val;
    int dim0, dim1;
 
-   if(s->n < 2)
+   if(s->n < 2 || s->containerSize == 0)
    {
-      printf("not printing, dimension too low\n");
+      printf("not printing, dimensions invalid\n");
       return;
    }
    dim0 = s->dim[0];
