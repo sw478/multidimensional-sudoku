@@ -20,6 +20,7 @@ void freeDance(Dance *d)
    {
       fclose(d->s->boardFile);
       free(d->s->sudoku);
+      free(d->s->dim);
       free(d->s);
    }
 

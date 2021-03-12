@@ -71,7 +71,6 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    freeDance(d);
 
-   fclose(d->s->boardFile);
    free(d->s->sudoku);
    free(d->s);
    free(d);

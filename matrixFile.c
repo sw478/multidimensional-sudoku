@@ -15,7 +15,7 @@ void setMatrixDimensions_Sudoku(Dance *d)
 */
 void findMatrixFile(Dance *d)
 {
-   char *matrixFile = malloc(BUFSIZE*sizeof(char));
+   char *matrixFile;
    int *sorted_dim = malloc(d->s->n*sizeof(int));
    int idim, n = d->s->n;
 
