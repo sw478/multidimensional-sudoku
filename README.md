@@ -34,7 +34,7 @@ A traditional sudoku is typically called a 9x9 sudoku, but to be more precise, i
 
 In a traditional sudoku, you have rows, columns, and boxes. In a generalized sudoku, the rows and columns will be called "span" and boxes will be called "containers". The number of dimensions (n) in the sudoku is 2. The dimensions themselves are specifically the box dimensions, so in this case, dimensions = [3, 3], not [9, 9].
 
-Reframing our understanding of sudokus in this way allows us to generalize these concepts for higher dimensions.
+Reframing sudokus in this way allows us to generalize these concepts for higher dimensions.
 
 ### containerSize
 

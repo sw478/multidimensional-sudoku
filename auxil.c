@@ -1,7 +1,6 @@
 #include "auxil.h"
 #include "error.h"
-
-#define PRINT_MEM_DOUBLY(doubly) { printf("drow: %3d dcol: %3d mem: %p\n", (doubly)->drow, (doubly)->dcol, ((void*)(doubly))); }
+#define LINE "---------------------------------------------------\n"
 
 /* this file contains functions useful for debugging and displaying data */
 
@@ -107,26 +106,37 @@ void printSingleSol_Sudoku(Dance *d, SolTree *sol)
 */
 void printSudoku(Sudoku *s)
 {
-   int subGridSize = pow(s->containerSize, 2);
+   int containerSize = s->containerSize;
+   int subGridSize = pow(containerSize, 2);
    int superSize = s->sudokuSize / subGridSize;
-   int row, col, iSub, iStart, iSudoku, val;
+   int row, col, iSub, iStart, iSudoku, iLine, val;
    int dim0 = s->dim[0], dim1 = s->dim[1];
 
    assert(s->n >= 2);
+   printf(LINE);
+   printf("\n");
 
    for(iSub = 0; iSub < superSize; iSub++)
    {
       iStart = subGridSize * iSub;
-      for(row = 0; row < s->containerSize; row++)
+      for(row = 0; row < containerSize; row++)
       {
-         if(row % dim1 == 0)
+         if(row % dim1 == 0 && row != 0)
+         {
+            for(iLine = 0; iLine < containerSize; iLine++)
+            {
+               if(iLine % dim0 == 0 && iLine != 0)
+                  printf("  ");
+               printf(" --");
+            }
             printf("\n");
+         }
          for(col = 0; col < s->containerSize; col++)
          {
-            iSudoku = iStart + row*s->containerSize + col;
+            iSudoku = iStart + row*containerSize + col;
             val = s->sudoku[iSudoku];
-            if(col % dim0 == 0)
-               printf(" ");
+            if(col % dim0 == 0 && col != 0)
+               printf(" |");
             if(val != 0)
                printf(" %2d", val);
             else
@@ -136,6 +146,7 @@ void printSudoku(Sudoku *s)
       }
       printf("\n");
    }
+   printf(LINE);
 }
 
 /*
@@ -145,24 +156,37 @@ void printSudoku(Sudoku *s)
 void printSudokuBoard_Gen(Dance *d)
 {
    Sudoku *s = d->s;
-   int subGridSize = pow(s->containerSize, 2);
+   int containerSize = s->containerSize;
+   int subGridSize = pow(containerSize, 2);
    int superSize = s->sudokuSize / subGridSize;
-   int row, col, iSub, iStart, iSudoku, val;
+   int row, col, iSub, iStart, iSudoku, iLine, val;
    int dim0 = s->dim[0], dim1 = s->dim[1];
+
+   assert(s->n >= 2);
+   printf(LINE);
+   printf("\n");
 
    for(iSub = 0; iSub < superSize; iSub++)
    {
       iStart = subGridSize * iSub;
-      for(row = 0; row < s->containerSize; row++)
+      for(row = 0; row < containerSize; row++)
       {
-         if(row % dim1 == 0)
+         if(row % dim1 == 0 && row != 0)
+         {
+            for(iLine = 0; iLine < containerSize; iLine++)
+            {
+               if(iLine % dim0 == 0 && iLine != 0)
+                  printf("  ");
+               printf(" --");
+            }
             printf("\n");
+         }
          for(col = 0; col < s->containerSize; col++)
          {
-            iSudoku = iStart + row*s->containerSize + col;
+            iSudoku = iStart + row*containerSize + col;
             val = s->sudoku[iSudoku];
-            if(col % dim0 == 0)
-               printf(" ");
+            if(col % dim0 == 0 && col != 0)
+               printf(" |");
             if(d->hideList[iSudoku]->filled != 0)
                printf(" %2d", val);
             else
@@ -172,6 +196,7 @@ void printSudokuBoard_Gen(Dance *d)
       }
       printf("\n");
    }
+   printf(LINE);
 }
 
 void printHeur(Dance *d)
@@ -234,33 +259,4 @@ void checkDoubly(Doubly *doub)
          doub->up->down == doub &&
          doub->down->up == doub))
       checkDoublyError(doub->drow, doub->dcol);
-}
-
-/* prints memory address of doubly pointers */
-void printMatrixDoublyMemory(Dance *d)
-{
-   Doubly *hcol, *hrow, *doub;
-
-   PRINT_MEM_DOUBLY(d->root)
-   for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
-   {
-      PRINT_MEM_DOUBLY(hcol)
-      for(doub = hcol->down; doub != hcol; doub = doub->down)
-         PRINT_MEM_DOUBLY(doub)
-   }
-   for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
-      PRINT_MEM_DOUBLY(hrow)
-}
-
-void printBinary(uint64_t num)
-{
-    int bit, ibit;
-
-    printf(" ");
-    for(ibit = 0; ibit < 16; ibit++)
-    {
-        bit = num % 2;
-        num = num / 2;
-        printf("%d", bit);
-    }
 }

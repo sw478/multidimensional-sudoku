@@ -14,9 +14,7 @@
 
 /* for d->problem */
 #define SUDOKU 0
-#define SUDOKU2 1
-#define NQUEENS 2
-#define SGEN 3
+#define SGEN 1
 
 /* for algX and generate */
 #define FOUND 1

@@ -15,7 +15,5 @@ void printHeur(Dance *d);
 
 void checkMatrix(Dance *d);
 void checkDoubly(Doubly *doub);
-void printMatrixDoublyMemory(Dance *d);
-void printBinary(uint64_t num);
 
 #endif

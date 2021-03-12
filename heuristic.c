@@ -66,7 +66,9 @@ void initHeurList(Dance *d, int maxColElements)
    for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
    {
       // associate heur with current hcol
-      heur = initHeur(hcol->drow - d->rmax);
+      hnum = hcol->drow - d->rmax;
+      assert(hnum <= maxColElements);
+      heur = initHeur(hnum);
       heur->hcol = ((void*)hcol);
       hcol->heur = heur;
 

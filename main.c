@@ -63,6 +63,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
    printf("starting algX\n");
    algorithmX(d);
    printf("number of calls: %d\n", d->numCalls);
+   
    uncoverRowHeaders(d);
    unfillAllCells(d);
 
@@ -88,16 +89,15 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    initDance(d);
    initMatrix(d);
 
-   printMatrix(d);
+   //printMatrix(d);
 
-   HEUR_INIT(d, d->s->sudokuSize)
+   HEUR_INIT(d, d->s->containerSize)
    
    coverRowHeaders(d);
 
    printf("starting algX\n");
    algorithmX_SGen1(d);
    printf("number of calls: %d\n", d->numCalls);
-   printf("numSols: %d\n", d->numSols);
 
    uncoverRowHeaders(d);
    saveSolution_Sudoku(d);

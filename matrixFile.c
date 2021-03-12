@@ -6,7 +6,7 @@ void setMatrixDimensions_Sudoku(Dance *d)
    int sudokuSize = d->s->sudokuSize, cs = d->s->containerSize;
 
    d->rmax = cs * sudokuSize;
-   d->cmax = sudokuSize*2 + (cs * cs) * d->s->n;
+   d->cmax = sudokuSize * (2 + d->s->n);
 }
 
 /*
@@ -26,7 +26,7 @@ void findMatrixFile(Dance *d)
    matrixFile = getMatrixFileName(d, sorted_dim);
 
    // check if file doesn't exist
-   //if((access(matrixFile, F_OK) != 0))
+   if((access(matrixFile, F_OK) != 0))
       createMatrixFile(d, matrixFile, sorted_dim);
 
    d->matrixFile = fopen(matrixFile, "r+");
