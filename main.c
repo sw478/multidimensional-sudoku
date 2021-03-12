@@ -38,9 +38,6 @@ void checkConfig()
 
 /*
  * dim: innermost dimension is first, outermost dimension is last
- *
- * If a textfile contains less characters than required, a message will
- * display. Any extra numbers will be ignored
  */
 int runSudoku(Dance *d, int argc, char *argv[])
 {

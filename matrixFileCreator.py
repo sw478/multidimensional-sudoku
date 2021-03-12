@@ -1,7 +1,5 @@
 import sys
 
-solRows = [0, 3, 5, 6, 9, 10, 12, 15]
-
 def initMatrixFile_Sudoku(matrixFile, dim):
     f = open(matrixFile, "w")
     n = len(dim)
@@ -25,6 +23,7 @@ def initMatrixFile_Sudoku(matrixFile, dim):
     mcol = [0]*nConstraints
     for iSudoku in range(sudokuSize):
         iBox = 0
+        iSpan = [0]*n
         dividend = iSudoku
         for idim in range(n):
             span[idim] = dividend % containerSize # index in span
@@ -33,13 +32,12 @@ def initMatrixFile_Sudoku(matrixFile, dim):
             iBoxSpan = span[idim] // dim[idim] # box index of this span
             iBox += iBoxSpan * boxMult[idim] # box index
 
-        iSpan = [0]*n
         for idim in range(n):
             span2 = span.copy()
             del span2[idim]
             
             for j in range(len(span2)):
-                iSpan[idim] += span2[j] * spanMult[j]
+                iSpan[idim] += span2[j] * spanMult[j] # span index
 
         for inum in range(containerSize):
             mrow = iSudoku * containerSize + inum
@@ -51,13 +49,6 @@ def initMatrixFile_Sudoku(matrixFile, dim):
 
             for iConstraint in range(nConstraints):
                 f.write("%d %d\n" % (mrow, mcol[iConstraint]))
-
-            continue
-            if mrow in solRows:
-                print("%2d: " % mrow, end="")
-                for iConstraint in range(nConstraints):
-                    print(" %2d" % mcol[iConstraint], end="")
-                print("")
 
     rmax = containerSize * sudokuSize
     cmax = sudokuSize * (2 + n)
