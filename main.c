@@ -65,7 +65,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
    uncoverRowHeaders(d);
    unfillAllCells(d);
 
-   //printSolutions_Sudoku(d);
+   printSolutions_Sudoku(d);
 
    saveSolution_Sudoku(d);
 
