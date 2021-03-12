@@ -11,3 +11,4 @@ workspace.code-workspace
 unistd_io.h
 test.sh
 /tests
+tests/dm.txt
