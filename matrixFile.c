@@ -86,5 +86,6 @@ void createMatrixFile(Dance *d, char *matrixFile, int *sorted_dim)
 
    system(command);
 
+   free(buf);
    free(command);
 }
