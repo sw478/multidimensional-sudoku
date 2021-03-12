@@ -8,6 +8,9 @@ def initMatrixFile_Sudoku(matrixFile, dim):
     containerSize = prod(dim)
     sudokuSize = pow(containerSize, n)
 
+    if(containerSize == 0):
+        return
+
     span = [0]*n
     iSpan = [0]*n
 

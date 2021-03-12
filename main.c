@@ -99,7 +99,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
 
    initHide_Sudoku(d);
 
-   d->numClues = d->s->sudokuSize / 2;
+   d->numClues = d->s->n == 1 ? d->s->dim[0]-1 : d->s->sudokuSize / 2;
    if(generate(d) == NOT_FOUND)
       printf("No puzzles found\n");
    

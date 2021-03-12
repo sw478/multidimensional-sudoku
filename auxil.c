@@ -105,16 +105,23 @@ void printSingleSol_Sudoku(Dance *d, SolTree *sol)
 void printSudoku(Sudoku *s)
 {
    int containerSize = s->containerSize;
-   int subGridSize = pow(containerSize, 2);
-   int superSize = s->sudokuSize / subGridSize;
+   int subGridSize, superSize;
    int row, col, iSub, iStart, iSudoku, iLine, val;
    int dim0, dim1;
-
-   if(s->n < 2 || s->containerSize == 0)
+   if(s->containerSize == 0)
    {
       printf("not printing, dimensions invalid\n");
       return;
    }
+   subGridSize = pow(containerSize, 2);
+   superSize = s->sudokuSize / subGridSize;
+
+   if(s->n == 1)
+   {
+      printSudoku_oneDim(s);
+      return;
+   }
+
    dim0 = s->dim[0];
    dim1 = s->dim[1];
 
@@ -150,6 +157,25 @@ void printSudoku(Sudoku *s)
       }
       printf("\n\n");
    }
+   printf(LINE);
+}
+
+void printSudoku_oneDim(Sudoku *s)
+{
+   int iSudoku, val;
+
+   printf(LINE);
+
+   for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
+   {
+      val = s->sudoku[iSudoku];
+      if(val != 0)
+         printf(" %2d", val);
+      else
+         printf(" __");
+   }
+   printf("\n");
+
    printf(LINE);
 }
 
