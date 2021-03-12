@@ -92,13 +92,16 @@ void printSingleSol_Sudoku(Dance *d, SolTree *sol)
 }
 
 /*
+
+   n must be >= 2 to print properly
+
    currently treats dim0 and dim1 as the innermost dimensions
    later should be able to print using any two dimensions
 
-   subBoxSize: dim0*dim1 (size of box in 2D grid)
-   subGridSize: subBoxSize^2 (size of grid to be printed)
+   subGridSize: containerSize^2 (size of grid to be printed)
    superSize: sudokuSize / subGridSize (number of 2D grids)
    iSudoku: index of cell in sudoku
+   iSub: outer index of 2D grid
    iStart: index of first cell of this specific 2D grid in sudoku
    iGrid: index of cell in this specific 2D grid
 */
@@ -108,6 +111,8 @@ void printSudoku(Sudoku *s)
    int superSize = s->sudokuSize / subGridSize;
    int row, col, iSub, iStart, iSudoku, val;
    int dim0 = s->dim[0], dim1 = s->dim[1];
+
+   assert(s->n >= 2);
 
    for(iSub = 0; iSub < superSize; iSub++)
    {
@@ -204,6 +209,7 @@ void printHeur(Dance *d)
    printf("\n");
 }
 
+/* checks if matrix is stitched together properly */
 void checkMatrix(Dance *d)
 {
    Doubly *hcol, *hrow, *doub;
@@ -230,6 +236,7 @@ void checkDoubly(Doubly *doub)
       checkDoublyError(doub->drow, doub->dcol);
 }
 
+/* prints memory address of doubly pointers */
 void printMatrixDoublyMemory(Dance *d)
 {
    Doubly *hcol, *hrow, *doub;

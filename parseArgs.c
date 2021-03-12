@@ -27,10 +27,7 @@ void parseArgs(Dance *d, int argc, char *argv[])
     file format:
     [n: number of dimensions]
     next n lines are dimensions
-    n must be >= 2
-
-    containerSize: product of all n dimensions, size of a "box"
-    sudokuSize: containerSize^n
+    sudokuSize: size of sudoku
 
     next sudokuSize lines are the numbers in the n-dimensional board
 */
