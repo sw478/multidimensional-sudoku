@@ -1,4 +1,5 @@
 # multidimensional sudoku
+[![HitCount](http://hits.dwyl.com/sw478/multidimensional-sudoku.svg)](http://hits.dwyl.com/sw478/multidimensional-sudoku)
 
 This project is based off of the main sudoku project, as most of the code is the same. It generalizes the ideas of a traditional 9x9 sudoku to any sudoku of any dimension, of any length.
 
