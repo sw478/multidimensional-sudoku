@@ -1,6 +1,6 @@
 #include "auxil.h"
 #include "error.h"
-#define LINE "---------------------------------------------------\n"
+#define LINE "=================================================\n\n"
 
 /* this file contains functions useful for debugging and displaying data */
 
@@ -61,8 +61,6 @@ void printSolutions_Sudoku(Dance *d)
    int i;
 
    printf("\n%d solutions found\n", d->numSols);
-   if(d->numSols != 1)
-      return;
 
    for(i = 0; i < d->numSols; i++)
    {
@@ -114,7 +112,6 @@ void printSudoku(Sudoku *s)
 
    assert(s->n >= 2);
    printf(LINE);
-   printf("\n");
 
    for(iSub = 0; iSub < superSize; iSub++)
    {
@@ -144,7 +141,7 @@ void printSudoku(Sudoku *s)
          }
          printf("\n");
       }
-      printf("\n");
+      printf("\n\n");
    }
    printf(LINE);
 }
@@ -164,7 +161,6 @@ void printSudokuBoard_Gen(Dance *d)
 
    assert(s->n >= 2);
    printf(LINE);
-   printf("\n");
 
    for(iSub = 0; iSub < superSize; iSub++)
    {

@@ -69,12 +69,14 @@ void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
 
     for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
     {
-        fgets(buf, BUFSIZE*sizeof(char), s->boardFile);
+        if(!fgets(buf, BUFSIZE*sizeof(char), s->boardFile))
+        {
+            s->sudoku[iSudoku] = 0;
+            continue;
+        }
         test = sscanf(buf, "%d", &num);
-        if(num < 0 || num > s->containerSize)
+        if(test != 1 || num < 0 || num > s->containerSize)
             invalidSudokuBoard();
-        if(test != 1)
-            num = 0;
         s->sudoku[iSudoku] = num;
     }
     free(buf);

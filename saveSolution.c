@@ -13,7 +13,9 @@ int saveSolution_Sudoku(Dance *d)
    SolTree *cur;
    int num, iSudoku, mrow, cSize = d->s->containerSize, *sudoku = d->s->sudoku;
 
-   assert(d->numSols == 1);
+   assert(d->numSols > 0);
+   if(d->numSols > 1)
+      printf("more than one solution found, saving first solution\n");
 
    for(cur = d->sols[0]; cur->parent != cur; cur = cur->parent)
    {

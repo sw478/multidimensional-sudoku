@@ -26,7 +26,7 @@ void findMatrixFile(Dance *d)
    matrixFile = getMatrixFileName(d, sorted_dim);
 
    // check if file doesn't exist
-   if((access(matrixFile, F_OK) != 0))
+   //if((access(matrixFile, F_OK) != 0))
       createMatrixFile(d, matrixFile, sorted_dim);
 
    d->matrixFile = fopen(matrixFile, "r+");

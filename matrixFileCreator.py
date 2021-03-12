@@ -1,13 +1,11 @@
 import sys
+from numpy import prod
 
 def initMatrixFile_Sudoku(matrixFile, dim):
     f = open(matrixFile, "w")
     n = len(dim)
 
-    containerSize = 1
-    for idim in range(n):
-        containerSize *= dim[idim]
-    
+    containerSize = prod(dim)
     sudokuSize = pow(containerSize, n)
 
     span = [0]*n

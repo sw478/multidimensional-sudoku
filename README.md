@@ -42,7 +42,7 @@ This is the size of the containers, as well as the length of all span. (In a tra
 
 ### sudokuSize
 
-This is the size of the sudoku, which is calculated as: containerSize ^ n (9^2).
+This is the size of the sudoku, which is calculated as: containerSize ^ n (9^2 = 81). It should be clear that a sudoku with dimensions [3, 3] is different from a sudoku with dimensions [3, 3, 1], as the first will have 81 cells while the second will have 729 cells.
 
 ### span and containers
 
