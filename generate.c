@@ -12,7 +12,7 @@ int generate(Dance *d)
     if(d->hideRoot->num >= d->numClues)
         return NOT_FOUND;
     
-    hitList = calloc(d->s->gridSize - d->hideRoot->num, sizeof(int));
+    hitList = calloc(d->s->sudokuSize - d->hideRoot->num, sizeof(int));
 
     h = nextHide(d, &hitList);
     while(h != d->hideRoot)
@@ -42,11 +42,11 @@ int generate(Dance *d)
     return res;
 }
 
-/* returns a random igrid without hiding anything */
+/* returns a random iSudoku without hiding anything */
 Hide *nextHide(Dance *d, int **hitList)
 {
     Hide *h;
-    int i, j, randInt, listSize = d->s->gridSize - d->hideRoot->num;
+    int i, j, randInt, listSize = d->s->sudokuSize - d->hideRoot->num;
     if(listSize == 0)
         return d->hideRoot;
 
@@ -68,49 +68,10 @@ Hide *nextHide(Dance *d, int **hitList)
     return h;
 }
 
-int generate2(Dance *d)
-{
-    int igrid, randInt;
-    int gridSize = d->s->gridSize;
-
-    unfillAllCells(d);
-    printf("all cells unfilled\n");
-
-    for(d->numSols = 0; d->numSols != 1;)
-    {
-        /* pick a random cell to fill */
-        randInt = rand() % gridSize;
-        for(igrid = (randInt + 1) % gridSize; d->hideList[igrid]->filled; igrid = (igrid + 1) % gridSize)
-        {
-            if(igrid == randInt)
-            {
-                if(d->hideList[igrid]->filled)
-                {
-                    printf("All cells filled\n");
-                    return 0;
-                }
-                break;
-            }
-        }
-        //printf("igrid: %d\n", igrid);
-        fillSingleCell(d, d->hideList[igrid]);
-        //checkMatrix(d);
-
-        printSudokuBoard_Gen(d);
-
-        d->numSols = 0;
-        coverRowHeaders(d);
-        algorithmX_SGen2(d);
-        uncoverRowHeaders(d);
-    }
-
-    return 0;
-}
-
 void printToSudokuFile(Dance *d)
 {
-    int igrid, gridSize = d->s->gridSize, *grid = d->s->sudoku;
+    int iSudoku, sudokuSize = d->s->sudokuSize, *sudoku = d->s->sudoku;
 
-    for(igrid = 0; igrid < gridSize; igrid++)
-        fprintf(d->s->boardFile, "%d\n", grid[igrid]);
+    for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
+        fprintf(d->s->boardFile, "%d\n", sudoku[iSudoku]);
 }

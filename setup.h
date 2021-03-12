@@ -3,6 +3,5 @@
 #include "struct.h"
 
 int initDance(Dance *d);
-int initMatrixFileSudoku(Dance *d);
 
 #endif

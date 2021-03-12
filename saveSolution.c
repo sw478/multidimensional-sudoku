@@ -1,56 +1,26 @@
 #include "saveSolution.h"
 
 /*
-    for custom exact cover:
-    modify/replace this function with your own
-    and make your own print fucntions to translate and
-    display the set of rows in the solutions found
+   translates solution matrix rows to a filled sudoku board
+
+   for custom exact cover:
+   modify/replace this function with your own
+   and make your own print fucntions to translate and
+   display the set of rows in the solutions found
 */
 int saveSolution_Sudoku(Dance *d)
 {
    SolTree *cur;
-   int num, igrid, rowNum, xy = d->s->xy, *grid = d->s->sudoku;
+   int num, iSudoku, mrow, cSize = d->s->containerSize, *sudoku = d->s->sudoku;
 
-   if(d->numSols > 1)
-      return d->numSols;
-   else if(d->numSols == 0)
-      return 0;
+   assert(d->numSols == 1);
 
    for(cur = d->sols[0]; cur->parent != cur; cur = cur->parent)
    {
-      rowNum = cur->row->drow;
-      num = rowNum % xy;
-      igrid = rowNum / xy;
-      grid[igrid] = num + 1;
-   }
-
-   return 0;
-}
-
-/*
-    this pairs with initMatrixFileSudoku2()
-*/
-int saveSolution_Sudoku2(Dance *d)
-{
-   SolTree *cur;
-   int num, igrid, xy = d->s->xy, *grid = d->s->sudoku;
-   Doubly *hrow, *xrow;
-
-   if(d->numSols > 1)
-      return d->numSols;
-   else if(d->numSols == 0)
-      return 0;
-   
-   for(cur = d->sols[0]; cur->parent != cur; cur = cur->parent)
-   {
-      hrow = cur->row;
-      num = hrow->drow % xy;
-
-      for(xrow = hrow->right->right; xrow != hrow; xrow = xrow->right)
-      {
-         igrid = xrow->dcol - xy;
-         grid[igrid] = num + 1;
-      }
+      mrow = cur->row->drow;
+      num = mrow % cSize;
+      iSudoku = mrow / cSize;
+      sudoku[iSudoku] = num + 1;
    }
 
    return 0;

@@ -88,7 +88,7 @@ typedef struct doubly
 typedef struct hide
 {
    Doubly **hrows;
-   int num, filled, igrid;
+   int num, filled, iSudoku;
    struct hide *next, *prev;
 } Hide;
 
@@ -126,9 +126,8 @@ typedef struct solTree
  */
 typedef struct
 {
-   int *sudoku, x, y, xy, gridSize;
-   int *dim, n, boxSize, sudokuSize;
-   int subBoxSize, subGridSize, superSize;
+   int *sudoku;
+   int *dim, n, containerSize, sudokuSize;
    FILE *boardFile;
 } Sudoku;
 
@@ -145,8 +144,6 @@ typedef struct
    /* problem specific data */
    int problem;
    Sudoku *s;
-   int nq;
-   int max16mult;
    int numClues;
    
    /* for secondary columns */

@@ -49,7 +49,7 @@ void initHeurList(Dance *d, int maxColElements)
    d->heurRoot->hcol = ((void*)d->root);
 
    // if maxColElements set to 0, set maxColElements to d->rmax
-   if(maxColElements < 1)
+   if(maxColElements < 1 || maxColElements > d->rmax)
       maxColElements = d->rmax;
 
    // initialize heur headers from the back

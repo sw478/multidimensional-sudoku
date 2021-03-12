@@ -37,6 +37,6 @@
     buffer size for printing
     no error checking for this
 */
-#define BUFSIZE 100
+#define BUFSIZE 1000
 
 #endif

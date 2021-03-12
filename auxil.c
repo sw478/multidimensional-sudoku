@@ -78,31 +78,17 @@ void printSolutions_Sudoku(Dance *d)
 void printSingleSol_Sudoku(Dance *d, SolTree *sol)
 {
    SolTree *cur;
-   int drow, num, igrid, xy = d->s->xy, *grid;
-   grid = calloc(d->cmax, sizeof(int));
+   Sudoku *s = d->s;
+   int drow, num, iSudoku, containerSize = d->s->containerSize;
 
    for(cur = sol; cur->parent != cur; cur = cur->parent)
    {
       drow = cur->row->drow;
-      num = drow % xy;
-      igrid = drow / xy;
-      grid[igrid] = num + 1;
+      num = drow % containerSize;
+      iSudoku = drow / containerSize;
+      s->sudoku[iSudoku] = num + 1;
    }
-   printSudoku(d->s);
-   free(grid);
-}
-
-/*
-   2D representation will be printed using the first two inner dimensions
-   iSub: index of 2d grid, range is 0 to superSize
-*/
-void printSudoku(Sudoku *s)
-{
-   int iSub, superSize = s->superSize;
-
-   for(iSub = 0; iSub < superSize; iSub++)
-      printSudoku_2D(s, iSub, s->dim[0], s->dim[1]);
-   printf("\n");
+   printSudoku(s);
 }
 
 /*
@@ -116,57 +102,71 @@ void printSudoku(Sudoku *s)
    iStart: index of first cell of this specific 2D grid in sudoku
    iGrid: index of cell in this specific 2D grid
 */
-void printSudoku_2D(Sudoku *s, int iSub, int dim0, int dim1)
+void printSudoku(Sudoku *s)
 {
-   int subBoxSize = dim0*dim1, subGridSize = pow(subBoxSize, 2);
-   int row, col, iStart = subGridSize * iSub, iGrid, val;
+   int subGridSize = pow(s->containerSize, 2);
+   int superSize = s->sudokuSize / subGridSize;
+   int row, col, iSub, iStart, iSudoku, val;
+   int dim0 = s->dim[0], dim1 = s->dim[1];
 
-   for(row = 0; row < subBoxSize; row++)
+   for(iSub = 0; iSub < superSize; iSub++)
    {
-      if(row % dim1 == 0)
-         printf("\n");
-      for(col = 0; col < subBoxSize; col++)
+      iStart = subGridSize * iSub;
+      for(row = 0; row < s->containerSize; row++)
       {
-         iGrid = row*subBoxSize + col;
-         val = s->sudoku[iStart + iGrid];
-         if(col % dim0 == 0)
-            printf(" ");
-         if(val != 0)
-            printf(" %2d", val);
-         else
-            printf(" __");
+         if(row % dim1 == 0)
+            printf("\n");
+         for(col = 0; col < s->containerSize; col++)
+         {
+            iSudoku = iStart + row*s->containerSize + col;
+            val = s->sudoku[iSudoku];
+            if(col % dim0 == 0)
+               printf(" ");
+            if(val != 0)
+               printf(" %2d", val);
+            else
+               printf(" __");
+         }
+         printf("\n");
       }
       printf("\n");
    }
-   printf("\n");
 }
 
 /*
    prints numbers based on whether or not
-   d->hideList[igrid]->filled == 1
+   d->hideList[iSudoku]->filled == 1
 */
 void printSudokuBoard_Gen(Dance *d)
 {
-   int x = d->s->x, y = d->s->y;
-   int row, col, xy = x*y, igrid;
+   Sudoku *s = d->s;
+   int subGridSize = pow(s->containerSize, 2);
+   int superSize = s->sudokuSize / subGridSize;
+   int row, col, iSub, iStart, iSudoku, val;
+   int dim0 = s->dim[0], dim1 = s->dim[1];
 
-   for(row = 0; row < xy; row++)
+   for(iSub = 0; iSub < superSize; iSub++)
    {
-      if(row % y == 0)
-         printf("\n");
-      for(col = 0; col < xy; col++)
+      iStart = subGridSize * iSub;
+      for(row = 0; row < s->containerSize; row++)
       {
-         igrid = row*xy + col;
-         if(col % x == 0)
-            printf(" ");
-         if(d->hideList[igrid]->filled)
-            printf(" %2d", d->hideList[igrid]->num);
-         else
-            printf(" __");
+         if(row % dim1 == 0)
+            printf("\n");
+         for(col = 0; col < s->containerSize; col++)
+         {
+            iSudoku = iStart + row*s->containerSize + col;
+            val = s->sudoku[iSudoku];
+            if(col % dim0 == 0)
+               printf(" ");
+            if(d->hideList[iSudoku]->filled != 0)
+               printf(" %2d", val);
+            else
+               printf(" __");
+         }
+         printf("\n");
       }
       printf("\n");
    }
-   printf("\n");
 }
 
 void printHeur(Dance *d)

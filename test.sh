@@ -21,35 +21,33 @@ elif [ "$type" = "b" ] || [ "$type" = "t" ] || [ "$type" = "v" ]; then
    read problem
 
    if [ "$problem" = "s" ]; then
-      echo "dimensions?"
-      read x y
       
       if [ "$type" = "t" ]; then
          make
-         time ./a.out ${problem} tests/${x}x${y}.txt
+         time ./a.out s tests/dm.txt
 
       elif [ "$type" = "v" ]; then
          make
-         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out ${problem} tests/${x}x${y}.txt
+         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out s tests/dm.txt
 
       elif [ "$type" = "b" ]; then
          make
-         ./a.out ${problem} tests/${x}x${y}.txt
+         ./a.out s tests/dm.txt
       fi
    
    elif [ "$problem" = "g" ]; then
       echo "dimensions?"
-      read x y
+      read dim
       
       if [ "$type" = "t" ]; then
-         time ./a.out g tests/${x}x${y}.txt ${x} ${y}
+         time ./a.out g tests/dm.txt ${dim}
 
       elif [ "$type" = "v" ]; then
-         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g tests/${x}x${y}.txt ${x} ${y}
+         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g tests/dm.txt ${dim}
 
       elif [ "$type" = "b" ]; then
          make
-         ./a.out g tests/${x}x${y}.txt ${x} ${y}
+         ./a.out g tests/dm.txt ${dim}
       fi
 
    fi

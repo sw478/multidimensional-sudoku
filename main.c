@@ -6,8 +6,7 @@
 #include "free.h"
 #include "error.h"
 #include "hide.h"
-#include "shuffle.h"
-#include "setMatrixDimensions.h"
+#include "matrixFile.h"
 #include "hrowCover.h"
 #include "saveSolution.h"
 #include "secondaryColumns.h"
@@ -47,17 +46,21 @@ int runSudoku(Dance *d, int argc, char *argv[])
 {
 
    printSudoku(d->s);
-
-/*
    findMatrixFile(d);
+
    setMatrixDimensions_Sudoku(d);
 
    initDance(d);
    initMatrix(d);
-   HEUR_INIT(d, d->s->xy)
+
+   //printMatrix(d);
+
+   HEUR_INIT(d, d->s->containerSize)
    initHide_Sudoku(d);
    fillAllCells(d);
    coverRowHeaders(d);
+
+   printf("starting algX\n");
    algorithmX(d);
    printf("number of calls: %d\n", d->numCalls);
    uncoverRowHeaders(d);
@@ -68,7 +71,6 @@ int runSudoku(Dance *d, int argc, char *argv[])
    saveSolution_Sudoku(d);
 
    freeDance(d);
-*/
 
    fclose(d->s->boardFile);
    free(d->s->sudoku);
@@ -80,34 +82,30 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
 int runSudokuGen(Dance *d, int argc, char *argv[])
 {
-   char *matrixFile = malloc(BUFSIZE*sizeof(char));
-
-   sprintf(matrixFile, "dance/ds1_%dx%d.txt", d->s->y, d->s->x);
-   d->matrixFile = fopen(matrixFile, "r+");
-   free(matrixFile);
-
+   findMatrixFile(d);
    setMatrixDimensions_Sudoku(d);
 
    initDance(d);
    initMatrix(d);
 
-   HEUR_INIT(d, d->s->xy)
+   printMatrix(d);
+
+   HEUR_INIT(d, d->s->sudokuSize)
    
    coverRowHeaders(d);
 
+   printf("starting algX\n");
    algorithmX_SGen1(d);
    printf("number of calls: %d\n", d->numCalls);
+   printf("numSols: %d\n", d->numSols);
 
    uncoverRowHeaders(d);
-
-   /* setup generating mechanic */
    saveSolution_Sudoku(d);
    printSudoku(d->s);
 
    initHide_Sudoku(d);
 
-   /* maximum number of clues you want for this puzzle */
-   d->numClues = d->s->gridSize / 2;
+   d->numClues = d->s->sudokuSize / 2;
    if(generate(d) == NOT_FOUND)
       printf("No puzzles found\n");
    printSudoku(d->s);

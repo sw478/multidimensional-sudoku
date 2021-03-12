@@ -11,10 +11,10 @@
  * for generating, should be done at the end, when all the
  * cell values are known
  * 
- * xy1 is xy-1 since the number of row headers that can be covered
+ * cs1 is xy-1 since the number of row headers that can be covered
  * for a single cell is one less than the # of possible cell numbers
  *
- * uses the values from d->s->grid, so for generation must
+ * uses the values from d->s->sudoku, so for generation must
  * be called after saveSolution
  *
  * doesn't hide any cell rows, just sets everything up
@@ -26,18 +26,18 @@
 int initHide_Sudoku(Dance *d)
 {
    Doubly *xrow;
-   int *grid = d->s->sudoku, igrid, xy = d->s->xy, gridSize = d->s->gridSize;
-   int ihide, num;
+   int *sudoku = d->s->sudoku, iSudoku, containerSize = d->s->containerSize;
+   int sudokuSize = d->s->sudokuSize, ihide, num;
    Hide *h;
 
-   d->hideList = malloc(d->s->gridSize*sizeof(Hide*));
+   d->hideList = malloc(sudokuSize*sizeof(Hide*));
    d->hideRoot = malloc(sizeof(Hide));
    d->hideRoot->prev = d->hideRoot->next = d->hideRoot;
-   d->hideRoot->num = 0; /* number of cells filled in grid */
+   d->hideRoot->num = 0; /* number of cells filled in sudoku */
 
    xrow = d->root->down;
    
-   for(igrid = 0; igrid < gridSize; igrid++)
+   for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
    {
       h = malloc(sizeof(Hide));
       h->next = d->hideRoot;
@@ -45,31 +45,31 @@ int initHide_Sudoku(Dance *d)
       d->hideRoot->prev->next = h;
       d->hideRoot->prev = h;
 
-      h->num = grid[igrid];
-      d->hideList[igrid] = h;
-      h->hrows = malloc((xy-1)*sizeof(Doubly));
+      h->num = sudoku[iSudoku];
+      d->hideList[iSudoku] = h;
+      h->hrows = malloc((containerSize-1)*sizeof(Doubly));
       h->filled = 0;
-      h->igrid = igrid;
+      h->iSudoku = iSudoku;
 
-      if(grid[igrid] == 0)
+      if(sudoku[iSudoku] == 0)
       {
-         for(ihide = 0; ihide < xy; ihide++, xrow = xrow->down);
+         for(ihide = 0; ihide < containerSize; ihide++, xrow = xrow->down);
          continue;
       }
 
-      for(ihide = 0; ihide < xy-1; xrow = xrow->down)
+      for(ihide = 0; ihide < containerSize-1; xrow = xrow->down)
       {
-         num = (xrow->drow % xy) + 1;
-         if(grid[igrid] == num)
+         num = (xrow->drow % containerSize) + 1;
+         if(sudoku[iSudoku] == num)
             continue;
          h->hrows[ihide] = xrow;
          ihide++;
       }
-      if(num != xy)
+      if(num != containerSize)
          xrow = xrow->down;
     
    }
-   d->ihide = d->s->gridSize;
+   d->ihide = sudokuSize;
 
    return 0;
 }
@@ -77,7 +77,7 @@ int initHide_Sudoku(Dance *d)
 int fillSingleCell(Dance *d, Hide *h)
 {
    Doubly *hrow, *xrow;
-   int ihide, xy1 = d->s->xy - 1;
+   int ihide, cs1 = d->s->containerSize - 1;
 
    /* check when generating */
    if(h->filled)
@@ -91,7 +91,7 @@ int fillSingleCell(Dance *d, Hide *h)
    if(h->num == 0)
       return 0;
 
-   for(ihide = 0; ihide < xy1; ihide++)
+   for(ihide = 0; ihide < cs1; ihide++)
    {
       hrow = h->hrows[ihide];
       hrow->up->down = hrow->down;
@@ -113,7 +113,7 @@ int fillSingleCell(Dance *d, Hide *h)
 int unfillSingleCell(Dance *d, Hide *h)
 {
    Doubly *hrow, *xrow;
-   int ihide, xy1 = d->s->xy - 1;
+   int ihide, cs1 = d->s->containerSize - 1;
 
    /* check when generating */
    if(!h->filled)
@@ -127,7 +127,7 @@ int unfillSingleCell(Dance *d, Hide *h)
    if(h->num == 0)
       return 0;
 
-   for(ihide = 0; ihide < xy1; ihide++)
+   for(ihide = 0; ihide < cs1; ihide++)
    {
       hrow = h->hrows[ihide];
       hrow->up->down = hrow;
@@ -148,18 +148,18 @@ int unfillSingleCell(Dance *d, Hide *h)
 
 void fillAllCells(Dance *d)
 {
-   int igrid, gridSize = d->s->gridSize;
+   int iSudoku, sudokuSize = d->s->sudokuSize;
 
-   for(igrid = 0; igrid < gridSize; igrid++)
-      fillSingleCell(d, d->hideList[igrid]);
+   for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
+      fillSingleCell(d, d->hideList[iSudoku]);
 }
 
 void unfillAllCells(Dance *d)
 {
-   int igrid, gridSize = d->s->gridSize;
+   int iSudoku, sudokuSize = d->s->sudokuSize;
 
-   for(igrid = 0; igrid < gridSize; igrid++)
-      unfillSingleCell(d, d->hideList[igrid]);
+   for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
+      unfillSingleCell(d, d->hideList[iSudoku]);
 }
 
 void freeHide(Dance *d)
@@ -179,11 +179,11 @@ void freeHide(Dance *d)
 /* translates filled status of cells to d->s */
 void saveGeneratedPuzzle(Dance *d)
 {
-   int igrid;
+   int iSudoku;
 
-   for(igrid = 0; igrid < d->s->gridSize; igrid++)
+   for(iSudoku = 0; iSudoku < d->s->sudokuSize; iSudoku++)
    {
-      if(d->hideList[igrid]->filled == 0)
-         d->s->sudoku[igrid] = 0;
+      if(d->hideList[iSudoku]->filled == 0)
+         d->s->sudoku[iSudoku] = 0;
    }
 }
