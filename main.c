@@ -70,10 +70,6 @@ int runSudoku(Dance *d, int argc, char *argv[])
    saveSolution_Sudoku(d);
 
    freeDance(d);
-
-   free(d->s->sudoku);
-   free(d->s);
-   free(d);
    
    return 0;
 }
