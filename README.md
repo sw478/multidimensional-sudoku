@@ -5,6 +5,7 @@ This project is based off of the main sudoku project, as most of the code is the
 
 ## general notes
 
+* Create a file called <unistd_io.h> that includes <io.h> if running on windows or <unistd.h> if on linux
 * In this project, sudokuFile is set to "sudokuFile.txt".
 * The generator can write to the sudokuFile for the solver to solve, or you can set your own input.
 * Heur, Hide, and SolTree can be used again in this project, not much was affected by the changes in processing sudokus.
