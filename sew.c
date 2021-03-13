@@ -7,16 +7,15 @@
 int initMatrix(Dance *d)
 {
    char *buf = malloc(BUFSIZE*sizeof(char));
-   int irow, icol;
-   Doubly *doub;
-   memset(buf, 0, BUFSIZE*sizeof(char));
+   int irow, icol, ilist, initListCap;
+   Doubly *doub, **initList;
 
    assert(fseek(d->matrixFile, 0, SEEK_SET) == 0);
-   
-   /* list of disconnected doubly */
-   d->ilist = 0;
-   d->initListCap = 1;
-   d->initList = malloc(sizeof(Doubly*));
+   memset(buf, 0, BUFSIZE*sizeof(char));
+
+   ilist = 0;
+   initListCap = 1;
+   initList = malloc(sizeof(Doubly*));
 
    /* initialize all aspects of root doubly */
    d->root = malloc(sizeof(Doubly));
@@ -35,20 +34,20 @@ int initMatrix(Dance *d)
       doub = malloc(sizeof(Doubly));
       doub->drow = irow;
       doub->dcol = icol;
-      if(d->ilist >= d->initListCap)
+      if(ilist >= initListCap)
       {
-         d->initListCap = d->initListCap * GROWTH_FACTOR + 1;
-         d->initList = realloc(d->initList, d->initListCap*sizeof(Doubly*));
+         initListCap = initListCap * GROWTH_FACTOR + 1;
+         initList = realloc(initList, initListCap*sizeof(Doubly*));
       }
-      d->initList[d->ilist] = doub;
-      d->ilist++;
+      initList[ilist] = doub;
+      ilist++;
    }
-   d->initList = realloc(d->initList, d->ilist*sizeof(Doubly*));
+   initList = realloc(initList, ilist*sizeof(Doubly*));
 
-   connectRows(d);
-   connectCols(d);
+   connectRows(d, initList, ilist);
+   connectCols(d, initList, ilist);
 
-   free(d->initList);
+   free(initList);
 
    fclose(d->matrixFile);
    free(buf);
@@ -72,15 +71,15 @@ int compareCols(const void *a, const void *b)
    return acol == bcol ? ax->drow - bx->drow : acol - bcol;
 }
 
-int connectRows(Dance *d)
+int connectRows(Dance *d, Doubly **initList, int ilist)
 {
    Doubly *hrow = d->root, *cur, *hnew, *root = d->root;
    int irow, i, prev = -1, cmax = d->cmax;
-   qsort(d->initList, d->ilist, sizeof(Doubly*), compareRows);
+   qsort(initList, ilist, sizeof(Doubly*), compareRows);
 
-   for(i = 0; i < d->ilist; i++)
+   for(i = 0; i < ilist; i++)
    {
-      cur = d->initList[i];
+      cur = initList[i];
       irow = cur->drow;
       if(irow != prev)
       {
@@ -109,15 +108,15 @@ int connectRows(Dance *d)
    return 0;
 }
 
-int connectCols(Dance *d)
+int connectCols(Dance *d, Doubly **initList, int ilist)
 {
    Doubly *hcol = d->root, *cur, *hnew, *root = d->root;
    int icol, i, prev = -1, rmax = d->rmax;
-   qsort(d->initList, d->ilist, sizeof(Doubly*), compareCols);
+   qsort(initList, ilist, sizeof(Doubly*), compareCols);
 
-   for(i = 0; i < d->ilist; i++)
+   for(i = 0; i < ilist; i++)
    {
-      cur = d->initList[i];
+      cur = initList[i];
       icol = cur->dcol;
       if(icol != prev)
       {

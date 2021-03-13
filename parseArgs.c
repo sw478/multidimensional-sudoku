@@ -27,8 +27,8 @@ void parseArgs(Dance *d, int argc, char *argv[])
     file format:
     [n: number of dimensions]
     next n lines are dimensions
-    sudokuSize: size of sudoku
 
+    sudokuSize: size of sudoku
     next sudokuSize lines are the numbers in the n-dimensional board
 */
 void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
@@ -82,7 +82,7 @@ void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
     free(buf);
 }
 
-/* a.out g [file] [dim]*n */
+/* a.out g [sudoku file] [dim]*n */
 void parseArgs_SGen(Dance *d, int argc, char *argv[])
 {
     Sudoku *s = malloc(sizeof(Sudoku));
@@ -98,7 +98,6 @@ void parseArgs_SGen(Dance *d, int argc, char *argv[])
     assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
 
     s->n = argc - 3;
-    //printf("n: %d\n", s->n);
     fprintf(d->s->boardFile, "%d\n", s->n);
 
     s->dim = malloc(s->n*sizeof(int));
@@ -106,12 +105,9 @@ void parseArgs_SGen(Dance *d, int argc, char *argv[])
     for(idim = 0; idim < s->n; idim++)
     {
         assert(1 == sscanf(argv[idim+3], "%d", &s->dim[idim]));
-        //printf("dim[%d]: %d\n", idim, s->dim[idim]);
         fprintf(d->s->boardFile, "%d\n", s->dim[idim]);
         s->containerSize *= s->dim[idim];
     }
-    //printf("containerSize: %d\n", s->containerSize);
     s->sudokuSize = pow(s->containerSize, s->n);
-    //printf("sudokuSize: %d\n", s->sudokuSize);
     s->sudoku = calloc(s->sudokuSize, sizeof(int));
 }

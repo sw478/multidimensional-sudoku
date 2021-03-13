@@ -175,15 +175,3 @@ void freeHide(Dance *d)
    free(d->hideList);
    free(d->hideRoot);
 }
-
-/* translates filled status of cells to d->s */
-void saveGeneratedPuzzle(Dance *d)
-{
-   int iSudoku;
-
-   for(iSudoku = 0; iSudoku < d->s->sudokuSize; iSudoku++)
-   {
-      if(d->hideList[iSudoku]->filled == 0)
-         d->s->sudoku[iSudoku] = 0;
-   }
-}

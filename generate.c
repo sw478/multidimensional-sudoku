@@ -9,19 +9,18 @@ int generate(Dance *d)
     int *hitList, res = NOT_FOUND;
     Hide *h;
 
-    if(d->hideRoot->num >= d->numClues)
+    if(d->hideRoot->num >= d->s->maxNumClues)
         return NOT_FOUND;
     
     hitList = calloc(d->s->sudokuSize - d->hideRoot->num, sizeof(int));
-
-    h = nextHide(d, &hitList);
-    while(h != d->hideRoot)
+    
+    for(h = nextHide(d, &hitList); h != d->hideRoot; h = nextHide(d, &hitList))
     {
         fillSingleCell(d, h);
 
         d->numSols = 0;
         coverRowHeaders(d);
-        algorithmX_SGen2(d);
+        algorithmX_Gen_NumSol(d);
         uncoverRowHeaders(d);
         if(d->numSols == 1)
         {
@@ -34,8 +33,6 @@ int generate(Dance *d)
         unfillSingleCell(d, h);
         if(res == FOUND)
             break;
-
-        h = nextHide(d, &hitList);
     }
 
     free(hitList);
@@ -50,13 +47,8 @@ Hide *nextHide(Dance *d, int **hitList)
     if(listSize == 0)
         return d->hideRoot;
 
-    /* pick random number in range of number of elements left */
     randInt = rand() % listSize;
-
-    /* go to a random uncovered hide */
     for(h = d->hideRoot->next, i = 0; i < randInt; h = h->next, i++);
-
-    /* continue going through list of uncovered hides until unvisited hide is found */
     for(j = i; (*hitList)[j] == 1; h = h->next)
     {
         if(h == d->hideRoot)
@@ -66,6 +58,27 @@ Hide *nextHide(Dance *d, int **hitList)
 
     (*hitList)[j] = 1;
     return h;
+}
+
+/*
+    if n == 1, maxNumClues will be ignored and be
+    replaced with dim[0] - 1
+*/
+void setMaxNumClues(Sudoku *s, int maxNumClues)
+{
+    s->maxNumClues = s->n == 1 ? s->dim[0]-1 : maxNumClues;
+}
+
+/* translates filled status of cells to d->s */
+void saveGeneratedPuzzle(Dance *d)
+{
+   int iSudoku;
+
+   for(iSudoku = 0; iSudoku < d->s->sudokuSize; iSudoku++)
+   {
+      if(d->hideList[iSudoku]->filled == 0)
+         d->s->sudoku[iSudoku] = 0;
+   }
 }
 
 void printToSudokuFile(Dance *d)

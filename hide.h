@@ -8,7 +8,6 @@ int fillSingleCell(Dance *d, Hide *h);
 void unfillAllCells(Dance *d);
 int unfillSingleCell(Dance *d, Hide *h);
 void freeHide(Dance *d);
-void saveGeneratedPuzzle(Dance *d);
 
 int hide_Sudoku2(Dance *d);
 int unhide_Sudoku2(Dance *d);

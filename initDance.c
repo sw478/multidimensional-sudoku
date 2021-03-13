@@ -1,4 +1,4 @@
-#include "setup.h"
+#include "initDance.h"
 #include "solTree.h"
 #include "dance.h"
 #include "heuristic.h"

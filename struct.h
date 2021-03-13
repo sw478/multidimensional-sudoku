@@ -126,6 +126,7 @@ typedef struct
 {
    int *sudoku;
    int *dim, n, containerSize, sudokuSize;
+   int maxNumClues;
    FILE *boardFile;
 } Sudoku;
 
@@ -142,15 +143,10 @@ typedef struct
    /* problem specific data */
    int problem;
    Sudoku *s;
-   int numClues;
    
    /* for secondary columns */
    Doubly *hcol_sec;
    int sec_hcol_index;
-   
-   /* for initializing matrix */
-   Doubly **initList;
-   int ilist, initListCap;
 
    /* for storing solutions */
    SolTree *csol, **sols;

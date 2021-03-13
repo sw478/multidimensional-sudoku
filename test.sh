@@ -1,5 +1,7 @@
 #!/bin/bash
 USAGE="[ q:quit | m:make | b:basic | t:time ]"
+OPTIONS="[ s:solve | g:generate ]"
+SUDOKU_FILE="sudokuFile.txt"
 
 while true; do
 
@@ -15,24 +17,23 @@ elif [ "$type" = "m" ]; then
    make
 
 elif [ "$type" = "b" ] || [ "$type" = "t" ] || [ "$type" = "v" ]; then
-   echo "problem:"
-   echo "\"s\" for sudoku"
-   echo "\"g\" for generating sudoku"
+   echo $OPTIONS
+   echo "if tests/dm.txt does not exist yet, generate sudoku first"
    read problem
 
    if [ "$problem" = "s" ]; then
       
       if [ "$type" = "t" ]; then
          make
-         time ./a.out s tests/dm.txt
+         time ./a.out s $SUDOKU_FILE
 
       elif [ "$type" = "v" ]; then
          make
-         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out s tests/dm.txt
+         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out s $SUDOKU_FILE
 
       elif [ "$type" = "b" ]; then
          make
-         ./a.out s tests/dm.txt
+         ./a.out s $SUDOKU_FILE
       fi
    
    elif [ "$problem" = "g" ]; then
@@ -40,14 +41,14 @@ elif [ "$type" = "b" ] || [ "$type" = "t" ] || [ "$type" = "v" ]; then
       read dim
       
       if [ "$type" = "t" ]; then
-         time ./a.out g tests/dm.txt ${dim}
+         time ./a.out g $SUDOKU_FILE ${dim}
 
       elif [ "$type" = "v" ]; then
-         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g tests/dm.txt ${dim}
+         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g $SUDOKU_FILE ${dim}
 
       elif [ "$type" = "b" ]; then
          make
-         ./a.out g tests/dm.txt ${dim}
+         ./a.out g $SUDOKU_FILE ${dim}
       fi
 
    fi

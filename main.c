@@ -1,6 +1,6 @@
 #include "main.h"
 #include "auxil.h"
-#include "setup.h"
+#include "initDance.h"
 #include "sew.h"
 #include "heuristic.h"
 #include "free.h"
@@ -8,7 +8,6 @@
 #include "hide.h"
 #include "matrixFile.h"
 #include "hrowCover.h"
-#include "saveSolution.h"
 #include "secondaryColumns.h"
 #include "parseArgs.h"
 #include "test.h"
@@ -31,7 +30,7 @@ int main(int argc, char *argv[])
 
 void checkConfig()
 {
-   assert(USE_HEUR == 0 || USE_HEUR == 1);
+   assert(USE_HEUR == 0 || USE_HEUR == 1 || USE_HEUR == 2);
    assert(STARTING_CAP >= 1);
    assert(GROWTH_FACTOR > 1);
 }
@@ -41,7 +40,6 @@ void checkConfig()
  */
 int runSudoku(Dance *d, int argc, char *argv[])
 {
-
    printSudoku(d->s);
    findMatrixFile(d);
 
@@ -89,7 +87,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    coverRowHeaders(d);
 
    printf("starting algX\n");
-   algorithmX_SGen1(d);
+   algorithmX_Gen_Rand(d);
    printf("number of calls: %d\n", d->numCalls);
 
    uncoverRowHeaders(d);
@@ -99,7 +97,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
 
    initHide_Sudoku(d);
 
-   d->numClues = d->s->n == 1 ? d->s->dim[0]-1 : d->s->sudokuSize / 2;
+   setMaxNumClues(d->s, d->s->sudokuSize / 2);
    if(generate(d) == NOT_FOUND)
       printf("No puzzles found\n");
    

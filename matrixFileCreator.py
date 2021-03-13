@@ -54,8 +54,8 @@ def initMatrixFile_Sudoku(matrixFile, dim):
     rmax = containerSize * sudokuSize
     cmax = sudokuSize * (2 + n)
 
-    print("rmax: " + repr(rmax))
-    print("cmax: " + repr(cmax))
+    #print("rmax: " + repr(rmax))
+    #print("cmax: " + repr(cmax))
 
     f.close()
 
