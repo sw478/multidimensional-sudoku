@@ -14,6 +14,6 @@ void unselectCandidateRow(Dance *d, Doubly *node);
 void uncoverColRows(Dance *d, Doubly *xrow);
 void uncoverRows(Dance *d, Doubly *xcol);
 
-Doubly *nextRow(Doubly *xrow, int *num, int **hitList);
+Doubly *nextRowRand(Doubly *xrow, int *num, int **hitList);
 
 #endif

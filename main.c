@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
 void checkConfig()
 {
-   assert(USE_HEUR == 0 || USE_HEUR == 1 || USE_HEUR == 2);
+   assert(USE_HEUR >= 0 && USE_HEUR <= 2);
    assert(STARTING_CAP >= 1);
    assert(GROWTH_FACTOR > 1);
 }

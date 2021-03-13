@@ -12,11 +12,11 @@ void testRandRows(Dance *d)
 
     listSize = hcol->drow - d->rmax;
     hitList = calloc(listSize, sizeof(int));
-    candidateRow = nextRow(hcol, &listSize, &hitList);
+    candidateRow = nextRowRand(hcol, &listSize, &hitList);
 
     while(candidateRow != hcol)
     {
         printf("drow: %d\n", candidateRow->drow);
-        candidateRow = nextRow(hcol, &listSize, &hitList);
+        candidateRow = nextRowRand(hcol, &listSize, &hitList);
     }
 }

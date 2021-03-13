@@ -14,6 +14,7 @@ int algorithmX(Dance *d)
    {
       d->csol = initTree();
       addLeaf(d, d->csol);
+      d->numSols++;
       return FOUND;
    }
 
@@ -60,6 +61,7 @@ int algorithmX_Gen_Rand(Dance *d)
    {
       d->csol = initTree();
       addLeaf(d, d->csol);
+      d->numSols++;
       return FOUND;
    }
 
@@ -71,7 +73,7 @@ int algorithmX_Gen_Rand(Dance *d)
    
    listSize = hcol->drow - d->rmax;
    hitList = calloc(listSize, sizeof(int));
-   crow = nextRow(hcol, &listSize, &hitList);
+   crow = nextRowRand(hcol, &listSize, &hitList);
    
    while(crow != hcol)
    {
@@ -94,7 +96,7 @@ int algorithmX_Gen_Rand(Dance *d)
 
          break;
       }
-      crow = nextRow(hcol, &listSize, &hitList);
+      crow = nextRowRand(hcol, &listSize, &hitList);
    }
 
    free(hitList);
@@ -135,10 +137,10 @@ int algorithmX_Gen_NumSol(Dance *d)
 }
 
 /*
- * used to randomize order of candidate rows searched in column chosen
- * in AlgX, otherwise algX will just go down the column
+   used to randomize order of candidate rows searched in column chosen
+   in AlgX, otherwise algX will just go down the column
  */
-Doubly *nextRow(Doubly *hcol, int *listSize, int **hitList)
+Doubly *nextRowRand(Doubly *hcol, int *listSize, int **hitList)
 {
    Doubly *crow;
    int i, j, randInt;

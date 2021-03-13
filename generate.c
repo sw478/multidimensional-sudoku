@@ -14,7 +14,7 @@ int generate(Dance *d)
     
     hitList = calloc(d->s->sudokuSize - d->hideRoot->num, sizeof(int));
     
-    for(h = nextHide(d, &hitList); h != d->hideRoot; h = nextHide(d, &hitList))
+    for(h = nextHideRand(d, &hitList); h != d->hideRoot; h = nextHideRand(d, &hitList))
     {
         fillSingleCell(d, h);
 
@@ -40,7 +40,7 @@ int generate(Dance *d)
 }
 
 /* returns a random iSudoku without hiding anything */
-Hide *nextHide(Dance *d, int **hitList)
+Hide *nextHideRand(Dance *d, int **hitList)
 {
     Hide *h;
     int i, j, randInt, listSize = d->s->sudokuSize - d->hideRoot->num;

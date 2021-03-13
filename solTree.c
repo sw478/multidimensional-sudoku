@@ -10,7 +10,6 @@ void addLeaf(Dance *d, SolTree *sol)
       d->sols = realloc(d->sols, d->solCap*sizeof(SolTree));
    }
    d->sols[d->numSols] = sol;
-   d->numSols++;
 }
 
 /*

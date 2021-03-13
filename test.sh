@@ -5,54 +5,54 @@ SUDOKU_FILE="sudokuFile.txt"
 
 while true; do
 
-echo
-echo $USAGE
-read type
+   echo $USAGE
+   read type
 
-if [ "$type" = "q" ]; then
-   exit 0
+   if [ "$type" = "q" ]; then
+      exit 0
 
-elif [ "$type" = "m" ]; then
-   make clean
-   make
+   elif [ "$type" = "m" ]; then
+      make clean
+      make
 
-elif [ "$type" = "b" ] || [ "$type" = "t" ] || [ "$type" = "v" ]; then
-   echo $OPTIONS
-   echo "if tests/dm.txt does not exist yet, generate sudoku first"
-   read problem
+   elif [ "$type" = "b" ] || [ "$type" = "t" ] || [ "$type" = "v" ]; then
+      echo "if sudokuFile does not exist yet, generate sudoku first"
+      echo $OPTIONS
+      read problem
 
-   if [ "$problem" = "s" ]; then
+      if [ "$problem" = "s" ]; then
+         
+         if [ "$type" = "t" ]; then
+            make
+            time ./a.out s $SUDOKU_FILE
+
+         elif [ "$type" = "v" ]; then
+            make
+            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out s $SUDOKU_FILE
+
+         elif [ "$type" = "b" ]; then
+            make
+            ./a.out s $SUDOKU_FILE
+         fi
       
-      if [ "$type" = "t" ]; then
-         make
-         time ./a.out s $SUDOKU_FILE
+      elif [ "$problem" = "g" ]; then
+         echo "dimensions?"
+         read dim
+         
+         if [ "$type" = "t" ]; then
+            time ./a.out g $SUDOKU_FILE ${dim}
 
-      elif [ "$type" = "v" ]; then
-         make
-         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out s $SUDOKU_FILE
+         elif [ "$type" = "v" ]; then
+            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g $SUDOKU_FILE ${dim}
 
-      elif [ "$type" = "b" ]; then
-         make
-         ./a.out s $SUDOKU_FILE
-      fi
-   
-   elif [ "$problem" = "g" ]; then
-      echo "dimensions?"
-      read dim
-      
-      if [ "$type" = "t" ]; then
-         time ./a.out g $SUDOKU_FILE ${dim}
+         elif [ "$type" = "b" ]; then
+            make
+            ./a.out g $SUDOKU_FILE ${dim}
+         fi
 
-      elif [ "$type" = "v" ]; then
-         valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g $SUDOKU_FILE ${dim}
-
-      elif [ "$type" = "b" ]; then
-         make
-         ./a.out g $SUDOKU_FILE ${dim}
       fi
 
    fi
 
-fi
-
+echo
 done

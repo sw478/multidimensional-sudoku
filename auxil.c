@@ -1,6 +1,6 @@
 #include "auxil.h"
 #include "error.h"
-#define LINE "=================================================\n\n"
+#define LINE "=================================================\n"
 
 /* this file contains functions useful for debugging and displaying data */
 
@@ -68,7 +68,6 @@ void printSolutions_Sudoku(Dance *d)
       //printSingleSol_Matrix(d, d->sols[i]); /* prints rows of matrices */
       printSingleSol_Sudoku(d, d->sols[i]); /* prints the solution as a sudoku grid */
    }
-   printf("\n");
 }
 
 /* TODO */
@@ -126,6 +125,7 @@ void printSudoku(Sudoku *s)
    dim1 = s->dim[1];
 
    printf(LINE);
+   printf("\n");
 
    for(iSub = 0; iSub < superSize; iSub++)
    {
@@ -155,9 +155,10 @@ void printSudoku(Sudoku *s)
          }
          printf("\n");
       }
-      printf("\n\n");
+      printf("\n");
    }
    printf(LINE);
+   printf("\n");
 }
 
 void printSudoku_oneDim(Sudoku *s)
