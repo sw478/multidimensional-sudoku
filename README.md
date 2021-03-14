@@ -62,9 +62,9 @@ There are n number of span types (row, col, etc.) each of containerSize length a
 
 ## matrix
 
-Matrix rows describe the possible placements of individual numbers in the sudoku, as well as the possible values it can have, so number of rows is: sudokuSize*containerSize.
+Matrix rows describe the possible placements of individual numbers in the sudoku, as well as the possible values it can have, so number of rows is: (sudokuSize*containerSize).
 
 Matrix columns are the constraints: (number of columns for each constraint in parentheses)
 * No more than one number can be in a cell. (sudokuSize)
 * No more than one of each value in each container (sudokuSize)
-* No more than one of each value in each span (containerSize * containerSize * n)
+* No more than one of each value in each span (sudokuSize * n)
