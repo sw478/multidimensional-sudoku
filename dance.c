@@ -42,6 +42,8 @@ int algorithmX(Dance *d)
          }
          addChild(sol, d->csol);
          d->csol = sol;
+
+         ALGX_BREAK
       }
    }
 
