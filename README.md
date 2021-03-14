@@ -38,6 +38,10 @@ In a traditional sudoku, you have rows, columns, and boxes. In a generalized sud
 
 Reframing sudokus in this way allows us to generalize these concepts for higher dimensions.
 
+A 3x2x1 multidimensional sudoku:
+
+![sudoku_3_2_1](images/msudoku_3_2_1.png)
+
 ### containerSize
 
 This is the size of the containers, as well as the length of all span. (In a traditional sudoku, containerSize would be 9). This number is calculated as the product of all dimensions (3x3 = 9).

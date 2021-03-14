@@ -22,7 +22,6 @@
     #define HEUR_FREE(d)
 #elif USE_HEUR == 0
     #define HEUR_HEURISTIC(d) (d)->root->right);
-    /* checkConfig() should assert USE_HEUR is 0 or 1 */
 #endif
 
 /*
@@ -35,7 +34,6 @@
 
 /*
     buffer size for printing
-    no error checking for this
 */
 #define BUFSIZE 1000
 

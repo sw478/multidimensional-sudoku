@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
    {
       case SUDOKU: runSudoku(d, argc, argv); break;
       case SGEN: runSudokuGen(d, argc, argv); break;
-      default: break;
+      default: assert(0);
    }
 }
 
@@ -33,6 +33,7 @@ void checkConfig()
    assert(USE_HEUR >= 0 && USE_HEUR <= 2);
    assert(STARTING_CAP >= 1);
    assert(GROWTH_FACTOR > 1);
+   assert(BUFSIZE > 100);
 }
 
 /*
@@ -97,7 +98,8 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
 
    initHide_Sudoku(d);
 
-   setMaxNumClues(d->s, d->s->sudokuSize / 2);
+   setMaxNumClues(d->s, d->s->sudokuSize * (1.0/2));
+   printf("starting generation\n");
    if(generate(d) == NOT_FOUND)
       printf("No puzzles found\n");
    
