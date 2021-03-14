@@ -15,30 +15,16 @@ void setMatrixDimensions_Sudoku(Dance *d)
 */
 void findMatrixFile(Dance *d)
 {
-   char *matrixFile;
-   int *sorted_dim = malloc(d->s->n*sizeof(int));
-   int idim, n = d->s->n;
-
-   for(idim = 0; idim < n; idim++)
-      sorted_dim[idim] = d->s->dim[idim];
-   qsort(sorted_dim, n, sizeof(int), compareInt);
-   
-   matrixFile = getMatrixFileName(d, sorted_dim);
+   char *matrixFile = getMatrixFileName(d);
 
    // check if file doesn't exist
    //if((access(matrixFile, F_OK) != 0))
-      createMatrixFile(d, matrixFile, sorted_dim);
+      createMatrixFile(d, matrixFile);
 
    d->matrixFile = fopen(matrixFile, "r+");
    assert(d->matrixFile);
 
-   free(sorted_dim);
    free(matrixFile);
-}
-
-int compareInt(const void *a, const void *b)
-{
-   return *(const int*)a - *(const int*)b;
 }
 
 /*
@@ -46,7 +32,7 @@ int compareInt(const void *a, const void *b)
    dance/dm_d1_d2_d3_..._dn.txt
    with dimensions sorted in increasing order
 */
-char *getMatrixFileName(Dance *d, int *sorted_dim)
+char *getMatrixFileName(Dance *d)
 {
    char *matrixFile = malloc(BUFSIZE*sizeof(char));
    char *buf = malloc(BUFSIZE*sizeof(char));
@@ -56,7 +42,7 @@ char *getMatrixFileName(Dance *d, int *sorted_dim)
 
    for(idim = 0; idim < d->s->n; idim++)
    {
-      sprintf(buf, "_%d", sorted_dim[idim]);
+      sprintf(buf, "_%d", d->s->dim[idim]);
       strcat(matrixFile, buf);
    } 
    sprintf(buf, ".txt");
@@ -69,7 +55,7 @@ char *getMatrixFileName(Dance *d, int *sorted_dim)
 /*
    run the python program to create the matrixFile
 */
-void createMatrixFile(Dance *d, char *matrixFile, int *sorted_dim)
+void createMatrixFile(Dance *d, char *matrixFile)
 {
    int idim;
    char *command = malloc(BUFSIZE*sizeof(char));
@@ -80,7 +66,7 @@ void createMatrixFile(Dance *d, char *matrixFile, int *sorted_dim)
    strcat(command, buf);
    for(idim = 0; idim < d->s->n; idim++)
    {
-      sprintf(buf, " %d", sorted_dim[idim]);
+      sprintf(buf, " %d", d->s->dim[idim]);
       strcat(command, buf);
    }
 

@@ -1,6 +1,7 @@
 #include "auxil.h"
 #include "error.h"
-#define LINE "=================================================\n"
+#define EQUALS_LINE "=================================================\n"
+#define LINE "---------------------------------------\n"
 
 /* this file contains functions useful for debugging and displaying data */
 
@@ -70,7 +71,7 @@ void printSolutions_Sudoku(Dance *d)
    }
 }
 
-/* TODO */
+/* translates single solution from matrix to a sudoku */
 void printSingleSol_Sudoku(Dance *d, SolTree *sol)
 {
    SolTree *cur;
@@ -88,49 +89,65 @@ void printSingleSol_Sudoku(Dance *d, SolTree *sol)
 }
 
 /*
-
-   n must be >= 2 to print properly
-
    currently treats dim0 and dim1 as the innermost dimensions
-   later should be able to print using any two dimensions
+   later should be able to print using any order of dimensions
 
-   subGridSize: containerSize^2 (size of grid to be printed)
-   superSize: sudokuSize / subGridSize (number of 2D grids)
    iSudoku: index of cell in sudoku
    iSub: outer index of 2D grid
    iStart: index of first cell of this specific 2D grid in sudoku
-   iGrid: index of cell in this specific 2D grid
 */
 void printSudoku(Sudoku *s)
 {
-   int containerSize = s->containerSize;
-   int subGridSize, superSize;
-   int row, col, iSub, iStart, iSudoku, iLine, val;
-   int dim0, dim1;
    if(s->containerSize == 0)
    {
       printf("not printing, dimensions invalid\n");
       return;
    }
-   subGridSize = pow(containerSize, 2);
-   superSize = s->sudokuSize / subGridSize;
 
    if(s->n == 1)
    {
-      printSudoku_oneDim(s);
+      printSudoku_1D(s);
       return;
    }
 
-   dim0 = s->dim[0];
-   dim1 = s->dim[1];
-
-   printf(LINE);
+   printf(EQUALS_LINE);
    printf("\n");
 
-   for(iSub = 0; iSub < superSize; iSub++)
+   printSudoku_ND(s, s->n - 1, s->sudokuSize / s->containerSize, 0);
+
+   printf(EQUALS_LINE);
+   printf("\n");
+}
+
+void printSudoku_ND(Sudoku *s, int idim, int printSize, int iStart)
+{
+   int dim = s->dim[idim];
+   int iSpan, iStartNew;
+   int containerSize = s->containerSize;
+
+   if(idim == 1)
    {
-      iStart = subGridSize * iSub;
-      for(row = 0; row < containerSize; row++)
+      printSudoku_2D(s, iStart);
+      return;
+   }
+
+   for(iSpan = 0; iSpan < containerSize; iSpan++)
+   {
+      if(iSpan % dim == 0 && iSpan != 0)
+         printf(LINE);
+      iStartNew = iStart + iSpan * printSize;
+      printf("\nspan[%d]: %d\n\n", idim, iSpan);
+      printSudoku_ND(s, idim-1, printSize / containerSize, iStartNew);
+   }
+}
+
+void printSudoku_2D(Sudoku *s, int iStart)
+{
+   int containerSize = s->containerSize;
+   int row, col, iLine, val, iSudoku;
+   int dim0 = s->dim[0], dim1 =s->dim[1];
+   
+   for(row = 0; row < containerSize; row++)
       {
          if(row % dim1 == 0 && row != 0)
          {
@@ -156,16 +173,13 @@ void printSudoku(Sudoku *s)
          printf("\n");
       }
       printf("\n");
-   }
-   printf(LINE);
-   printf("\n");
 }
 
-void printSudoku_oneDim(Sudoku *s)
+void printSudoku_1D(Sudoku *s)
 {
    int iSudoku, val;
 
-   printf(LINE);
+   printf(EQUALS_LINE);
 
    for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
    {
@@ -177,7 +191,7 @@ void printSudoku_oneDim(Sudoku *s)
    }
    printf("\n");
 
-   printf(LINE);
+   printf(EQUALS_LINE);
 }
 
 /*
@@ -194,7 +208,7 @@ void printSudokuBoard_Gen(Dance *d)
    int dim0 = s->dim[0], dim1 = s->dim[1];
 
    assert(s->n >= 2);
-   printf(LINE);
+   printf(EQUALS_LINE);
 
    for(iSub = 0; iSub < superSize; iSub++)
    {
@@ -226,7 +240,7 @@ void printSudokuBoard_Gen(Dance *d)
       }
       printf("\n");
    }
-   printf(LINE);
+   printf(EQUALS_LINE);
 }
 
 void printHeur(Dance *d)

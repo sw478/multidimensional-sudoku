@@ -38,9 +38,15 @@ In a traditional sudoku, you have rows, columns, and boxes. In a generalized sud
 
 Reframing sudokus in this way allows us to generalize these concepts for higher dimensions.
 
-A 3x2x1 multidimensional sudoku:
+A 3x2x1 sudoku:
 
 ![sudoku_3_2_1](images/msudoku_3_2_1.png)
+
+A 3x2x1 puzzle and its solution:
+
+![sudoku_3_2_1](images/msudoku_3_2_1_puzzle.png)
+
+(This specific puzzle can be found in sudokuFile_example.txt)
 
 ### containerSize
 

@@ -32,6 +32,8 @@ def initMatrixFile_Sudoku(matrixFile, dim):
 
             iBoxSpan = span[idim] // dim[idim] # box index of this span
             iBox += iBoxSpan * boxMult[idim] # box index
+        
+        #print("iSudoku: %2d iBox: %d" % (iSudoku, iBox))
 
         for idim in range(n):
             span2 = span[:]
