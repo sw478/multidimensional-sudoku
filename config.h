@@ -38,21 +38,28 @@
 #define BUFSIZE 1000
 
 /*
-    set to 1 to search for all solutions when solving
+    set to 2 to search for all solutions when solving
+    set to 1 for normal settings (print and search all)
     set to 0 to stop at the first solution found
 
     solutions will not be printed if searching for all solutions
 */
 #define SEARCH_ALL_SOLUTIONS 1
 
-#if SEARCH_ALL_SOLUTIONS == 1
+#if SEARCH_ALL_SOLUTIONS == 2
     #define ALGX_BREAK
     #define PRINT_ALL_SUDOKU_SOLS
-    #define SAVE_LEAF
+#elif SEARCH_ALL_SOLUTIONS == 1
+    #define ALGX_BREAK
+    #define PRINT_ALL_SUDOKU_SOLS printSolutions_Sudoku(d);
 #elif SEARCH_ALL_SOLUTIONS == 0
     #define ALGX_BREAK break;
-    #define PRINT_ALL_SUDOKU_SOLS printSudoku(d->s);
-    #define SAVE_LEAF
+    #define PRINT_ALL_SUDOKU_SOLS printSolutions_Sudoku(d);
 #endif
+
+/* used to count calls to algX and generate */
+#define CALL_TRACKING_GEN 10
+#define CALL_TRACKING_ALGX_GEN_1 5000000
+#define CALL_TRACKING_ALGX_GEN_2 5000000
 
 #endif

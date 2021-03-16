@@ -13,15 +13,22 @@ int generate(Dance *d)
         return NOT_FOUND;
     
     hitList = calloc(d->s->sudokuSize - d->hideRoot->num, sizeof(int));
+    assert(hitList != NULL);
     
     for(h = nextHideRand(d, &hitList); h != d->hideRoot; h = nextHideRand(d, &hitList))
     {
         fillSingleCell(d, h);
 
         d->numSols = 0;
+        d->numCalls = 0;
         coverRowHeaders(d);
         algorithmX_Gen_NumSol(d);
         uncoverRowHeaders(d);
+        printf("number of calls: %lu\n", d->numCalls);
+        d->genNumCalls++;
+        //if(d->genNumCalls % CALL_TRACKING_GEN == 0)
+          //  printf("-----gen calls: %d\n", d->genNumCalls);
+
         if(d->numSols == 1)
         {
             saveGeneratedPuzzle(d);

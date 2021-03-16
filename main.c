@@ -58,7 +58,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    printf("starting algX\n");
    algorithmX(d);
-   printf("number of calls: %d\n", d->numCalls);
+   printf("number of calls: %lu\n", d->numCalls);
    printf("numSols: %d\n", d->numSols);
    
    uncoverRowHeaders(d);
@@ -89,7 +89,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
 
    printf("starting algX\n");
    algorithmX_Gen_Rand(d);
-   printf("number of calls: %d\n", d->numCalls);
+   printf("number of calls: %lu\n", d->numCalls);
 
    uncoverRowHeaders(d);
    saveSolution_Sudoku(d);
@@ -98,10 +98,12 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
 
    initHide_Sudoku(d);
 
+   d->genNumCalls = 0;
    setMaxNumClues(d->s, d->s->sudokuSize * (1.0/2));
    printf("starting generation\n");
    if(generate(d) == NOT_FOUND)
       printf("No puzzles found\n");
+   printf("\nnumber of gen calls: %d\n", d->genNumCalls);
    
    printf("printing sudoku puzzle:\n");
    printSudoku(d->s);

@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <time.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include "unistd_io.h" /* unistd for linux, io.h for windows */
 #include "config.h"
 #define F_OK 0
@@ -137,7 +138,7 @@ typedef struct
    /* matrix dimensions */
    int rmax, cmax;
    /* number of times AlgX is called */
-   int numCalls;
+   long int numCalls;
    FILE *matrixFile;
 
    /* problem specific data */
@@ -155,6 +156,7 @@ typedef struct
    /* for optional pre processed row covering */
    Hide **hideList, *hideRoot;
    int hidden, hideCap, ihide;
+   int genNumCalls;
 
    /* for column heuristic */
    Heur *heurRoot;

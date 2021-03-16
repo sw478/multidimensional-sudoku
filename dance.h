@@ -15,5 +15,7 @@ void uncoverColRows(Dance *d, Doubly *xrow);
 void uncoverRows(Dance *d, Doubly *xcol);
 
 Doubly *nextRowRand(Doubly *xrow, int *num, int **hitList);
+Doubly *nextRowRand2(Doubly *hcol, Doubly **hitList, int *irand);
+Doubly **shuffledList(Dance *d, Doubly *hcol);
 
 #endif
