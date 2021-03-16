@@ -69,8 +69,8 @@ int algorithmX_Gen_Rand(Dance *d)
    }
 
    d->numCalls++;
-   if(d->numCalls % CALL_TRACKING_ALGX_GEN_1 == 0)
-      printf("-----algX gen 1 calls: %lu\n", d->numCalls);
+   //if(d->numCalls % CALL_TRACKING_ALGX_GEN_1 == 0)
+     // printf("-----algX gen 1 calls: %lu\n", d->numCalls);
    if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
       return NOT_FOUND;
 

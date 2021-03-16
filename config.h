@@ -62,10 +62,11 @@
 #endif
 
 /* used to count calls to algX and generate */
-#define CALL_TRACKING_GEN 50
-#define CALL_TRACKING_ALGX_GEN_1    1000000
-#define THRESHOLD_TRY               20
-#define THRESHOLD_ALGX_GEN_1        5000000
-#define THRESHOLD_ALGX_GEN_2        50000
+#define CALL_TRACKING_GEN           500
+#define THRESHOLD_TRY               1000
+#define THRESHOLD_ALGX_GEN_1        200000
+#define THRESHOLD_ALGX_GEN_2        10000
+#define THRESHOLD_TRY_GEN           2000
+#define CALL_TRACKING_ALGX_GEN_1    100000
 
 #endif

@@ -90,25 +90,38 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    for(i = 0; i < THRESHOLD_TRY; i++)
    {
       d->numCalls = 0;
-      printf("try: %d\n", i);
+      printf("try: %d\n", i+1);
       res = algorithmX_Gen_Rand(d);
-      printf("number of calls: %lu\n", d->numCalls);
       if(res == FOUND)
          break;
    }
-   //printf("number of calls: %lu\n", d->numCalls);
+   printf("number of calls: %lu\n", d->numCalls);
 
    uncoverRowHeaders(d);
+   if(res == NOT_FOUND)
+   {
+      d->hideList = malloc(0);
+      d->hideRoot = malloc(0);
+      freeDance(d);
+   }
+   
    saveSolution_Sudoku(d);
    printf("printing sudoku solved:\n");
    printSudoku(d->s);
 
    initHide_Sudoku(d);
-
-   d->genNumCalls = 0;
+   
    setMaxNumClues(d->s, d->s->sudokuSize * (1.0/2));
    printf("starting generation\n");
-   if(generate(d) == NOT_FOUND)
+   for(i = 0; i < THRESHOLD_TRY_GEN; i++)
+   {
+      d->genNumCalls = 0;
+      printf("try: %d\n", i+1);
+      res = generate(d);
+      if(res == FOUND)
+         break;
+   }
+   if(res == NOT_FOUND)
       printf("No puzzles found\n");
    printf("\nnumber of gen calls: %d\n", d->genNumCalls);
    

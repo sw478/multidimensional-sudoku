@@ -13,6 +13,10 @@ int generate(Dance *d)
     if(d->hideRoot->num >= d->s->maxNumClues)
         return NOT_FOUND;
     
+    d->genNumCalls++;
+    if(d->genNumCalls >= THRESHOLD_TRY_GEN)
+        return NOT_FOUND;
+    
     listSize = d->s->sudokuSize - d->hideRoot->num;
     //hitList = shuffledHide(d, listSize);
     hitList = calloc(listSize, sizeof(int));
@@ -28,7 +32,6 @@ int generate(Dance *d)
         algorithmX_Gen_NumSol(d);
         uncoverRowHeaders(d);
         //printf("number of calls: %lu\n", d->numCalls);
-        d->genNumCalls++;
         if(d->genNumCalls % CALL_TRACKING_GEN == 0)
             printf("-----gen calls: %d\n", d->genNumCalls);
 
@@ -37,6 +40,12 @@ int generate(Dance *d)
             saveGeneratedPuzzle(d);
             res = FOUND;
             break;
+        }
+        if(d->genNumCalls >= THRESHOLD_TRY_GEN)
+        {
+            unfillSingleCell(d, h);
+            free(hitList);
+            return NOT_FOUND;
         }
         res = generate(d);
 
