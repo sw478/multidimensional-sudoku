@@ -24,7 +24,7 @@ int generate(Dance *d)
         coverRowHeaders(d);
         algorithmX_Gen_NumSol(d);
         uncoverRowHeaders(d);
-        printf("number of calls: %lu\n", d->numCalls);
+        //printf("number of calls: %lu\n", d->numCalls);
         d->genNumCalls++;
         //if(d->genNumCalls % CALL_TRACKING_GEN == 0)
           //  printf("-----gen calls: %d\n", d->genNumCalls);

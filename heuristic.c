@@ -104,6 +104,7 @@ void incHeur(Dance *d, Heur *heur, int amount)
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
 
+   amount = heur->lastDecAmount;
    heur->num += amount;
 
    /*
@@ -135,6 +136,7 @@ void decHeur(Dance *d, Heur *heur, int amount)
    heur->prev->next = heur->next;
 
    heur->num -= amount;
+   heur->lastDecAmount = amount;
 
    /*
       check if hcol and heur num matches up

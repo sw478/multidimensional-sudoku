@@ -225,6 +225,7 @@ void coverColRows(Dance *d, Doubly *crow)
       doub->hcol->drow--;
       doub->hrow->dcol--;
       coverRows(d, doub);
+      HEUR_DEC(d, doub->hcol->heur, 1)
    }
 }
 
@@ -241,7 +242,6 @@ void coverRows(Dance *d, Doubly *doub)
 
       HEUR_DEC(d, xrow->hcol->heur, 1)
    }
-   HEUR_DEC(d, xrow->hcol->heur, 1)
 }
 
 void unselectCandidateRow(Dance *d, Doubly *candidateRow)
@@ -265,6 +265,7 @@ void uncoverColRows(Dance *d, Doubly *crow)
       doub->hcol->drow++;
       doub->hrow->dcol++;
       uncoverRows(d, doub);
+      HEUR_INC(d, doub->hcol->heur, 1)
    }
 }
 
@@ -280,5 +281,4 @@ void uncoverRows(Dance *d, Doubly *doub)
       xrow->hrow->dcol++;
       HEUR_INC(d, xrow->hcol->heur, 1)
    }
-   HEUR_INC(d, xrow->hcol->heur, 1)
 }
