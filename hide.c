@@ -102,7 +102,7 @@ int fillSingleCell(Dance *d, Hide *h)
          xrow->down->up = xrow->up;
          xrow->hcol->drow--;
          xrow->hrow->dcol--;
-         HEUR_DEC(d, 0, 1, xrow->hcol->heur)
+         HEUR_DEC(d, xrow->hcol->heur, 1)
       }
    }
    h->filled = 1;
@@ -138,7 +138,7 @@ int unfillSingleCell(Dance *d, Hide *h)
          xrow->down->up = xrow;
          xrow->hcol->drow++;
          xrow->hrow->dcol++;
-         HEUR_INC(d, 0, 1, xrow->hcol->heur)
+         HEUR_INC(d, xrow->hcol->heur, 1)
       }
    }
    h->filled = 0;

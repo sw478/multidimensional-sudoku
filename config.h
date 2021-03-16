@@ -11,17 +11,21 @@
 #if USE_HEUR == 1
     #define HEUR_HEURISTIC(d) heuristic((d));
     #define HEUR_INIT(d, heur_max) initHeurList((d), (heur_max));
-    #define HEUR_DEC(d, dcol, index, heur) if((dcol) < (index)) { decHeur((d), (heur)); }
-    #define HEUR_INC(d, dcol, index, heur) if((dcol) < (index)) { incHeur((d), (heur)); }
+    #define HEUR_DEC(d, heur, amount) decHeur((d), (heur), (amount));
+    #define HEUR_INC(d, heur, amount) incHeur((d), (heur), (amount));
     #define HEUR_FREE(d) freeHeur((d));
 #elif USE_HEUR == 2
     #define HEUR_HEURISTIC(d) heuristic2((d));
     #define HEUR_INIT(d, heur_max)
-    #define HEUR_DEC(d, dcol, index, heur)
-    #define HEUR_INC(d, dcol, index, heur)
+    #define HEUR_DEC(d, heur)
+    #define HEUR_INC(d, heur)
     #define HEUR_FREE(d)
 #elif USE_HEUR == 0
     #define HEUR_HEURISTIC(d) (d)->root->right);
+    #define HEUR_INIT(d, heur_max)
+    #define HEUR_DEC(d, heur)
+    #define HEUR_INC(d, heur)
+    #define HEUR_FREE(d)
 #endif
 
 /*

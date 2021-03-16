@@ -95,14 +95,16 @@ Heur *initHeur(int num)
    return heur;
 }
 
-void incHeur(Dance *d, Heur *heur)
+void incHeur(Dance *d, Heur *heur, int amount)
 {
    Heur *head = heur->heurHeader;
+   int i;
 
    // remove heur from current heur sublist
-   heur->num++;
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
+
+   heur->num += amount;
 
    /*
       check if hcol and heur num matches up
@@ -112,7 +114,8 @@ void incHeur(Dance *d, Heur *heur)
    //   heurNumError();
 
    // go to correct heur header
-   head = head->hnext;
+   for(i = 0; i < amount; i++)
+      head = head->hnext;
 
    // add heur to heur header
    heur->next = head;
@@ -122,14 +125,16 @@ void incHeur(Dance *d, Heur *heur)
    heur->heurHeader = head;
 }
 
-void decHeur(Dance *d, Heur *heur)
+void decHeur(Dance *d, Heur *heur, int amount)
 {
    Heur *head = heur->heurHeader;
+   int i;
 
    // remove heur from current heur sublist
-   heur->num--;
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
+
+   heur->num -= amount;
 
    /*
       check if hcol and heur num matches up
@@ -139,7 +144,8 @@ void decHeur(Dance *d, Heur *heur)
    //   heurNumError();
 
    // go to correct heur header
-   head = head->hprev;
+   for(i = 0; i < amount; i++)
+      head = head->hprev;
 
    // add heur to heur header
    heur->next = head;

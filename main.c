@@ -8,7 +8,6 @@
 #include "hide.h"
 #include "matrixFile.h"
 #include "hrowCover.h"
-#include "secondaryColumns.h"
 #include "parseArgs.h"
 #include "test.h"
 #include "generate.h"
