@@ -6,25 +6,27 @@
 
 int generate(Dance *d)
 {
-    int *hitList, res = NOT_FOUND;
+    int *hitList, res = NOT_FOUND, listSize;
     Hide *h;
 
     if(d->hideRoot->num >= d->s->maxNumClues)
         return NOT_FOUND;
     
-    hitList = calloc(d->s->sudokuSize - d->hideRoot->num, sizeof(int));
+    listSize = d->s->sudokuSize - d->hideRoot->num;
+    hitList = calloc(listSize, sizeof(int));
     assert(hitList != NULL);
     
     for(h = nextHideRand(d, &hitList); h != d->hideRoot; h = nextHideRand(d, &hitList))
     {
         fillSingleCell(d, h);
+        //printSudokuBoard_Gen(d);
 
         d->numSols = 0;
         d->numCalls = 0;
         coverRowHeaders(d);
         algorithmX_Gen_NumSol(d);
         uncoverRowHeaders(d);
-        printf("number of calls: %lu\n", d->numCalls);
+        //printf("number of calls: %lu\tnumSols: %d\n", d->numCalls, d->numSols);
         d->genNumCalls++;
         //if(d->genNumCalls % CALL_TRACKING_GEN == 0)
           //  printf("-----gen calls: %d\n", d->genNumCalls);
@@ -33,9 +35,9 @@ int generate(Dance *d)
         {
             saveGeneratedPuzzle(d);
             res = FOUND;
+            break;
         }
-        else
-            res = generate(d);
+        res = generate(d);
         
         unfillSingleCell(d, h);
         if(res == FOUND)
@@ -56,10 +58,16 @@ Hide *nextHideRand(Dance *d, int **hitList)
 
     randInt = rand() % listSize;
     for(h = d->hideRoot->next, i = 0; i < randInt; h = h->next, i++);
-    for(j = i; (*hitList)[j] == 1; h = h->next)
+    for(j = (i + 1) % listSize; (*hitList)[j] == 1; h = h->next)
     {
         if(h == d->hideRoot)
             continue;
+        if(j == i)
+        {
+            if((*hitList)[j] != 1)
+                break;
+            return d->hideRoot;
+        }
         j = (j + 1) % listSize;
     }
 

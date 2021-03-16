@@ -116,7 +116,7 @@ int algorithmX_Gen_Rand(Dance *d)
 int algorithmX_Gen_NumSol(Dance *d)
 {
    Doubly *hcol, *crow, *root = d->root;
-   int ret;
+   int ret, num, iSudoku;
 
    if(root == root->right)
    {
@@ -138,8 +138,23 @@ int algorithmX_Gen_NumSol(Dance *d)
       ret = algorithmX_Gen_NumSol(d);
       unselectCandidateRow(d, crow);
 
-      if(ret == FOUND && d->numSols > 1)
-         return FOUND;
+      if(ret == FOUND)
+      {
+         if(d->numSols > 1)
+            return FOUND;
+         
+         num = crow->drow % d->s->sudokuSize;
+         iSudoku = crow->drow / d->s->sudokuSize;
+         if(d->s->sudoku[iSudoku] != num)
+         {
+            /*
+               if solution found here was not original solution,
+               then there must be at least two solutions
+            */
+            //d->numSols++;
+            //return FOUND;
+         }
+      }
    }
 
    return NOT_FOUND;
@@ -226,7 +241,7 @@ void coverColRows(Dance *d, Doubly *crow)
       coverRows(d, doub);
    }
    HEUR_DEC(d, hcol->heur, hcol->drow - d->rmax);
-   doub->hcol->drow -= (hcol->drow - d->rmax);
+   hcol->drow = d->rmax;
 }
 
 void coverRows(Dance *d, Doubly *doub)
@@ -266,7 +281,7 @@ void uncoverColRows(Dance *d, Doubly *crow)
       incAmount++;
       uncoverRows(d, doub);
    }
-   doub->hcol->drow += incAmount;
+   hcol->drow += incAmount;
    HEUR_INC(d, hcol->heur, incAmount)
 }
 
