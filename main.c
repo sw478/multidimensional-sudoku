@@ -9,7 +9,6 @@
 #include "matrixFile.h"
 #include "hrowCover.h"
 #include "parseArgs.h"
-#include "test.h"
 #include "generate.h"
 
 int main(int argc, char *argv[])
@@ -74,6 +73,7 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
 int runSudokuGen(Dance *d, int argc, char *argv[])
 {
+   int res, i;
    findMatrixFile(d);
    setMatrixDimensions_Sudoku(d);
 
@@ -87,8 +87,16 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    coverRowHeaders(d);
 
    printf("starting algX\n");
-   algorithmX_Gen_Rand(d);
-   printf("number of calls: %lu\n", d->numCalls);
+   for(i = 0; i < THRESHOLD_TRY; i++)
+   {
+      d->numCalls = 0;
+      printf("try: %d\n", i);
+      res = algorithmX_Gen_Rand(d);
+      printf("number of calls: %lu\n", d->numCalls);
+      if(res == FOUND)
+         break;
+   }
+   //printf("number of calls: %lu\n", d->numCalls);
 
    uncoverRowHeaders(d);
    saveSolution_Sudoku(d);

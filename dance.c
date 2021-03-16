@@ -71,6 +71,8 @@ int algorithmX_Gen_Rand(Dance *d)
    d->numCalls++;
    if(d->numCalls % CALL_TRACKING_ALGX_GEN_1 == 0)
       printf("-----algX gen 1 calls: %lu\n", d->numCalls);
+   if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
+      return NOT_FOUND;
 
    hcol = HEUR_HEURISTIC(d)
 
@@ -89,6 +91,12 @@ int algorithmX_Gen_Rand(Dance *d)
       if(ret == FOUND)
          res = FOUND;
       unselectCandidateRow(d, crow);
+
+      if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
+      {
+         free(hitList);
+         return NOT_FOUND;
+      }
 
       if(ret == FOUND)
       {
@@ -125,8 +133,9 @@ int algorithmX_Gen_NumSol(Dance *d)
    }
 
    d->numCalls++;
-   if(d->numCalls % CALL_TRACKING_ALGX_GEN_2 == 0)
-      printf("-----algX gen 2 calls: %lu\n", d->numCalls);
+   if(d->numCalls >= THRESHOLD_ALGX_GEN_2)
+      return FOUND;
+
    hcol = HEUR_HEURISTIC(d)
 
    if(hcol == root)
@@ -142,47 +151,17 @@ int algorithmX_Gen_NumSol(Dance *d)
       {
          if(d->numSols > 1)
             return FOUND;
-         
-         num = crow->drow % d->s->sudokuSize;
-         iSudoku = crow->drow / d->s->sudokuSize;
+         num = crow->drow % d->s->containerSize + 1;
+         iSudoku = crow->drow / d->s->containerSize;
          if(d->s->sudoku[iSudoku] != num)
          {
-            /*
-               if solution found here was not original solution,
-               then there must be at least two solutions
-            */
-            //d->numSols++;
-            //return FOUND;
+            d->numSols = 2;
+            return FOUND;
          }
       }
    }
 
    return NOT_FOUND;
-}
-
-/*
-   used to randomize order of candidate rows searched in column chosen
-   in AlgX, otherwise algX will just go down the column
- */
-Doubly *nextRowRand(Doubly *hcol, int *listSize, int **hitList)
-{
-   Doubly *crow;
-   int i, j, randInt;
-   if(*listSize == 0)
-      return hcol;
-
-   randInt = rand() % *listSize;
-   for(crow = hcol->down, i = 0; i < randInt; i++, crow = crow->down);
-   for(j = i; (*hitList)[j] == 1; crow = crow->down)
-   {
-      if(crow == hcol)
-         continue;
-      j++;
-   }
-
-   (*listSize)--;
-   (*hitList)[j] = 1;
-   return crow;
 }
 
 Doubly *nextRowRand2(Doubly *hcol, Doubly **hitList, int *irand)
@@ -206,7 +185,7 @@ Doubly **shuffledList(Dance *d, Doubly *hcol)
    for(i = 0, doub = hcol->down; i < len; i++, doub = doub->down)
       nextDoubly[i] = doub;
 
-   for(i = len-1; i > 0; i--)
+   for(i = len - 1; i > 0; i--)
    {
       irand = rand() % (i + 1);
 

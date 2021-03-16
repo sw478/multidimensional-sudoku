@@ -6,15 +6,16 @@
 
 int generate(Dance *d)
 {
-    int *hitList, res = NOT_FOUND, listSize;
-    Hide *h;
+    int res = NOT_FOUND, listSize;//, irand;
+    Hide *h;//, **hitList;
+    int *hitList;
 
     if(d->hideRoot->num >= d->s->maxNumClues)
         return NOT_FOUND;
     
     listSize = d->s->sudokuSize - d->hideRoot->num;
+    //hitList = shuffledHide(d, listSize);
     hitList = calloc(listSize, sizeof(int));
-    assert(hitList != NULL);
     
     for(h = nextHideRand(d, &hitList); h != d->hideRoot; h = nextHideRand(d, &hitList))
     {
@@ -26,10 +27,10 @@ int generate(Dance *d)
         coverRowHeaders(d);
         algorithmX_Gen_NumSol(d);
         uncoverRowHeaders(d);
-        //printf("number of calls: %lu\tnumSols: %d\n", d->numCalls, d->numSols);
+        //printf("number of calls: %lu\n", d->numCalls);
         d->genNumCalls++;
-        //if(d->genNumCalls % CALL_TRACKING_GEN == 0)
-          //  printf("-----gen calls: %d\n", d->genNumCalls);
+        if(d->genNumCalls % CALL_TRACKING_GEN == 0)
+            printf("-----gen calls: %d\n", d->genNumCalls);
 
         if(d->numSols == 1)
         {
@@ -38,7 +39,7 @@ int generate(Dance *d)
             break;
         }
         res = generate(d);
-        
+
         unfillSingleCell(d, h);
         if(res == FOUND)
             break;
@@ -73,6 +74,40 @@ Hide *nextHideRand(Dance *d, int **hitList)
 
     (*hitList)[j] = 1;
     return h;
+}
+
+Hide *nextHideRand2(Dance *d, Hide **hitList, int *irand)
+{
+    if(*irand == 0)
+        return d->hideRoot;
+
+    (*irand)--;
+
+    return hitList[*irand];
+}
+
+Hide **shuffledHide(Dance *d, int listSize)
+{
+    int i, j, irand;
+    Hide *temp, **hitList = malloc(listSize*sizeof(Hide));
+    assert(hitList != NULL);
+
+    for(i = 0, j = 0; i < listSize; i++)
+    {
+        for(; d->hideList[j]->filled; j++);
+        hitList[i] = d->hideList[j];
+        assert(hitList[i]->filled == 0);
+    }
+
+    for(i = listSize - 1; i > 0; i--)
+    {
+        irand = rand() % (i + 1);
+        temp = hitList[irand];
+        hitList[irand] = hitList[i];
+        hitList[i] = temp;
+    }
+
+    return hitList;
 }
 
 /*

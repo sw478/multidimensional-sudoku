@@ -5,6 +5,8 @@
 int generate(Dance *d);
 int generate2(Dance *d);
 Hide *nextHideRand(Dance *d, int **hitList);
+Hide *nextHideRand2(Dance *d, Hide **hitList, int *irand);
+Hide **shuffledHide(Dance *d, int listSize);
 void setMaxNumClues(Sudoku *s, int maxNumClues);
 void printToSudokuFile(Dance *d);
 void saveGeneratedPuzzle(Dance *d);
