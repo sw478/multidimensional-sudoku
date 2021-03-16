@@ -40,7 +40,6 @@ typedef struct heur
    /* used for hcol heurs */
    void *hcol;
    struct heur *heurHeader, *prev, *next;
-   int lastDecAmount;
 
    /* used for heur headers */
    struct heur *hprev, *hnext;

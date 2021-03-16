@@ -48,9 +48,7 @@ void initHeurList(Dance *d, int maxColElements)
    d->heurRoot = initHeur(0);
    d->heurRoot->hcol = ((void*)d->root);
 
-   // if maxColElements set to 0, set maxColElements to d->rmax
-   if(maxColElements < 1 || maxColElements > d->rmax)
-      maxColElements = d->rmax;
+   assert(maxColElements > 0 && maxColElements <= d->rmax);
 
    // initialize heur headers from the back
    // note off by one
@@ -73,8 +71,9 @@ void initHeurList(Dance *d, int maxColElements)
       hcol->heur = heur;
 
       // find the correct heur header
-      heurHeader = d->heurRoot;
-      for(; heur->num > heurHeader->num; heurHeader = heurHeader->hnext);
+      heurHeader = d->heurRoot->hnext;
+      for(; heur->num > heurHeader->num; heurHeader = heurHeader->hnext)
+         assert(heurHeader != d->heurRoot);
 
       // add heur to heur header
       heur->next = heurHeader;
@@ -104,7 +103,6 @@ void incHeur(Dance *d, Heur *heur, int amount)
    heur->next->prev = heur->prev;
    heur->prev->next = heur->next;
 
-   amount = heur->lastDecAmount;
    heur->num += amount;
 
    /*
@@ -136,7 +134,6 @@ void decHeur(Dance *d, Heur *heur, int amount)
    heur->prev->next = heur->next;
 
    heur->num -= amount;
-   heur->lastDecAmount = amount;
 
    /*
       check if hcol and heur num matches up
