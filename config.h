@@ -63,7 +63,7 @@
 
 /* used to count calls to algX and generate */
 #define CALL_TRACKING_GEN           500
-#define THRESHOLD_TRY               1//1000
+#define THRESHOLD_TRY               1000
 #define THRESHOLD_ALGX_GEN_1        1000000
 #define THRESHOLD_ALGX_GEN_2        10000
 #define THRESHOLD_GEN_FACTOR        100 /* threshold will be a factor of sudokuSize */

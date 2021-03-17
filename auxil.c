@@ -30,6 +30,41 @@ void printMatrix(Dance *d)
    printf("\n");
 }
 
+void printMatrix2(Dance *d)
+{
+   int irow, icol, cmax = d->cmax, rmax = d->rmax, status;
+   Doubly *hcol, *doub;
+
+   int **matrix = malloc(cmax*sizeof(int*));
+   for(icol = 0; icol < cmax; icol++)
+      matrix[icol] = calloc(rmax, sizeof(int));
+
+   for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
+   {
+      icol = hcol->dcol;
+      for(doub = hcol->down; doub != hcol; doub = doub->down)
+      {
+         irow = doub->drow;
+         matrix[icol][irow] = 1;
+      }
+   }
+
+   for(irow = 0; irow < rmax; irow++)
+   {
+      printf("%4d: ", irow);
+      for(icol = 0; icol < cmax; icol++)
+      {
+         status = matrix[icol][irow];
+         if(status == 0)
+            printf(".");
+         else if(status == 1)
+            printf("X");
+      }
+      printf("\n");
+   }
+   printf("\n");
+}
+
 void printSingleSol_Matrix(Dance *d, SolTree *sol)
 {
    SolTree *cur;
@@ -276,23 +311,6 @@ void printHeur(Dance *d)
       printf("\n");
    }
    printf("\n");
-/*
-   for(head = d->heurRoot->hnext; head != d->heurRoot; head = head->hnext)
-   {
-      if(head->next == head)
-         continue;
-      printf("%d: ", head->num);
-      for(heur = head->next; heur != head; heur = heur->next)
-      {
-         hcol = ((Doubly*)heur->hcol);
-         if(hcol->drow - d->rmax == heur->num)
-            heurNumError();
-         printf("%d ", hcol->dcol);
-      }
-      printf("\n");
-   }
-   printf("\n");
-   */
 }
 
 /* checks if matrix is stitched together properly */

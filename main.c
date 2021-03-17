@@ -80,7 +80,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    initDance(d);
    initMatrix(d);
 
-   //printMatrix(d);
+   //printMatrix2(d);
 
    HEUR_INIT(d, d->s->containerSize)
    
@@ -90,7 +90,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    for(i = 0; i < THRESHOLD_TRY; i++)
    {
       d->numCalls = 0;
-      //if(i % 10 == 0)
+      if(i % 10 == 0)
          printf("algX try: %d\n", i);
       res = algorithmX_Gen_Rand(d);
       if(res == FOUND)

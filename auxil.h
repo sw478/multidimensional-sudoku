@@ -4,6 +4,7 @@
 #include "solTree.h"
 
 void printMatrix(Dance *d);
+void printMatrix2(Dance *d);
 void printSingleSol_Matrix(Dance *d, SolTree *sol);
 
 void printSolutions_Sudoku(Dance *d);

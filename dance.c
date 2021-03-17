@@ -78,7 +78,10 @@ int algorithmX_Gen_Rand(Dance *d)
    if(hcol == root)
       return NOT_FOUND;
    
-   irand = hcol->drow - d->rmax;
+   //printHeur(d);
+   //printMatrix2(d);
+   
+   irand = hcol->heur->num;
    hitList = shuffledList(d, hcol, irand);
 
    for(irand--; irand >= 0; irand--)
@@ -192,13 +195,13 @@ void coverColRows(Dance *d, Doubly *crow)
    hcol->right->left = hcol->left;
    hcol->left->right = hcol->right;
 
+   hcol->drow = d->rmax;
+   HEUR_DEC(d, hcol->heur, hcol->heur->num)
    for(doub = hcol->down; doub != hcol; doub = doub->down)
    {
       //doub->hrow->dcol--;
       coverRows(d, doub);
    }
-   HEUR_DEC(d, hcol->heur, hcol->drow - d->rmax);
-   hcol->drow = d->rmax;
 }
 
 void coverRows(Dance *d, Doubly *doub)
