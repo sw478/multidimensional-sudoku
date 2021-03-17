@@ -245,22 +245,38 @@ void printSudokuBoard_Gen(Dance *d)
 
 void printHeur(Dance *d)
 {
-   Heur *head = d->heurRoot, *heur;
+   Heur *heur, *head;
    Doubly *hcol;
+   int hnum;
 
    printf("heuristics: \n");
 
-   if(head->next != head)
+   head = d->heurList[0];
+   printf("r: ");
+   for(heur = head->next; heur != head; heur = heur->next)
    {
-      printf("r: ");
+      hcol = ((Doubly*)heur->hcol);
+      printf("%d ", hcol->dcol);
+   }
+   printf("\n");
+
+   for(hnum = 1; hnum < d->maxColElements + 1; hnum++)
+   {
+      head = d->heurList[hnum];
+      if(head->next == head)
+         continue;
+      printf("%d: ", head->num);
       for(heur = head->next; heur != head; heur = heur->next)
       {
          hcol = ((Doubly*)heur->hcol);
+         if(hcol->drow - d->rmax != heur->num)
+            heurNumError();
          printf("%d ", hcol->dcol);
       }
       printf("\n");
    }
-
+   printf("\n");
+/*
    for(head = d->heurRoot->hnext; head != d->heurRoot; head = head->hnext)
    {
       if(head->next == head)
@@ -276,6 +292,7 @@ void printHeur(Dance *d)
       printf("\n");
    }
    printf("\n");
+   */
 }
 
 /* checks if matrix is stitched together properly */

@@ -39,10 +39,10 @@ typedef struct heur
 {
    /* used for hcol heurs */
    void *hcol;
-   struct heur *heurHeader, *prev, *next;
+   struct heur *prev, *next;
 
    /* used for heur headers */
-   struct heur *hprev, *hnext;
+   //struct heur *hprev, *hnext, *heurHeader;
 
    /* used for both */
    int num;
@@ -160,6 +160,8 @@ typedef struct
 
    /* for column heuristic */
    Heur *heurRoot;
+   Heur **heurList;
+   int maxColElements;
 
 } Dance;
 

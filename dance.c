@@ -73,7 +73,6 @@ int algorithmX_Gen_Rand(Dance *d)
    
    if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
       return NOT_FOUND;
-
    hcol = HEUR_HEURISTIC(d)
 
    if(hcol == root)
