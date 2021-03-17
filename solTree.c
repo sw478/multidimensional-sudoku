@@ -7,7 +7,7 @@ void addLeaf(Dance *d, SolTree *sol)
    if(d->numSols >= d->solCap)
    {
       d->solCap = d->solCap * GROWTH_FACTOR + 1;
-      d->sols = realloc(d->sols, d->solCap*sizeof(SolTree));
+      d->sols = realloc(d->sols, d->solCap*sizeof(SolTree*));
    }
    d->sols[d->numSols] = sol;
 }
@@ -21,7 +21,7 @@ SolTree* initTree()
    SolTree *sol = malloc(sizeof(SolTree));
    sol->ichild = 0;
    sol->cap = STARTING_CAP;
-   sol->childList = malloc(sol->cap*sizeof(SolTree));
+   sol->childList = malloc(sol->cap*sizeof(SolTree*));
    sol->parent = sol;
 
    return sol;
@@ -36,7 +36,7 @@ void addChild(SolTree *parent, SolTree *child)
    if(parent->ichild >= parent->cap)
    {
       parent->cap = parent->cap * GROWTH_FACTOR + 1;
-      parent->childList = realloc(parent->childList, parent->cap*sizeof(SolTree));
+      parent->childList = realloc(parent->childList, parent->cap*sizeof(SolTree*));
    }
 
    parent->childList[parent->ichild] = child;

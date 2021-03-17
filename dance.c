@@ -159,7 +159,7 @@ int algorithmX_Gen_NumSol(Dance *d)
 Doubly **shuffledList(Dance *d, Doubly *hcol, int len)
 {
    int i, irand;
-   Doubly **hitList = malloc(len*sizeof(Doubly));
+   Doubly **hitList = malloc(len*sizeof(Doubly*));
    Doubly *doub, *temp;
 
    /* initialize list */

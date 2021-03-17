@@ -9,7 +9,7 @@ int initDance(Dance *d)
 {
    d->numSols = 0;
    d->solCap = STARTING_CAP;
-   d->sols = malloc(d->solCap*sizeof(SolTree));
+   d->sols = malloc(d->solCap*sizeof(SolTree*));
 
    d->numCalls = 0;
 

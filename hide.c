@@ -47,7 +47,7 @@ int initHide_Sudoku(Dance *d)
 
       h->num = sudoku[iSudoku];
       d->hideList[iSudoku] = h;
-      h->hrows = malloc((containerSize-1)*sizeof(Doubly));
+      h->hrows = malloc((containerSize-1)*sizeof(Doubly*));
       h->filled = 0;
       h->iSudoku = iSudoku;
 

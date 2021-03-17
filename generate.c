@@ -98,7 +98,7 @@ Hide *nextHideRand2(Dance *d, Hide **hitList, int *irand)
 Hide **shuffledHide(Dance *d, int listSize)
 {
     int i, j, irand;
-    Hide *temp, **hitList = malloc(listSize*sizeof(Hide));
+    Hide *temp, **hitList = malloc(listSize*sizeof(Hide*));
     assert(hitList != NULL);
 
     for(i = 0, j = 0; i < listSize; i++)

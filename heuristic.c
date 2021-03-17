@@ -45,7 +45,7 @@ void initHeurList(Dance *d, int maxColElements)
 
    assert(maxColElements > 0 && maxColElements <= d->rmax);
 
-   d->heurList = malloc((maxColElements+1) * sizeof(Heur));
+   d->heurList = malloc((maxColElements+1) * sizeof(Heur*));
    d->maxColElements = maxColElements;
 
    for(hnum = 0; hnum < maxColElements+1; hnum++)
