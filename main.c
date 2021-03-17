@@ -90,7 +90,8 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    for(i = 0; i < THRESHOLD_TRY; i++)
    {
       d->numCalls = 0;
-      printf("try: %d\n", i+1);
+      //if(i % 10 == 0)
+         printf("algX try: %d\n", i);
       res = algorithmX_Gen_Rand(d);
       if(res == FOUND)
          break;
@@ -113,10 +114,10 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    
    setMaxNumClues(d->s, d->s->sudokuSize * (1.0/2));
    printf("starting generation\n");
-   for(i = 0; i < THRESHOLD_TRY_GEN; i++)
+   for(i = 0; i < THRESHOLD_TRY; i++)
    {
       d->genNumCalls = 0;
-      printf("try: %d\n", i+1);
+      printf("gen try: %d\n", i);
       res = generate(d);
       if(res == FOUND)
          break;

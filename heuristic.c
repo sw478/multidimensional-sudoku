@@ -7,7 +7,10 @@ Doubly *heuristic(Dance *d)
    Heur *heurHeader;
 
    if(d->heurRoot->hnext == d->heurRoot)
+   {
+      assert(0);
       return d->root;
+   }
 
    // find the first non-empty heur header
    for(heurHeader = d->heurRoot->hnext; heurHeader != d->heurRoot; heurHeader = heurHeader->hnext)

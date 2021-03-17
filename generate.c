@@ -8,16 +8,16 @@ int generate(Dance *d)
 {
     int res = NOT_FOUND, listSize;//, irand;
     Hide *h;//, **hitList;
-    int *hitList;
+    int *hitList, sudokuSize = d->s->sudokuSize;
 
     if(d->hideRoot->num >= d->s->maxNumClues)
         return NOT_FOUND;
     
     d->genNumCalls++;
-    if(d->genNumCalls >= THRESHOLD_TRY_GEN)
+    if(d->genNumCalls >= THRESHOLD_GEN_FACTOR)
         return NOT_FOUND;
     
-    listSize = d->s->sudokuSize - d->hideRoot->num;
+    listSize = sudokuSize - d->hideRoot->num;
     //hitList = shuffledHide(d, listSize);
     hitList = calloc(listSize, sizeof(int));
     
@@ -32,8 +32,8 @@ int generate(Dance *d)
         algorithmX_Gen_NumSol(d);
         uncoverRowHeaders(d);
         //printf("number of calls: %lu\n", d->numCalls);
-        if(d->genNumCalls % CALL_TRACKING_GEN == 0)
-            printf("-----gen calls: %d\n", d->genNumCalls);
+        //if(d->genNumCalls % CALL_TRACKING_GEN == 0)
+          //  printf("-----gen calls: %d\n", d->genNumCalls);
 
         if(d->numSols == 1)
         {
@@ -41,7 +41,7 @@ int generate(Dance *d)
             res = FOUND;
             break;
         }
-        if(d->genNumCalls >= THRESHOLD_TRY_GEN)
+        if(d->genNumCalls >= sudokuSize * THRESHOLD_GEN_FACTOR)
         {
             unfillSingleCell(d, h);
             free(hitList);

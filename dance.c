@@ -54,10 +54,9 @@ int algorithmX(Dance *d)
 int algorithmX_Gen_Rand(Dance *d)
 {
    Doubly *hcol, *crow, *root = d->root;
-   int res = NOT_FOUND, ret;
-   int solCreated = 0;
+   int ret;
    SolTree *sol;
-   int irand = 0;
+   int irand;
    Doubly **hitList;
 
    if(root == root->right)
@@ -71,6 +70,7 @@ int algorithmX_Gen_Rand(Dance *d)
    d->numCalls++;
    //if(d->numCalls % CALL_TRACKING_ALGX_GEN_1 == 0)
      // printf("-----algX gen 1 calls: %lu\n", d->numCalls);
+   
    if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
       return NOT_FOUND;
 
@@ -79,45 +79,34 @@ int algorithmX_Gen_Rand(Dance *d)
    if(hcol == root)
       return NOT_FOUND;
    
-   hitList = shuffledList(d, hcol);
-   assert(hitList != NULL);
    irand = hcol->drow - d->rmax;
-   crow = nextRowRand2(hcol, hitList, &irand);
-   
-   while(crow != hcol)
+   hitList = shuffledList(d, hcol, irand);
+
+   for(irand--; irand >= 0; irand--)
    {
+      crow = hitList[irand];
+
       selectCandidateRow(d, crow);
       ret = algorithmX_Gen_Rand(d);
-      if(ret == FOUND)
-         res = FOUND;
       unselectCandidateRow(d, crow);
 
       if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
-      {
-         free(hitList);
-         return NOT_FOUND;
-      }
+         break;
 
       if(ret == FOUND)
       {
          d->csol->row = crow->hrow;
-         if(solCreated == 0)
-         {
-            solCreated = 1;
-            sol = initTree();
-         }
+         sol = initTree();
          addChild(sol, d->csol);
          d->csol = sol;
 
          free(hitList);
          return FOUND;
       }
-      crow = nextRowRand2(hcol, hitList, &irand);
    }
 
    free(hitList);
-
-   return res;
+   return NOT_FOUND;
 }
 
 /* checks if more than one solution exists */
@@ -164,38 +153,28 @@ int algorithmX_Gen_NumSol(Dance *d)
    return NOT_FOUND;
 }
 
-Doubly *nextRowRand2(Doubly *hcol, Doubly **hitList, int *irand)
-{
-   if(*irand == 0)
-      return hcol;
-
-   (*irand)--;
-
-   return hitList[*irand];
-}
-
 /* uses the Fisher-Yates O(n) algorithm */
-Doubly **shuffledList(Dance *d, Doubly *hcol)
+Doubly **shuffledList(Dance *d, Doubly *hcol, int len)
 {
-   int i, irand, len = hcol->drow - d->rmax;
-   Doubly **nextDoubly = malloc(len*sizeof(Doubly));
+   int i, irand;
+   Doubly **hitList = malloc(len*sizeof(Doubly));
    Doubly *doub, *temp;
 
    /* initialize list */
    for(i = 0, doub = hcol->down; i < len; i++, doub = doub->down)
-      nextDoubly[i] = doub;
+      hitList[i] = doub;
 
    for(i = len - 1; i > 0; i--)
    {
       irand = rand() % (i + 1);
 
       /* swap doubly at indices irand and i */
-      temp = nextDoubly[irand];
-      nextDoubly[irand] = nextDoubly[i];
-      nextDoubly[i] = temp;
+      temp = hitList[irand];
+      hitList[irand] = hitList[i];
+      hitList[i] = temp;
    }
 
-   return nextDoubly;
+   return hitList;
 }
 
 void selectCandidateRow(Dance *d, Doubly *candidateRow)

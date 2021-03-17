@@ -14,7 +14,6 @@ void unselectCandidateRow(Dance *d, Doubly *node);
 void uncoverColRows(Dance *d, Doubly *xrow);
 void uncoverRows(Dance *d, Doubly *xcol);
 
-Doubly *nextRowRand2(Doubly *hcol, Doubly **hitList, int *irand);
-Doubly **shuffledList(Dance *d, Doubly *hcol);
+Doubly **shuffledList(Dance *d, Doubly *hcol, int len);
 
 #endif
