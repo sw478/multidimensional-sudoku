@@ -53,11 +53,9 @@ int algorithmX(Dance *d)
 /* stops after finding first random solution */
 int algorithmX_Gen_Rand(Dance *d)
 {
-   Doubly *hcol, *crow, *root = d->root;
-   int ret;
+   Doubly *hcol, *crow, *root = d->root, **hitList;
+   int ret, irand;
    SolTree *sol;
-   int irand;
-   Doubly **hitList;
 
    if(root == root->right)
    {
@@ -68,17 +66,16 @@ int algorithmX_Gen_Rand(Dance *d)
    }
 
    d->numCalls++;
-   //if(d->numCalls % CALL_TRACKING_ALGX_GEN_1 == 0)
-     // printf("-----algX gen 1 calls: %lu\n", d->numCalls);
+   if(d->numCalls % CALL_TRACKING_ALGX_GEN_1 == 0)
+      printf("-----algX gen 1 calls: %lu\n", d->numCalls);
    
-   if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
-      return NOT_FOUND;
+   //if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
+      //return NOT_FOUND;
    hcol = HEUR_HEURISTIC(d)
 
    if(hcol == root)
       return NOT_FOUND;
    
-   //printHeur(d);
    //printMatrix2(d);
    
    irand = hcol->heur->num;
@@ -92,8 +89,8 @@ int algorithmX_Gen_Rand(Dance *d)
       ret = algorithmX_Gen_Rand(d);
       unselectCandidateRow(d, crow);
 
-      if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
-         break;
+      //if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
+         //break;
 
       if(ret == FOUND)
       {
@@ -159,8 +156,8 @@ int algorithmX_Gen_NumSol(Dance *d)
 Doubly **shuffledList(Dance *d, Doubly *hcol, int len)
 {
    int i, irand;
-   Doubly **hitList = malloc(len*sizeof(Doubly*));
    Doubly *doub, *temp;
+   Doubly **hitList = malloc(len*sizeof(Doubly*));
 
    /* initialize list */
    for(i = 0, doub = hcol->down; i < len; i++, doub = doub->down)
@@ -170,7 +167,7 @@ Doubly **shuffledList(Dance *d, Doubly *hcol, int len)
    {
       irand = rand() % (i + 1);
 
-      /* swap doubly at indices irand and i */
+      // swap doubly at indices irand and i
       temp = hitList[irand];
       hitList[irand] = hitList[i];
       hitList[i] = temp;

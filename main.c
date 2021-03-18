@@ -22,7 +22,6 @@ int main(int argc, char *argv[])
    {
       case SUDOKU: runSudoku(d, argc, argv); break;
       case SGEN: runSudokuGen(d, argc, argv); break;
-      default: assert(0);
    }
 }
 
@@ -87,7 +86,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    coverRowHeaders(d);
 
    printf("starting algX\n");
-   for(i = 0; i < THRESHOLD_TRY; i++)
+   for(i = 1; i < THRESHOLD_TRY+1; i++)
    {
       d->numCalls = 0;
       if(i % 10 == 0)
@@ -96,6 +95,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
       if(res == FOUND)
          break;
    }
+   printf("algX number of tries: %d\n", i);
    printf("number of calls: %lu\n", d->numCalls);
 
    uncoverRowHeaders(d);
@@ -114,7 +114,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    
    setMaxNumClues(d->s, d->s->sudokuSize * (1.0/2));
    printf("starting generation\n");
-   for(i = 0; i < THRESHOLD_TRY; i++)
+   for(i = 1; i < THRESHOLD_TRY+1; i++)
    {
       d->genNumCalls = 0;
       printf("gen try: %d\n", i);

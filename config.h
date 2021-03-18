@@ -17,14 +17,14 @@
 #elif USE_HEUR == 2
     #define HEUR_HEURISTIC(d) heuristic2((d));
     #define HEUR_INIT(d, heur_max)
-    #define HEUR_DEC(d, heur)
-    #define HEUR_INC(d, heur)
+    #define HEUR_DEC(d, heur, amount)
+    #define HEUR_INC(d, heur, amount)
     #define HEUR_FREE(d)
 #elif USE_HEUR == 0
     #define HEUR_HEURISTIC(d) (d)->root->right);
     #define HEUR_INIT(d, heur_max)
-    #define HEUR_DEC(d, heur)
-    #define HEUR_INC(d, heur)
+    #define HEUR_DEC(d, heur, amount)
+    #define HEUR_INC(d, heur, amount)
     #define HEUR_FREE(d)
 #endif
 
@@ -67,6 +67,6 @@
 #define THRESHOLD_ALGX_GEN_1        1000000
 #define THRESHOLD_ALGX_GEN_2        10000
 #define THRESHOLD_GEN_FACTOR        100 /* threshold will be a factor of sudokuSize */
-#define CALL_TRACKING_ALGX_GEN_1    100000
+#define CALL_TRACKING_ALGX_GEN_1    5000000
 
 #endif
