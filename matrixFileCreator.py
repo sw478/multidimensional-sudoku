@@ -61,6 +61,7 @@ def initMatrixFile_Sudoku(matrixFile, dim):
 
     f.close()
 
+"""
 def convert():
     f = open("sudokuConvert.txt", "r")
     lines = f.read().split("\n")
@@ -91,6 +92,7 @@ def convert():
             f.write("%s\n" % val)
 
     f.close()
+"""
 
 def matrixFile():
     matrixFile = sys.argv[1]
