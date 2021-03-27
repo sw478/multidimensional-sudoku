@@ -2,6 +2,7 @@
 USAGE="[ q:quit | m:make | b:basic | t:time ]"
 OPTIONS="[ s:solve | g:generate ]"
 SUDOKU_FILE="sudokuFile.txt"
+SOLUTION_FILE="solutionFile.txt"
 
 while true; do
 
@@ -24,15 +25,15 @@ while true; do
          
          if [ "$type" = "t" ]; then
             make
-            time ./a.out s $SUDOKU_FILE
+            time ./a.out s $SUDOKU_FILE $SOLUTION_FILE
 
          elif [ "$type" = "v" ]; then
             make
-            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out s $SUDOKU_FILE
+            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out s $SUDOKU_FILE $SOLUTION_FILE
 
          elif [ "$type" = "b" ]; then
             make
-            ./a.out s $SUDOKU_FILE
+            ./a.out s $SUDOKU_FILE $SOLUTION_FILE
          fi
       
       elif [ "$problem" = "g" ]; then
@@ -40,14 +41,14 @@ while true; do
          read dim
          
          if [ "$type" = "t" ]; then
-            time ./a.out g $SUDOKU_FILE ${dim}
+            time ./a.out g $SUDOKU_FILE $SOLUTION_FILE ${dim}
 
          elif [ "$type" = "v" ]; then
-            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g $SUDOKU_FILE ${dim}
+            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g $SUDOKU_FILE $SOLUTION_FILE ${dim}
 
          elif [ "$type" = "b" ]; then
             make
-            ./a.out g $SUDOKU_FILE ${dim}
+            ./a.out g $SUDOKU_FILE $SOLUTION_FILE ${dim}
          fi
 
       fi

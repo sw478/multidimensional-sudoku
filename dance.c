@@ -6,7 +6,7 @@
 int algorithmX(Dance *d)
 {
    Doubly *hcol, *crow, *root = d->root;
-   int res = NOT_FOUND, ret;
+   int algXres = NOT_FOUND, lowerAlgXres;
    int solCreated = 0;
    SolTree *sol;
 
@@ -27,12 +27,12 @@ int algorithmX(Dance *d)
    for(crow = hcol->down; crow != hcol; crow = crow->down)
    {
       selectCandidateRow(d, crow);
-      ret = algorithmX(d);
-      if(ret == FOUND)
-         res = FOUND;
+      lowerAlgXres = algorithmX(d);
+      if(lowerAlgXres == FOUND)
+         algXres = FOUND;
       unselectCandidateRow(d, crow);
 
-      if(ret == FOUND)
+      if(lowerAlgXres == FOUND)
       {
          d->csol->row = crow->hrow;
          if(solCreated == 0)
@@ -47,7 +47,7 @@ int algorithmX(Dance *d)
       }
    }
 
-   return res;
+   return algXres;
 }
 
 /* stops after finding first random solution */
@@ -152,7 +152,10 @@ int algorithmX_Gen_NumSol(Dance *d)
    return NOT_FOUND;
 }
 
-/* uses the Fisher-Yates O(n) algorithm */
+/*
+   returns shuffled list of doubly
+   uses the Fisher-Yates O(n) algorithm
+*/
 Doubly **shuffledList(Dance *d, Doubly *hcol, int len)
 {
    int i, irand;
@@ -167,7 +170,6 @@ Doubly **shuffledList(Dance *d, Doubly *hcol, int len)
    {
       irand = rand() % (i + 1);
 
-      // swap doubly at indices irand and i
       temp = hitList[irand];
       hitList[irand] = hitList[i];
       hitList[i] = temp;

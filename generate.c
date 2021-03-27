@@ -140,10 +140,26 @@ void saveGeneratedPuzzle(Dance *d)
    }
 }
 
-void printToSudokuFile(Dance *d)
+void writePuzzleToSudokuFile(Dance *d)
 {
-    int iSudoku, sudokuSize = d->s->sudokuSize, *sudoku = d->s->sudoku;
+    int iSudoku, idim, sudokuSize = d->s->sudokuSize, *sudoku = d->s->sudoku;
+
+    fprintf(d->s->boardFile, "%d\n", d->s->n);
+    for(idim = 0; idim < d->s->n; idim++)
+        fprintf(d->s->boardFile, "%d\n", d->s->dim[idim]);
 
     for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
         fprintf(d->s->boardFile, "%d\n", sudoku[iSudoku]);
+}
+
+void writeSolToSolFile(Dance *d)
+{
+    int iSudoku, idim, sudokuSize = d->s->sudokuSize, *sudoku = d->s->sudoku;
+
+    fprintf(d->s->solFile, "%d\n", d->s->n);
+    for(idim = 0; idim < d->s->n; idim++)
+        fprintf(d->s->solFile, "%d\n", d->s->dim[idim]);
+    
+    for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
+        fprintf(d->s->solFile, "%d\n", sudoku[iSudoku]);
 }

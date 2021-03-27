@@ -109,10 +109,12 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    saveSolution_Sudoku(d);
    printf("printing sudoku solved:\n");
    printSudoku(d->s);
+   writeSolToSolFile(d);
 
    initHide_Sudoku(d);
    
    setMaxNumClues(d->s, d->s->sudokuSize * (1.0/2));
+   setMaxNumClues(d->s, d->s->sudokuSize * (30.0/81));
    printf("starting generation\n");
    for(i = 1; i < THRESHOLD_TRY+1; i++)
    {
@@ -128,7 +130,7 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    
    printf("printing sudoku puzzle:\n");
    printSudoku(d->s);
-   printToSudokuFile(d);
+   writePuzzleToSudokuFile(d);
 
    unfillAllCells(d);
    freeDance(d);

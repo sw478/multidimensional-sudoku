@@ -23,7 +23,7 @@ void parseArgs(Dance *d, int argc, char *argv[])
 }
 
 /*
-    a.out s [sudoku file]
+    a.out s [sudoku file] [solution file]
 
     file format:
     [n: number of dimensions]
@@ -40,7 +40,7 @@ void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
     memset(buf, 0, BUFSIZE*sizeof(char));
     d->s = s;
 
-    if(argc != 3)
+    if(argc != 4)
         numArgError();
     
     s->boardFile = fopen(argv[2], "r+");
@@ -48,24 +48,25 @@ void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
         fileError(argv[2]);
     assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
 
+    s->solFile = fopen(argv[3], "w+");
+    if(!s->solFile)
+        fileError(argv[3]);
+    assert(fseek(s->solFile, 0, SEEK_SET) == 0);
+
     /* get n */
     fgets(buf, BUFSIZE*sizeof(char), s->boardFile);
     assert(1 == sscanf(buf, "%d", &s->n));
     assert(s->n >= 2);
     s->dim = malloc(s->n*sizeof(int));
-    //printf("n: %d\n", s->n);
 
     s->containerSize = 1;
     for(idim = 0; idim < s->n; idim++)
     {
         fgets(buf, BUFSIZE*sizeof(char), s->boardFile);
         assert(1 == sscanf(buf, "%d", &s->dim[idim]));
-        //printf("dim[%d]: %d\n", idim, s->dim[idim]);
         s->containerSize *= s->dim[idim];
     }
-    //printf("containerSize: %d\n", s->containerSize);
     s->sudokuSize = pow(s->containerSize, s->n);
-    //printf("sudokuSize: %d\n", s->sudokuSize);
     s->sudoku = calloc(s->sudokuSize, sizeof(int));
 
     for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
@@ -83,14 +84,14 @@ void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
     free(buf);
 }
 
-/* a.out g [sudoku file] [dim]*n */
+/* a.out g [sudoku file] [solution file] [dim]*n */
 void parseArgs_SGen(Dance *d, int argc, char *argv[])
 {
     Sudoku *s = malloc(sizeof(Sudoku));
     int idim;
     d->s = s;
 
-    if(argc < 4)
+    if(argc < 5)
         numArgError();
 
     s->boardFile = fopen(argv[2], "w+");
@@ -98,15 +99,18 @@ void parseArgs_SGen(Dance *d, int argc, char *argv[])
         fileError(argv[2]);
     assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
 
-    s->n = argc - 3;
-    fprintf(d->s->boardFile, "%d\n", s->n);
+    s->solFile = fopen(argv[3], "w+");
+    if(!s->solFile)
+        fileError(argv[3]);
+    assert(fseek(s->solFile, 0, SEEK_SET) == 0);
+
+    s->n = argc - 4;
 
     s->dim = malloc(s->n*sizeof(int));
     s->containerSize = 1;
     for(idim = 0; idim < s->n; idim++)
     {
-        assert(1 == sscanf(argv[idim+3], "%d", &s->dim[idim]));
-        fprintf(d->s->boardFile, "%d\n", s->dim[idim]);
+        assert(1 == sscanf(argv[idim+4], "%d", &s->dim[idim]));
         s->containerSize *= s->dim[idim];
     }
     s->sudokuSize = pow(s->containerSize, s->n);

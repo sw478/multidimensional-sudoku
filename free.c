@@ -16,6 +16,7 @@ void freeDance(Dance *d)
    HEUR_FREE(d)
 
    fclose(d->s->boardFile);
+   fclose(d->s->solFile);
    free(d->s->sudoku);
    free(d->s->dim);
    free(d->s);

@@ -123,7 +123,7 @@ typedef struct
    int *sudoku;
    int *dim, n, containerSize, sudokuSize;
    int maxNumClues;
-   FILE *boardFile;
+   FILE *boardFile, *solFile;
 } Sudoku;
 
 typedef struct
