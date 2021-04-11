@@ -9,13 +9,22 @@
 #include <time.h>
 #include <stdint.h>
 #include <inttypes.h>
-#include "unistd_io.h" /* unistd for linux, io.h for windows */
 #include "config.h"
 #define F_OK 0
+
+#if defined(_WIN32)
+#include <io.h>
+#elif defined(__APPLE__)
+#include <stdio.h>
+#elif defined(__linux__)
+#include <stdio.h>
+#endif
+
 
 /* for d->problem */
 #define SUDOKU 0
 #define SGEN 1
+#define SAT 2
 
 /* for algX and generate */
 #define FOUND 1

@@ -11,6 +11,8 @@ void parseArgs(Dance *d, int argc, char *argv[])
         d->problem = SUDOKU;
     else if(!strcmp(argv[1], "g"))
         d->problem = SGEN;
+    else if(!strcmp(argv[1], "b"))
+        d->problem = SAT;
     else
         arg1Error();
 
@@ -18,6 +20,7 @@ void parseArgs(Dance *d, int argc, char *argv[])
     {
         case SUDOKU: parseArgs_Sudoku(d, argc, argv); break;
         case SGEN: parseArgs_SGen(d, argc, argv); break;
+        case SAT: parseArgs_Sudoku(d, argc, argv); break;
         default: assert(0);
     }
 }

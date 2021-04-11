@@ -61,39 +61,6 @@ def initMatrixFile_Sudoku(matrixFile, dim):
 
     f.close()
 
-"""
-def convert():
-    f = open("sudokuConvert.txt", "r")
-    lines = f.read().split("\n")
-    f.close()
-    
-    #for line in lines:
-    #    print(line, end="\n")
-
-    newLines = []
-    for line in lines:
-        newLines += line.split(" ")
-
-    for i, val in enumerate(newLines):
-        if(i % 32 == 0 and i != 0):
-            print("")
-        print(val, end=" ")
-
-    f = open("sudokuFile.txt", "w")
-    dim = [2, 2, 2]
-    f.write("%s\n" % str(len(dim)))
-    for idim in dim:
-        f.write("%s\n" % str(idim))
-
-    for val in newLines:
-        if(val == '.'):
-            f.write("0\n")
-        else:
-            f.write("%s\n" % val)
-
-    f.close()
-"""
-
 def matrixFile():
     matrixFile = sys.argv[1]
     dim = [int(idim) for idim in sys.argv[2:]]
@@ -101,4 +68,3 @@ def matrixFile():
 
 if __name__ == "__main__":
     matrixFile()
-    #convert()

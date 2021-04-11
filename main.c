@@ -10,6 +10,7 @@
 #include "hrowCover.h"
 #include "parseArgs.h"
 #include "generate.h"
+#include "convertSat.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +23,8 @@ int main(int argc, char *argv[])
    {
       case SUDOKU: runSudoku(d, argc, argv); break;
       case SGEN: runSudokuGen(d, argc, argv); break;
+      case SAT: runSudokuSat(d, argc, argv); break;
+      default: assert(0);
    }
 }
 
@@ -135,5 +138,41 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    unfillAllCells(d);
    freeDance(d);
 
+   return 0;
+}
+
+int runSudokuSat(Dance *d, int argc, char *argv[])
+{
+   printSudoku(d->s);
+   findMatrixFile(d);
+
+   setMatrixDimensions_Sudoku(d);
+
+   initDance(d);
+   initMatrix(d);
+
+   //printMatrix(d);
+
+   HEUR_INIT(d, d->s->containerSize)
+   initHide_Sudoku(d);
+   fillAllCells(d);
+   coverRowHeaders(d);
+
+   printf("starting algX\n");
+   algorithmX(d);
+   printf("number of calls: %lu\n", d->numCalls);
+   printf("numSols: %d\n", d->numSols);
+   
+   uncoverRowHeaders(d);
+   unfillAllCells(d);
+
+   PRINT_ALL_SUDOKU_SOLS
+
+   testConvertSat(d);
+
+   saveSolution_Sudoku(d);
+
+   freeDance(d);
+   
    return 0;
 }
