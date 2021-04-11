@@ -168,7 +168,8 @@ int runSudokuSat(Dance *d, int argc, char *argv[])
 
    PRINT_ALL_SUDOKU_SOLS
 
-   testConvertSat(d);
+   //testConvertSat(d);
+   writeToDimacs(d);
 
    saveSolution_Sudoku(d);
 
