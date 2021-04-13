@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.sat4j.maxsat"},{"l":"org.sat4j.maxsat.reader"}];updateSearchResults();

@@ -5,15 +5,18 @@
 int cellToVar(Dance *d, int iSudoku, int val);
 void writeToDimacs(Dance *d);
 int getNumClausesMinimal(Dance *d);
+int getNumClausesExtended(Dance *d);
 void dimacsHeader(FILE *dimacsFile, int numVars, int numClauses);
 
 /* minimal */
+void dimacsMinimal(Dance *d, FILE *dimacsFile);
 void dimacsAtLeastOneValuePerCell(Dance *d, FILE *dimacsFile);
 void dimacsAtMostOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim);
 void dimacsAtMostOneValuePerContainer(Dance *d, FILE *dimacsFile);
 
 /* extended */
-void dimacsAtMostOneValuePerEntry(Dance *d, FILE *dimacsFile);
+void dimacsExtended(Dance *d, FILE *dimacsFile);
+void dimacsAtMostOneValuePerCell(Dance *d, FILE *dimacsFile);
 void dimacsAtLeastOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim);
 void dimacsAtLeastOneValuePerContainer(Dance *d, FILE *dimacsFile);
 

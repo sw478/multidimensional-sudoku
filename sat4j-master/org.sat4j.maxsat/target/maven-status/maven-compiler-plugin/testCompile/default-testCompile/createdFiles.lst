@@ -1,0 +1,9 @@
+org\sat4j\maxsat\BugSAT113.class
+org\sat4j\maxsat\TestSoftCard.class
+org\sat4j\maxsat\TestDavid.class
+org\sat4j\maxsat\BugSAT84.class
+org\sat4j\maxsat\BugSAT65.class
+org\sat4j\maxsat\MarcelBugsTests.class
+org\sat4j\maxsat\TestMaxHSLikeSolver.class
+org\sat4j\maxsat\BugFatih2.class
+org\sat4j\maxsat\MichalBug.class

@@ -13,20 +13,18 @@ int cellToVar(Dance *d, int iSudoku, int val)
 void writeToDimacs(Dance *d)
 {
     int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
-    int numVars, numClauses, idim, n = d->s->n;
+    int numVars, numClauses;
     FILE *dimacsFile = fopen("dimacs.txt", "w+");
 
     if(!dimacsFile)
         fileError("dimacs.txt");
 
     numVars = sudokuSize * containerSize;
-    numClauses = getNumClausesMinimal(d);
+    numClauses = getNumClausesMinimal(d) + getNumClausesExtended(d);
 
     dimacsHeader(dimacsFile, numVars, numClauses);
-    dimacsAtLeastOneValuePerCell(d, dimacsFile);
-    for(idim = 0; idim < n; idim++)
-        dimacsAtMostOneValuePerSpan(d, dimacsFile, idim);
-    dimacsAtMostOneValuePerContainer(d, dimacsFile);
+    dimacsMinimal(d, dimacsFile);
+    dimacsExtended(d, dimacsFile);
 
     fclose(dimacsFile);
 }
@@ -37,8 +35,36 @@ int getNumClausesMinimal(Dance *d)
     int n = d->s->n;
 
     return sudokuSize +
-        n * (sudokuSize * (containerSize*(containerSize-1)/2)) + 
-            (sudokuSize * (containerSize*(containerSize-1)/2));
+        (n + 1) * (sudokuSize * (containerSize*(containerSize-1)/2));
+}
+
+int getNumClausesExtended(Dance *d)
+{
+    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
+    int n = d->s->n;
+
+    return sudokuSize * (containerSize*(containerSize-1)/2) + 
+        (n + 1) * sudokuSize;
+}
+
+void dimacsMinimal(Dance *d, FILE *dimacsFile)
+{
+    int idim, n = d->s->n;
+
+    dimacsAtLeastOneValuePerCell(d, dimacsFile);
+    for(idim = 0; idim < n; idim++)
+        dimacsAtMostOneValuePerSpan(d, dimacsFile, idim);
+    dimacsAtMostOneValuePerContainer(d, dimacsFile);
+}
+
+void dimacsExtended(Dance *d, FILE *dimacsFile)
+{
+    int idim, n = d->s->n;
+
+    dimacsAtMostOneValuePerCell(d, dimacsFile);
+    for(idim = 0; idim < n; idim++)
+        dimacsAtLeastOneValuePerSpan(d, dimacsFile, idim);
+    dimacsAtLeastOneValuePerContainer(d, dimacsFile);
 }
 
 void dimacsHeader(FILE *dimacsFile, int numVars, int numClauses)
@@ -203,7 +229,7 @@ int iContainerToiSudoku2(int offset, int iCell, int containerSize, int *dim, int
     return iSudoku;
 }
 
-void dimacsAtMostOneValuePerEntry(Dance *d, FILE *dimacsFile)
+void dimacsAtMostOneValuePerCell(Dance *d, FILE *dimacsFile)
 {
     int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
     int iSudoku, a, b, aVar, bVar;
@@ -246,8 +272,8 @@ void dimacsAtLeastOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim)
                 iSudoku = iCell * cellSpace + partial;
                 fprintf(dimacsFile, "%d ", cellToVar(d, iSudoku, val));
             }
+            fprintf(dimacsFile, "0\n");
         }
-        fprintf(dimacsFile, "0\n");
     }
 }
 

@@ -143,6 +143,9 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
 
 int runSudokuSat(Dance *d, int argc, char *argv[])
 {
+   //testConvertSat(d);
+   writeToDimacs(d);
+
    printSudoku(d->s);
    findMatrixFile(d);
 
@@ -167,9 +170,6 @@ int runSudokuSat(Dance *d, int argc, char *argv[])
    unfillAllCells(d);
 
    PRINT_ALL_SUDOKU_SOLS
-
-   //testConvertSat(d);
-   writeToDimacs(d);
 
    saveSolution_Sudoku(d);
 

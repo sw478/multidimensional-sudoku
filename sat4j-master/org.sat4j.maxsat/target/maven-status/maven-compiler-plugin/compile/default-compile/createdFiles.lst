@@ -1,0 +1,9 @@
+org\sat4j\maxsat\GenericOptLauncher.class
+org\sat4j\maxsat\MaxHSLikeSolver.class
+org\sat4j\maxsat\MinCostDecorator.class
+org\sat4j\maxsat\UnitWeightedClause.class
+org\sat4j\maxsat\reader\MSInstanceReader.class
+org\sat4j\maxsat\WeightedMaxSatDecorator.class
+org\sat4j\maxsat\WeightedPartialMaxsat.class
+org\sat4j\maxsat\reader\WDimacsReader.class
+org\sat4j\maxsat\SolverFactory.class
