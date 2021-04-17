@@ -3,6 +3,27 @@
 #include "heuristic.h"
 #include "hide.h"
 
+void freeSudoku(Dance *d)
+{
+   freeDance(d);
+}
+
+void freeSGen(Dance *d)
+{
+   freeDance(d);
+}
+
+void freeSudokuSat(Dance *d)
+{
+   fclose(d->s->boardFile);
+   fclose(d->s->solFile);
+   free(d->s->sudoku);
+   free(d->s->dim);
+   free(d->s);
+
+   free(d);
+}
+
 void freeDance(Dance *d)
 {
    freeMatrix(d);

@@ -1,4 +1,5 @@
 #include "sew.h"
+#include "matrixFile.h"
 
 /*
  * general matrix creator that reads in a text file of coordinates
@@ -7,9 +8,13 @@
 int initMatrix(Dance *d)
 {
    char *buf = malloc(BUFSIZE*sizeof(char));
+   char *matrixFileName = getMatrixFileName(d);
    int irow, icol, ilist, initListCap;
    Doubly *doub, **initList;
 
+   d->matrixFile = fopen(matrixFileName, "r+");
+   free(matrixFileName);
+   assert(d->matrixFile);
    assert(fseek(d->matrixFile, 0, SEEK_SET) == 0);
    memset(buf, 0, BUFSIZE*sizeof(char));
 

@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
       case SAT: runSudokuSat(d, argc, argv); break;
       default: assert(0);
    }
+
+   return 0;
 }
 
 void checkConfig()
@@ -39,7 +41,7 @@ void checkConfig()
 /*
  * dim: innermost dimension is first, outermost dimension is last
  */
-int runSudoku(Dance *d, int argc, char *argv[])
+void runSudoku(Dance *d, int argc, char *argv[])
 {
    printSudoku(d->s);
    findMatrixFile(d);
@@ -68,12 +70,10 @@ int runSudoku(Dance *d, int argc, char *argv[])
 
    saveSolution_Sudoku(d);
 
-   freeDance(d);
-   
-   return 0;
+   freeSudoku(d);
 }
 
-int runSudokuGen(Dance *d, int argc, char *argv[])
+void runSudokuGen(Dance *d, int argc, char *argv[])
 {
    int res, i;
    findMatrixFile(d);
@@ -136,44 +136,13 @@ int runSudokuGen(Dance *d, int argc, char *argv[])
    writePuzzleToSudokuFile(d);
 
    unfillAllCells(d);
-   freeDance(d);
-
-   return 0;
+   freeSGen(d);
 }
 
-int runSudokuSat(Dance *d, int argc, char *argv[])
+void runSudokuSat(Dance *d, int argc, char *argv[])
 {
    //testConvertSat(d);
    writeToDimacs(d);
 
-   printSudoku(d->s);
-   findMatrixFile(d);
-
-   setMatrixDimensions_Sudoku(d);
-
-   initDance(d);
-   initMatrix(d);
-
-   //printMatrix(d);
-
-   HEUR_INIT(d, d->s->containerSize)
-   initHide_Sudoku(d);
-   fillAllCells(d);
-   coverRowHeaders(d);
-
-   printf("starting algX\n");
-   algorithmX(d);
-   printf("number of calls: %lu\n", d->numCalls);
-   printf("numSols: %d\n", d->numSols);
-   
-   uncoverRowHeaders(d);
-   unfillAllCells(d);
-
-   PRINT_ALL_SUDOKU_SOLS
-
-   saveSolution_Sudoku(d);
-
-   freeDance(d);
-   
-   return 0;
+   freeSudokuSat(d);
 }

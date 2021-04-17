@@ -89,9 +89,6 @@ int algorithmX_Gen_Rand(Dance *d)
       ret = algorithmX_Gen_Rand(d);
       unselectCandidateRow(d, crow);
 
-      //if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
-         //break;
-
       if(ret == FOUND)
       {
          d->csol->row = crow->hrow;
@@ -102,6 +99,9 @@ int algorithmX_Gen_Rand(Dance *d)
          free(hitList);
          return FOUND;
       }
+      
+      //if(d->numCalls >= THRESHOLD_ALGX_GEN_1)
+         //break;
    }
 
    free(hitList);

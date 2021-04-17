@@ -4,7 +4,7 @@
 
 void setMatrixDimensions_Sudoku(Dance *d);
 void findMatrixFile(Dance *d);
-void createMatrixFile(Dance *d, char *matrixFile);
 char *getMatrixFileName(Dance *d);
+void initMatrixFile_Sudoku(Dance *d, char *matrixFileName);
 
 #endif

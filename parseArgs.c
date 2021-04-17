@@ -20,7 +20,7 @@ void parseArgs(Dance *d, int argc, char *argv[])
     {
         case SUDOKU: parseArgs_Sudoku(d, argc, argv); break;
         case SGEN: parseArgs_SGen(d, argc, argv); break;
-        case SAT: parseArgs_Sudoku(d, argc, argv); break;
+        case SAT: parseArgs_SGen(d, argc, argv); break;
         default: assert(0);
     }
 }

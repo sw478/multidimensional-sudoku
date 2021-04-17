@@ -50,15 +50,17 @@ while true; do
          fi
       
       elif [ "$problem" = "b" ]; then
+         echo "dimensions?"
+         read dim
          
          if [ "$type" = "t" ]; then
-            time ./a.out b $SUDOKU_FILE $SOLUTION_FILE
+            time ./a.out b $SUDOKU_FILE $SOLUTION_FILE ${dim}
 
          elif [ "$type" = "v" ]; then
-            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out b $SUDOKU_FILE $SOLUTION_FILE
+            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out b $SUDOKU_FILE $SOLUTION_FILE ${dim}
 
          elif [ "$type" = "b" ]; then
-            ./a.out b $SUDOKU_FILE $SOLUTION_FILE
+            ./a.out b $SUDOKU_FILE $SOLUTION_FILE ${dim}
          fi
 
       fi

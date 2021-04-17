@@ -1,3 +1,10 @@
+c mSudoku
+c
+c num dimensions: 2
+c dimensions: 3 3
+c containerSize: 9
+c sudokuSize: 81
+c
 p cnf 729 11988
 1 2 3 4 5 6 7 8 9 0
 10 11 12 13 14 15 16 17 18 0

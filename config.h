@@ -29,7 +29,7 @@
 #endif
 
 /*
-    used for list memmory allocation
+    used for dynamic list growth
     starting capacity must be >= 1
     growth factor must be > 1
 */
@@ -37,7 +37,7 @@
 #define GROWTH_FACTOR 2
 
 /*
-    buffer size for printing
+    buffer size of strings for printing
 */
 #define BUFSIZE 1000
 
@@ -62,11 +62,12 @@
 #endif
 
 /* used to count calls to algX and generate */
+/* TO DO: thresholds should be a factor of sudokuSize and dimensions */
 #define CALL_TRACKING_GEN           500
 #define THRESHOLD_TRY               1000
 #define THRESHOLD_ALGX_GEN_1        1000000
 #define THRESHOLD_ALGX_GEN_2        10000
-#define THRESHOLD_GEN_FACTOR        100 /* threshold will be a factor of sudokuSize */
+#define THRESHOLD_GEN_FACTOR        100
 #define CALL_TRACKING_ALGX_GEN_1    5000000
 
 #endif

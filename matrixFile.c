@@ -3,9 +3,9 @@
 /* call after sudoku board is initialized */
 void setMatrixDimensions_Sudoku(Dance *d)
 {
-   int sudokuSize = d->s->sudokuSize, cs = d->s->containerSize;
+   int sudokuSize = d->s->sudokuSize;
 
-   d->rmax = cs * sudokuSize;
+   d->rmax = sudokuSize * d->s->containerSize;
    d->cmax = sudokuSize * (2 + d->s->n);
 }
 
@@ -15,16 +15,15 @@ void setMatrixDimensions_Sudoku(Dance *d)
 */
 void findMatrixFile(Dance *d)
 {
-   char *matrixFile = getMatrixFileName(d);
+   char *matrixFileName = getMatrixFileName(d);
 
-   // check if file doesn't exist
-   //if((access(matrixFile, F_OK) != 0))
-      createMatrixFile(d, matrixFile);
+   // create if file doesn't exist
+   //if((access(matrixFileName, F_OK) != 0))
+   {
+      initMatrixFile_Sudoku(d, matrixFileName);
+   }
 
-   d->matrixFile = fopen(matrixFile, "r+");
-   assert(d->matrixFile);
-
-   free(matrixFile);
+   free(matrixFileName);
 }
 
 /*
@@ -34,44 +33,87 @@ void findMatrixFile(Dance *d)
 */
 char *getMatrixFileName(Dance *d)
 {
-   char *matrixFile = malloc(BUFSIZE*sizeof(char));
+   char *matrixFileName = malloc(BUFSIZE*sizeof(char));
    char *buf = malloc(BUFSIZE*sizeof(char));
    int idim;
    
-   sprintf(matrixFile, "dance/dm");
+   sprintf(matrixFileName, "dance/dm");
 
    for(idim = 0; idim < d->s->n; idim++)
    {
       sprintf(buf, "_%d", d->s->dim[idim]);
-      strcat(matrixFile, buf);
+      strcat(matrixFileName, buf);
    } 
    sprintf(buf, ".txt");
-   strcat(matrixFile, buf);
+   strcat(matrixFileName, buf);
 
    free(buf);
-   return matrixFile;
+   return matrixFileName;
 }
 
-/*
-   run the python program to create the matrixFile
-*/
-void createMatrixFile(Dance *d, char *matrixFile)
+void initMatrixFile_Sudoku(Dance *d, char *matrixFileName)
 {
-   int idim;
-   char *command = malloc(BUFSIZE*sizeof(char));
-   char *buf = malloc(BUFSIZE*sizeof(char));
+   int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
+   int n = d->s->n, *dim = d->s->dim, nConstraints, idim, iSudoku;
+   int iContainer, iContainerSpan, inum, dividend, j, mrow, iConstraint, mult;
 
-   sprintf(command, "python matrixFileCreator.py");
-   sprintf(buf, " %s", matrixFile);
-   strcat(command, buf);
-   for(idim = 0; idim < d->s->n; idim++)
+   d->matrixFile = fopen(matrixFileName, "w+");
+   assert(d->matrixFile);
+
+   nConstraints = n + 2;
+
+   int *span = malloc(n * sizeof(int));
+   int *iSpan = malloc(n * sizeof(int));
+   int *mcol = malloc(nConstraints * sizeof(int));
+
+   d->matrixFile = fopen(matrixFileName, "w+");
+   assert(d->matrixFile);
+
+   for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
    {
-      sprintf(buf, " %d", d->s->dim[idim]);
-      strcat(command, buf);
+      iContainer = 0;
+      iSpan = malloc(n*sizeof(int));
+      dividend = iSudoku;
+      mult = 1;
+      for(idim = 0; idim < n; idim++)
+      {
+         span[idim] = dividend % containerSize;
+         dividend /= containerSize;
+
+         iContainerSpan = span[idim] / dim[idim];
+         iContainer += iContainerSpan * mult;
+         mult = containerSize / (dim[idim] * mult);
+      }
+
+      for(idim = 0; idim < n; idim++)
+      {
+         mult = 1;
+         iSpan[idim] = 0;
+         for(j = 0; j < n; j++)
+         {
+            if(j == idim)
+               continue;
+            iSpan[idim] += span[j] * mult;
+            mult *= containerSize;
+         }
+      }
+
+      for(inum = 0; inum < containerSize; inum++)
+      {
+         mrow = iSudoku * containerSize + inum;
+         mcol[0] = iSudoku;
+         mcol[1] = sudokuSize + (iContainer * containerSize) + inum;
+
+         for(idim = 0; idim < n; idim++)
+            mcol[idim+2] = (sudokuSize * (2 + idim)) + iSpan[idim] * containerSize + inum;
+
+         for(iConstraint = 0; iConstraint < nConstraints; iConstraint++)
+            fprintf(d->matrixFile, "%d %d\n", mrow, mcol[iConstraint]);
+      }
    }
 
-   system(command);
-
-   free(buf);
-   free(command);
+   free(span);
+   free(iSpan);
+   free(mcol);
+   fclose(d->matrixFile);
 }
