@@ -8,8 +8,9 @@ a.out
 CppProperties.json
 workspace.code-workspace
 .vscode/
-unistd_io.h
 sudokuFile.txt
 /minisat-master
 /sat4j-master
 /dance
+solutionFile.txt
+sudokuFile.txt
