@@ -69,7 +69,7 @@ void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
         assert(1 == sscanf(buf, "%d", &s->dim[idim]));
         s->containerSize *= s->dim[idim];
     }
-    s->sudokuSize = pow(s->containerSize, s->n);
+    s->sudokuSize = round(pow(s->containerSize, s->n));
     s->sudoku = calloc(s->sudokuSize, sizeof(int));
 
     for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
@@ -116,6 +116,6 @@ void parseArgs_SGen(Dance *d, int argc, char *argv[])
         assert(1 == sscanf(argv[idim+4], "%d", &s->dim[idim]));
         s->containerSize *= s->dim[idim];
     }
-    s->sudokuSize = pow(s->containerSize, s->n);
+    s->sudokuSize = round(pow(s->containerSize, s->n));
     s->sudoku = calloc(s->sudokuSize, sizeof(int));
 }

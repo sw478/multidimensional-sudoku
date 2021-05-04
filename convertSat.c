@@ -126,7 +126,7 @@ void dimacsAtMostOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim)
     int iSpan, numSpan = sudokuSize / containerSize;
 
     /* space between span cells */
-    int cellSpace = (int)pow(containerSize, idim);
+    int cellSpace = round(pow(containerSize, idim));
 
     /* loop through all span of a dimension */
     for(iSpan = 0; iSpan < numSpan; iSpan++)
@@ -223,7 +223,7 @@ void dimacsAtLeastOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim)
     int iSpan, numSpan = sudokuSize / containerSize;
 
     /* space between span cells */
-    int cellSpace = (int)pow(containerSize, idim);
+    int cellSpace = round(pow(containerSize, idim));
 
     /* loop through all span of a dimension */
     for(iSpan = 0; iSpan < numSpan; iSpan++)
