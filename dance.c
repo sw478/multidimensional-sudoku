@@ -79,6 +79,7 @@ int algorithmX_Gen_Rand(Dance *d)
    //printMatrix2(d);
    
    irand = hcol->heur->num;
+   //hitList = unshuffledList(d, hcol, irand);
    hitList = shuffledList(d, hcol, irand);
 
    for(irand--; irand >= 0; irand--)
@@ -150,6 +151,19 @@ int algorithmX_Gen_NumSol(Dance *d)
    }
 
    return NOT_FOUND;
+}
+
+/* returns unshuffled list */
+Doubly **unshuffledList(Dance *d, Doubly *hcol, int len)
+{
+   int i;
+   Doubly *doub;
+   Doubly **hitList = malloc(len*sizeof(Doubly*));
+   
+   for(i = 0, doub = hcol->down; i < len; i++, doub = doub->down)
+      hitList[i] = doub;
+
+   return hitList;
 }
 
 /*

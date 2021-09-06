@@ -35,6 +35,7 @@ void checkConfig()
    assert(USE_HEUR >= 0 && USE_HEUR <= 2);
    assert(STARTING_CAP >= 1);
    assert(GROWTH_FACTOR > 1);
+   assert((int)(STARTING_CAP * GROWTH_FACTOR) > STARTING_CAP);
    assert(BUFSIZE > 100);
 }
 
@@ -69,6 +70,7 @@ void runSudoku(Dance *d, int argc, char *argv[])
    PRINT_ALL_SUDOKU_SOLS
 
    saveSolution_Sudoku(d);
+   writeSolToSolFile(d);
 
    freeSudoku(d);
 }

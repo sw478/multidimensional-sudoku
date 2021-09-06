@@ -15,5 +15,6 @@ void uncoverColRows(Dance *d, Doubly *xrow);
 void uncoverRows(Dance *d, Doubly *xcol);
 
 Doubly **shuffledList(Dance *d, Doubly *hcol, int len);
+Doubly **unshuffledList(Dance *d, Doubly *hcol, int len);
 
 #endif
