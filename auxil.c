@@ -5,6 +5,7 @@
 
 /* this file contains functions useful for debugging and displaying data */
 
+// print by rows, shows hidden rows
 void printMatrix(Dance *d)
 {
    int pcol = 0, irow, nrow;
@@ -30,6 +31,7 @@ void printMatrix(Dance *d)
    printf("\n");
 }
 
+// print by columns, doesn't show hidden rows
 void printMatrix2(Dance *d)
 {
    int irow, icol, cmax = d->cmax, rmax = d->rmax, status;
@@ -338,4 +340,35 @@ void checkDoubly(Doubly *doub)
          doub->up->down == doub &&
          doub->down->up == doub))
       checkDoublyError(doub->drow, doub->dcol);
+}
+
+/*
+   print to output file all solutions
+   one solution per line
+   delimeter: space
+
+   0: 1, 2, 3, 4, ...
+   1: 1, 2, 4, 3, ...
+*/
+int outputToFile_Enumerate(Dance *d)
+{
+   SolTree *cur;
+   int iSol, value, mrow, cSize = d->s->containerSize;
+
+   for(iSol = 0; iSol < d->numSols; iSol++)
+   {
+      for(cur = d->sols[iSol]; cur->parent != cur; cur = cur->parent)
+      {
+         mrow = cur->row->drow;
+         value = mrow % cSize + 1;
+
+         fprintf(d->s->solFile, "%d ", value);
+
+         
+      }
+
+      fprintf(d->s->solFile, "\n");
+   }
+
+   return 0;
 }

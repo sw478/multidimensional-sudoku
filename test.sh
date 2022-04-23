@@ -1,8 +1,9 @@
 #!/bin/bash
-USAGE="[ q:quit | m:make | b:basic | t:time ]"
-OPTIONS="[ s:solve | g:generate | b: bSAT ]"
+USAGE="[ q:quit | m:make | b:basic ]"
+OPTIONS="[ s:solve | g:generate | e:enumerate | b: bSat ]"
 SUDOKU_FILE="sudokuFile.txt"
 SOLUTION_FILE="solutionFile.txt"
+DIMACS_FILE="dimacs.txt"
 
 while true; do
 
@@ -28,9 +29,6 @@ while true; do
          if [ "$type" = "t" ]; then
             time ./a.out s $SUDOKU_FILE $SOLUTION_FILE
 
-         elif [ "$type" = "v" ]; then
-            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out s $SUDOKU_FILE $SOLUTION_FILE
-
          elif [ "$type" = "b" ]; then
             ./a.out s $SUDOKU_FILE $SOLUTION_FILE
          fi
@@ -42,11 +40,19 @@ while true; do
          if [ "$type" = "t" ]; then
             time ./a.out g $SUDOKU_FILE $SOLUTION_FILE ${dim}
 
-         elif [ "$type" = "v" ]; then
-            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out g $SUDOKU_FILE $SOLUTION_FILE ${dim}
-
          elif [ "$type" = "b" ]; then
             ./a.out g $SUDOKU_FILE $SOLUTION_FILE ${dim}
+         fi
+      
+      elif [ "$problem" = "e" ]; then
+         echo "dimensions?"
+         read dim
+         
+         if [ "$type" = "t" ]; then
+            time ./a.out e $SOLUTION_FILE ${dim}
+
+         elif [ "$type" = "b" ]; then
+            ./a.out e $SOLUTION_FILE ${dim}
          fi
       
       elif [ "$problem" = "b" ]; then
@@ -56,11 +62,10 @@ while true; do
          if [ "$type" = "t" ]; then
             time ./a.out b $SUDOKU_FILE $SOLUTION_FILE ${dim}
 
-         elif [ "$type" = "v" ]; then
-            valgrind --leak-check=full --error-exitcode=13 --track-origins=yes ./a.out b $SUDOKU_FILE $SOLUTION_FILE ${dim}
-
          elif [ "$type" = "b" ]; then
             ./a.out b $SUDOKU_FILE $SOLUTION_FILE ${dim}
+            ./zchaff.64bit.2007.3.12/zchaff64/zchaff $DIMACS_FILE
+
          fi
 
       fi

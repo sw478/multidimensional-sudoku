@@ -5,6 +5,7 @@
 int algorithmX(Dance *d);
 int algorithmX_Gen_Rand(Dance *d);
 int algorithmX_Gen_NumSol(Dance *d);
+int algorithmX_Enumerate(Dance *d);
 
 void selectCandidateRow(Dance *d, Doubly *node);
 void coverColRows(Dance *d, Doubly *xrow);

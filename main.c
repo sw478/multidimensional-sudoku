@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
       case SUDOKU: runSudoku(d, argc, argv); break;
       case SGEN: runSudokuGen(d, argc, argv); break;
       case SAT: runSudokuSat(d, argc, argv); break;
+      case ENUMERATE: runSudokuEnumerate(d, argc, argv); break;
       default: assert(0);
    }
 
@@ -75,6 +76,36 @@ void runSudoku(Dance *d, int argc, char *argv[])
    freeSudoku(d);
 }
 
+void runSudokuEnumerate(Dance *d, int argc, char *argv[])
+{
+   //printSudoku(d->s);
+   findMatrixFile(d);
+
+   setMatrixDimensions_Sudoku(d);
+
+   initDance(d);
+   initMatrix(d);
+
+   //printMatrix(d);
+
+   HEUR_INIT(d, d->s->containerSize)
+   initHide_Sudoku(d);
+   fillAllCells(d);
+   coverRowHeaders(d);
+
+   printf("starting algX\n");
+   algorithmX_Enumerate(d);
+   printf("number of calls: %lu\n", d->numCalls);
+   printf("numSols: %d\n", d->numSols);
+   
+   uncoverRowHeaders(d);
+   unfillAllCells(d);
+
+   outputToFile_Enumerate(d);
+   
+   freeSudoku(d);
+}
+
 void runSudokuGen(Dance *d, int argc, char *argv[])
 {
    int res, i;
@@ -118,8 +149,8 @@ void runSudokuGen(Dance *d, int argc, char *argv[])
 
    initHide_Sudoku(d);
    
-   setMaxNumClues(d->s, d->s->sudokuSize * (1.0/2));
-   setMaxNumClues(d->s, d->s->sudokuSize * (30.0/81));
+   setNumClues(d->s, d->s->sudokuSize * (1.0/2));
+   //setNumClues(d->s, d->s->sudokuSize * (30.0/81));
    printf("starting generation\n");
    for(i = 1; i < THRESHOLD_TRY+1; i++)
    {

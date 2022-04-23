@@ -6,7 +6,7 @@
     1: using heur system
     2: finding minCol each time
 */
-#define USE_HEUR 1
+#define USE_HEUR 0
 
 #if USE_HEUR == 1
     #define HEUR_HEURISTIC(d) heuristic((d));
@@ -21,7 +21,7 @@
     #define HEUR_INC(d, heur, amount)
     #define HEUR_FREE(d)
 #elif USE_HEUR == 0
-    #define HEUR_HEURISTIC(d) (d)->root->right);
+    #define HEUR_HEURISTIC(d) ((d)->root->right);
     #define HEUR_INIT(d, heur_max)
     #define HEUR_DEC(d, heur, amount)
     #define HEUR_INC(d, heur, amount)
@@ -64,10 +64,10 @@
 /* used to count calls to algX and generate */
 /* TO DO: thresholds should be a factor of sudokuSize and dimensions */
 #define CALL_TRACKING_GEN           500
-#define THRESHOLD_TRY               1000
-#define THRESHOLD_ALGX_GEN_1        1000000
-#define THRESHOLD_ALGX_GEN_2        10000
-#define THRESHOLD_GEN_FACTOR        100
+#define THRESHOLD_TRY               100000 // how many times gen will be called on the completed sudoku
+#define THRESHOLD_ALGX_GEN_1        10000000
+#define THRESHOLD_ALGX_GEN_2        1000000
+#define THRESHOLD_GEN_FACTOR        10000
 #define CALL_TRACKING_ALGX_GEN_1    5000000
 
 #endif

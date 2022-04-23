@@ -20,4 +20,6 @@ void printHeur(Dance *d);
 void checkMatrix(Dance *d);
 void checkDoubly(Doubly *doub);
 
+int outputToFile_Enumerate(Dance *d);
+
 #endif

@@ -10,11 +10,11 @@ int generate(Dance *d)
     Hide *h;//, **hitList;
     int *hitList, sudokuSize = d->s->sudokuSize;
 
-    if(d->hideRoot->num >= d->s->maxNumClues)
+    if(d->hideRoot->num > d->s->numClues)
         return NOT_FOUND;
     
     d->genNumCalls++;
-    if(d->genNumCalls >= THRESHOLD_GEN_FACTOR)
+    if(d->genNumCalls >= sudokuSize * THRESHOLD_GEN_FACTOR)
         return NOT_FOUND;
     
     listSize = sudokuSize - d->hideRoot->num;
@@ -35,11 +35,11 @@ int generate(Dance *d)
         //if(d->genNumCalls % CALL_TRACKING_GEN == 0)
           //  printf("-----gen calls: %d\n", d->genNumCalls);
 
-        if(d->numSols == 1)
+        if(d->numSols == 1 && d->hideRoot->num == d->s->numClues)
         {
             saveGeneratedPuzzle(d);
-            res = FOUND;
-            break;
+            free(hitList);
+            return FOUND;
         }
         if(d->genNumCalls >= sudokuSize * THRESHOLD_GEN_FACTOR)
         {
@@ -123,9 +123,9 @@ Hide **shuffledHide(Dance *d, int listSize)
     if n == 1, maxNumClues will be ignored and be
     replaced with dim[0] - 1
 */
-void setMaxNumClues(Sudoku *s, int maxNumClues)
+void setNumClues(Sudoku *s, int maxNumClues)
 {
-    s->maxNumClues = s->n == 1 ? s->dim[0]-1 : maxNumClues;
+    s->numClues = s->n == 1 ? s->dim[0]-1 : maxNumClues;
 }
 
 /* translates filled status of cells to d->s */

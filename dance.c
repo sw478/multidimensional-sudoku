@@ -153,6 +153,55 @@ int algorithmX_Gen_NumSol(Dance *d)
    return NOT_FOUND;
 }
 
+/*
+   returns all solutions, solTree is now actually a tree
+   ret: if singular recursive call finds at least one solution
+   res: if this function finds at least one solution
+*/
+int algorithmX_Enumerate(Dance *d)
+{
+   Doubly *hcol, *crow, *root = d->root;
+   int ret = NOT_FOUND, res = NOT_FOUND;
+   SolTree *sol = initTree();
+
+   if(root == root->right)
+   {
+      d->csol = initTree();
+      addLeaf(d, d->csol);
+      d->numSols++;
+      return FOUND;
+   }
+
+   d->numCalls++;
+   hcol = HEUR_HEURISTIC(d)
+
+   if(hcol == root)
+      return NOT_FOUND;
+   
+   for(crow = hcol->down; crow != hcol; crow = crow->down)
+   {
+      //printMatrix2(d);
+      selectCandidateRow(d, crow);
+      //printMatrix2(d);
+      ret = algorithmX_Enumerate(d);
+      unselectCandidateRow(d, crow);
+
+      if(ret == FOUND)
+      {
+         d->csol->row = crow->hrow;
+         addChild(sol, d->csol);
+         d->csol = sol;
+         res = FOUND;
+      }
+   }
+
+   // no solutions found
+   if(res == NOT_FOUND)
+      freeTree(sol);
+
+   return res;
+}
+
 /* returns unshuffled list */
 Doubly **unshuffledList(Dance *d, Doubly *hcol, int len)
 {

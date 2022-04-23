@@ -25,6 +25,7 @@
 #define SUDOKU 0
 #define SGEN 1
 #define SAT 2
+#define ENUMERATE 3
 
 /* for algX and generate */
 #define FOUND 1
@@ -131,7 +132,7 @@ typedef struct
 {
    int *sudoku;
    int *dim, n, containerSize, sudokuSize;
-   int maxNumClues;
+   int numClues;
    FILE *boardFile, *solFile;
 } Sudoku;
 

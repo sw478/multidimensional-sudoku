@@ -13,6 +13,8 @@ void parseArgs(Dance *d, int argc, char *argv[])
         d->problem = SGEN;
     else if(!strcmp(argv[1], "b"))
         d->problem = SAT;
+    else if(!strcmp(argv[1], "e"))
+        d->problem = ENUMERATE;
     else
         arg1Error();
 
@@ -21,6 +23,7 @@ void parseArgs(Dance *d, int argc, char *argv[])
         case SUDOKU: parseArgs_Sudoku(d, argc, argv); break;
         case SGEN: parseArgs_SGen(d, argc, argv); break;
         case SAT: parseArgs_SGen(d, argc, argv); break;
+        case ENUMERATE: parseArgs_Enumerate(d, argc, argv); break;
         default: assert(0);
     }
 }
@@ -118,4 +121,37 @@ void parseArgs_SGen(Dance *d, int argc, char *argv[])
     }
     s->sudokuSize = round(pow(s->containerSize, s->n));
     s->sudoku = calloc(s->sudokuSize, sizeof(int));
+}
+
+/* a.out e [solution file] [dim]*n */
+void parseArgs_Enumerate(Dance *d, int argc, char *argv[])
+{
+    int iSudoku, idim;
+    Sudoku *s = malloc(sizeof(Sudoku));
+    d->s = s;
+    
+    if(argc < 4)
+        numArgError();
+
+    s->solFile = fopen(argv[2], "w+");
+    if(!s->solFile)
+        fileError(argv[2]);
+    assert(fseek(s->solFile, 0, SEEK_SET) == 0);
+
+    s->n = argc - 3;
+
+    s->dim = malloc(s->n*sizeof(int));
+    s->containerSize = 1;
+    
+    for(idim = 0; idim < s->n; idim++)
+    {
+        assert(1 == sscanf(argv[idim+3], "%d", &s->dim[idim]));
+        s->containerSize *= s->dim[idim];
+    }
+    
+    s->sudokuSize = round(pow(s->containerSize, s->n));
+    s->sudoku = calloc(s->sudokuSize, sizeof(int));
+
+    for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
+        s->sudoku[iSudoku] = 0;
 }
