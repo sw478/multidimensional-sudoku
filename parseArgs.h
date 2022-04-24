@@ -2,10 +2,9 @@
 #define PARSE_H
 #include "struct.h"
 
-void parseArgs(Dance *d, int argc, char *argv[]);
-void parseArgs_Sudoku(Dance *d, int argc, char *argv[]);
-void parseArgs_NQueens(Dance *d, int argc, char *argv[]);
-void parseArgs_SGen(Dance *d, int argc, char *argv[]);
+int parseFirstArg(int argc, char *argv[]);
+void parseArgs_DLX_Solve(Dance *d, int argc, char *argv[]);
+void parseArgs_DLX_Gen(Dance *d, int argc, char *argv[]);
 void parseArgs_Enumerate(Dance *d, int argc, char *argv[]);
 
 #endif

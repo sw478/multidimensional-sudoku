@@ -10,21 +10,34 @@
 #include "hrowCover.h"
 #include "parseArgs.h"
 #include "generate.h"
-#include "convertSat.h"
+#include "dimacs.h"
 
 int main(int argc, char *argv[])
 {
-   Dance *d = malloc(sizeof(Dance));
+   int userOption = parseFirstArg(argc, argv);
    srand(time(NULL));
    checkConfig();
-   parseArgs(d, argc, argv);
+   
+   Dance *d = malloc(sizeof(Dance));
 
-   switch(d->problem)
+   switch(userOption)
    {
-      case SUDOKU: runSudoku(d, argc, argv); break;
-      case SGEN: runSudokuGen(d, argc, argv); break;
-      case SAT: runSudokuSat(d, argc, argv); break;
-      case ENUMERATE: runSudokuEnumerate(d, argc, argv); break;
+      case DLX_SOLVE:
+         parseArgs_DLX_Solve(d, argc, argv);
+         runSudoku(d, argc, argv);
+         break;
+      case DLX_GEN:
+         parseArgs_DLX_Gen(d, argc, argv);
+         runSudokuGen(d, argc, argv);
+         break;
+      case ENUMERATE:
+         parseArgs_Enumerate(d, argc, argv);
+         runSudokuEnumerate(d, argc, argv);
+         break;
+      case ZCHAFF_GEN_0:
+         parseArgs_DLX_Gen(d, argc, argv);
+         runSudokuSat(d, argc, argv);
+         break;
       default: assert(0);
    }
 

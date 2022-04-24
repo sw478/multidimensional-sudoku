@@ -1,44 +1,30 @@
 #include "parseArgs.h"
 #include "error.h"
 
-void parseArgs(Dance *d, int argc, char *argv[])
+int parseFirstArg(int argc, char *argv[])
 {
-
     if(argc < 1)
         numArgError();
 
     if(!strcmp(argv[1], "s"))
-        d->problem = SUDOKU;
+        return DLX_SOLVE;
     else if(!strcmp(argv[1], "g"))
-        d->problem = SGEN;
-    else if(!strcmp(argv[1], "b"))
-        d->problem = SAT;
+        return DLX_GEN;
     else if(!strcmp(argv[1], "e"))
-        d->problem = ENUMERATE;
+        return ENUMERATE;
+    else if(!strcmp(argv[1], "zs0"))
+        return ZCHAFF_SOLVE_0;
+    else if(!strcmp(argv[1], "zs1"))
+        return ZCHAFF_SOLVE_1;
+    else if(!strcmp(argv[1], "zg0"))
+        return ZCHAFF_GEN_0;
+    else if(!strcmp(argv[1], "zg1"))
+        return ZCHAFF_GEN_1;
     else
-        arg1Error();
-
-    switch(d->problem)
-    {
-        case SUDOKU: parseArgs_Sudoku(d, argc, argv); break;
-        case SGEN: parseArgs_SGen(d, argc, argv); break;
-        case SAT: parseArgs_SGen(d, argc, argv); break;
-        case ENUMERATE: parseArgs_Enumerate(d, argc, argv); break;
-        default: assert(0);
-    }
+        return -1;
 }
 
-/*
-    a.out s [sudoku file] [solution file]
-
-    file format:
-    [n: number of dimensions]
-    next n lines are dimensions
-
-    sudokuSize: size of sudoku
-    next sudokuSize lines are the numbers in the n-dimensional board
-*/
-void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
+void parseArgs_DLX_Solve(Dance *d, int argc, char *argv[])
 {
     int iSudoku, num, test, idim;
     Sudoku *s = malloc(sizeof(Sudoku));
@@ -90,8 +76,7 @@ void parseArgs_Sudoku(Dance *d, int argc, char *argv[])
     free(buf);
 }
 
-/* a.out g [sudoku file] [solution file] [dim]*n */
-void parseArgs_SGen(Dance *d, int argc, char *argv[])
+void parseArgs_DLX_Gen(Dance *d, int argc, char *argv[])
 {
     Sudoku *s = malloc(sizeof(Sudoku));
     int idim;
@@ -123,7 +108,6 @@ void parseArgs_SGen(Dance *d, int argc, char *argv[])
     s->sudoku = calloc(s->sudokuSize, sizeof(int));
 }
 
-/* a.out e [solution file] [dim]*n */
 void parseArgs_Enumerate(Dance *d, int argc, char *argv[])
 {
     int iSudoku, idim;

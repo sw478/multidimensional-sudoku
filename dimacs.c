@@ -1,4 +1,4 @@
-#include "convertSat.h"
+#include "dimacs.h"
 #include "error.h"
 #include "math.h"
 
@@ -26,7 +26,21 @@ void writeToDimacs(Dance *d)
 
     dimacsHeader(d, dimacsFile);
     dimacsMinimal(d, dimacsFile);
-    dimacsExtended(d, dimacsFile);
+    //dimacsExtended(d, dimacsFile);
+
+    fclose(dimacsFile);
+}
+
+void readOutput(Dance *d)
+{
+    FILE *dimacsFile = fopen("dimacs.txt", "w+");
+
+    if(!dimacsFile)
+        fileError("dimacs.txt");
+
+    dimacsHeader(d, dimacsFile);
+    dimacsMinimal(d, dimacsFile);
+    //dimacsExtended(d, dimacsFile);
 
     fclose(dimacsFile);
 }
@@ -60,7 +74,7 @@ void dimacsHeader(Dance *d, FILE *dimacsFile)
     int numVars, numClauses, n = d->s->n, idim;
 
     numVars = sudokuSize * containerSize;
-    numClauses = getNumClausesMinimal(d) + getNumClausesExtended(d);
+    numClauses = getNumClausesMinimal(d);// + getNumClausesExtended(d);
 
     fprintf(dimacsFile, "c mSudoku\n");
     fprintf(dimacsFile, "c\n");
@@ -70,8 +84,6 @@ void dimacsHeader(Dance *d, FILE *dimacsFile)
     for(idim = 0; idim < n; idim++)
         fprintf(dimacsFile, " %d", d->s->dim[idim]);
     fprintf(dimacsFile, "\n");
-    fprintf(dimacsFile, "c containerSize: %d\n", containerSize);
-    fprintf(dimacsFile, "c sudokuSize: %d\n", sudokuSize);
     fprintf(dimacsFile, "c\n");
 
     fprintf(dimacsFile, "p cnf %d %d\n", numVars, numClauses);

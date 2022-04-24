@@ -22,10 +22,13 @@
 
 
 /* for d->problem */
-#define SUDOKU 0
-#define SGEN 1
-#define SAT 2
-#define ENUMERATE 3
+#define DLX_SOLVE 0
+#define DLX_GEN 1
+#define ENUMERATE 2
+#define ZCHAFF_SOLVE_0 3
+#define ZCHAFF_SOLVE_1 4
+#define ZCHAFF_GEN_0 5
+#define ZCHAFF_GEN_1 6
 
 /* for algX and generate */
 #define FOUND 1
@@ -147,7 +150,6 @@ typedef struct
    FILE *matrixFile;
 
    /* problem specific data */
-   int problem;
    Sudoku *s;
    
    /* for secondary columns */
@@ -169,5 +171,27 @@ typedef struct
    int maxColElements;
 
 } Dance;
+
+/*
+ * Data structs for different user options
+ */
+
+typedef struct
+{
+    FILE *sudokuFile, *solutionFile;
+    FILE *matrixFile;
+
+    Sudoku *s;
+    Dance *d;
+} DLX;
+
+typedef struct
+{
+    FILE *sudokuFile, *solutionFile;
+    FILE *dimacsInputFile, *dimacsOutputFile;
+
+    Sudoku *s;
+} Zchaff;
+
 
 #endif

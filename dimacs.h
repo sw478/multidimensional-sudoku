@@ -1,5 +1,5 @@
-#ifndef CONVERT_H
-#define CONVERT_H
+#ifndef DIMACS_H
+#define DIMACS_H
 #include "struct.h"
 
 void writeToDimacs(Dance *d);

@@ -1,5 +1,4 @@
 # multidimensional sudoku
-[![HitCount](http://hits.dwyl.com/sw478/multidimensional-sudoku.svg)](http://hits.dwyl.com/sw478/multidimensional-sudoku)
 
 This project is based off of the main sudoku project, as most of the code is reusable. It generalizes the ideas of a traditional 9x9 sudoku to sudokus of any dimension, of any size.
 
@@ -18,7 +17,7 @@ This project is based off of the main sudoku project, as most of the code is reu
 Use "b:basic". Options:
 * Solve: solve sudoku located in sudokuFile. If sudoku doesn't exist, generate one first, or copy a sample puzzle from /samples into sudokuFile.
 * Generate: generate sudoku, input is just container dimensions.
-* Enumerate: enumerate all sudokus of a given dimensions. Don't expect this finish on anything other than small sudokus (largest: [2, 2], [3, 2]). Meant for analyzing all 288 [2, 2] sudokus.
+* Enumerate: enumerate all sudokus of a given dimensions. Don't expect this finish on anything other than small sudokus (largest: [2, 2], [3, 2]). Meant for analyzing all 288 [2, 2] sudokus. Doesn't currently work yet.
 * bSat: create a dimacs file for inputed dimensions, then run zchaff on dimacs file. Doesn't do anything other than spit out SAT/UNSAT. Plan to expand on this functionality.
 
 ## process (dancing links)
