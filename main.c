@@ -30,6 +30,12 @@ int main(int argc, char *argv[])
         case ENUMERATE:
             run_Enumerate(argc, argv);
             break;
+        case ZCHAFF_SOLVE_0:
+            run_ZchaffSolve0(argc, argv);
+            break;
+        case ZCHAFF_SOLVE_1:
+            run_ZchaffSolve1(argc, argv);
+            break;
         case ZCHAFF_GEN_0:
             run_ZchaffGen0(argc, argv);
             break;
@@ -83,7 +89,7 @@ void run_DLXSolve(int argc, char *argv[])
     PRINT_ALL_SUDOKU_SOLS
 
     saveSolution_Sudoku(d);
-    writeToSudokuFile(d, dlx->solutionFile);
+    writeToSudokuFile(d->s, dlx->solutionFile);
 
     free_DLXSolve(dlx);
 }
@@ -112,14 +118,13 @@ void run_DLXGen(int argc, char *argv[])
     for(i = 1; i < THRESHOLD_TRY+1; i++)
     {
         d->numCalls = 0;
-        if(i % 10 == 0)
-            printf("algX try: %d\n", i);
+        //if(i % 10 == 0){ printf("algX try: %d\n", i); }
         res = algorithmX_Gen_Rand(d);
         if(res == FOUND)
             break;
     }
-    printf("algX number of tries: %d\n", i-1);
-    printf("number of calls: %lu\n", d->numCalls);
+    //printf("algX number of tries: %d\n", i);
+    //printf("number of calls: %lu\n", d->numCalls);
 
     uncoverRowHeaders(d);
     if(res == NOT_FOUND)
@@ -131,7 +136,7 @@ void run_DLXGen(int argc, char *argv[])
     saveSolution_Sudoku(d);
     printf("printing sudoku solved:\n");
     printSudoku(d->s);
-    writeToSudokuFile(d, dlx->solutionFile);
+    writeToSudokuFile(d->s, dlx->solutionFile);
 
     initHide(d);
 
@@ -152,7 +157,7 @@ void run_DLXGen(int argc, char *argv[])
 
     printf("printing sudoku puzzle:\n");
     printSudoku(d->s);
-    writeToSudokuFile(d, dlx->sudokuFile);
+    writeToSudokuFile(d->s, dlx->sudokuFile);
 
     unfillAllCells(d);
 
@@ -194,13 +199,40 @@ void run_Enumerate(int argc, char *argv[])
     free_Enum(e);
 }
 
+void run_ZchaffSolve0(int argc, char *argv[])
+{
+    ZChaff *z = malloc(sizeof(ZChaff));
+    parseArgs_ZChaffSolve0(z, argc, argv);
+
+    printSudoku(z->s);
+    writeToDimacs_Solve(z);
+    printf("written to dimacs input\n");
+
+    free_ZChaffSolve0(z);
+}
+
+void run_ZchaffSolve1(int argc, char *argv[])
+{
+    ZChaff *z = malloc(sizeof(ZChaff));
+    parseArgs_ZChaffSolve1(z, argc, argv);
+    printf("finished zchaff\n");
+
+    readInDimacsOutput(z, z->dimacsOutputFile);
+    printSudoku(z->s);
+
+    writeToSudokuFile(z->s, z->solutionFile);
+
+    free_ZChaffSolve1(z);
+}
+
 void run_ZchaffGen0(int argc, char *argv[])
 {
     ZChaff *z = malloc(sizeof(ZChaff));
     parseArgs_ZChaffGen0(z, argc, argv);
 
     //testConvertSat(z);
-    writeToDimacs(z);
+    writeToDimacs_Gen(z);
+    printf("written to dimacs input\n");
 
     free_ZChaffGen0(z);
 }
@@ -209,6 +241,13 @@ void run_ZchaffGen1(int argc, char *argv[])
 {
     ZChaff *z = malloc(sizeof(ZChaff));
     parseArgs_ZChaffGen1(z, argc, argv);
+
+    printf("finished zchaff\n");
+
+    readInDimacsOutput(z, z->dimacsOutputFile);
+    printSudoku(z->s);
+
+    writeToSudokuFile(z->s, z->solutionFile);
 
     free_ZChaffGen1(z);
 }

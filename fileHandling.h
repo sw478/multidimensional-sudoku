@@ -4,7 +4,7 @@
 
 void readInSudokuFile(Sudoku *s, FILE *f);
 
-void writeToSudokuFile(Dance *d, FILE *f);
+void writeToSudokuFile(Sudoku *s, FILE *f);
 void writeToEnumerateFile(Dance *d, FILE *f);
 
 #endif

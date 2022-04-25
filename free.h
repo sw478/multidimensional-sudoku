@@ -4,6 +4,8 @@
 
 void free_DLXSolve(DLX *dlx);
 void free_DLXGen(DLX *dlx);
+void free_ZChaffSolve0(ZChaff *z);
+void free_ZChaffSolve1(ZChaff *z);
 void free_ZChaffGen0(ZChaff *z);
 void free_ZChaffGen1(ZChaff *z);
 void free_Enum(Enum *e);

@@ -1,6 +1,6 @@
 #!/bin/bash
 USAGE="[ q:quit | m:make | b:basic | >:push | <:pull ]"
-OPTIONS="[ s:solve | g:generate | e:enumerate | zg: zchaff gen ]"
+OPTIONS="[ s:solve | g:generate | e:enumerate | zs:zchaff solve | zg:zchaff gen ]"
 EXECUTABLE="./mSudoku"
 SUDOKU_FILE="sudokuFile.txt"
 SOLUTION_FILE="solutionFile.txt"
@@ -59,6 +59,12 @@ while true; do
          $EXECUTABLE zg0 $DIMACS_INPUT_FILE ${dim}
          ./zchaff.64bit.2007.3.12/zchaff64/zchaff $DIMACS_INPUT_FILE > $DIMACS_OUTPUT_FILE
          $EXECUTABLE zg1 $DIMACS_OUTPUT_FILE $SUDOKU_FILE $SOLUTION_FILE ${dim}
+      
+      elif [ "$problem" = "zs" ]; then
+         make
+         $EXECUTABLE zs0 $DIMACS_INPUT_FILE $SUDOKU_FILE
+         ./zchaff.64bit.2007.3.12/zchaff64/zchaff $DIMACS_INPUT_FILE > $DIMACS_OUTPUT_FILE
+         $EXECUTABLE zs1 $DIMACS_OUTPUT_FILE $SUDOKU_FILE $SOLUTION_FILE
 
       fi
 

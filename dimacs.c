@@ -3,25 +3,88 @@
 #include "math.h"
 
 /* convert cell position and cell value to a SAT variable */
-int cellToVar(int containerSize, int iSudoku, int val)
+long int cellToVar(int containerSize, int iSudoku, int val)
 {
     return (iSudoku * containerSize) + val + 1;
 }
 
 /* saves cell value and position from SAT variable */
-void varToCell(Sudoku *s, int containerSize, int var)
+void varToCell(Sudoku *s, int containerSize, long int var)
 {
     assert(var > 0);
     var--;
-    s->sudoku[var / containerSize] = var % containerSize;
+    s->sudoku[var / containerSize] = (var % containerSize) + 1;
+}
+
+void readInDimacsOutput(ZChaff *z, FILE *f)
+{
+    Sudoku *s = z->s;
+    char *buf, *token, firstChar;
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
+    long int iVar, var, numVars, bufSize;
+
+    numVars = sudokuSize * containerSize;
+    bufSize = numVars * 10;
+    buf = malloc(bufSize*sizeof(char));
+    memset(buf, 0, bufSize*sizeof(char));
+
+    while(1)
+    {
+        fgets(buf, bufSize*sizeof(char), f);
+        firstChar = buf[0];
+
+        if(firstChar == (int)('-') || (firstChar >= (int)('0') && firstChar <= (int)('9')))
+            break;
+    }
+
+    for(iVar = 0, token = strtok(buf, " "); token != NULL && iVar < numVars; token = strtok(NULL, " "), iVar++)
+    {
+        if(token[0] != (int)('-'))
+        {
+            assert(sscanf(token, "%ld", &var) == 1);
+            varToCell(s, containerSize, var);
+        }
+    }
+    
+    free(buf);
 }
 
 /* writes header and clauses to file from existing sudoku information */
-void writeToDimacs(ZChaff *z)
+void writeToDimacs_Gen(ZChaff *z)
 {
-    dimacsHeader(z);
+    int numClauses = getNumClausesMinimal(z->s) + getNumClausesExtended(z->s);
+
+    dimacsHeader(z, numClauses);
     dimacsMinimal(z);
-    //dimacsExtended(z);
+    dimacsExtended(z);
+}
+
+void writeToDimacs_Solve(ZChaff *z)
+{
+    int numClauses = getNumClausesMinimal(z->s) + getNumClausesExtended(z->s) + getNumClausesPartial(z->s);
+
+    dimacsHeader(z, numClauses);
+    dimacsPartial(z);
+    dimacsMinimal(z);
+    dimacsExtended(z);
+}
+
+/* writes partial sudoku solution for a puzzle */
+void dimacsPartial(ZChaff *z)
+{
+    Sudoku *s = z->s;
+    FILE *f = z->dimacsInputFile;
+    int val, iSudoku;
+
+    for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
+    {
+        val = s->sudoku[iSudoku];
+        if(val == 0)
+            continue;
+        
+        fprintf(f, "%ld ", cellToVar(s->containerSize, iSudoku, val - 1));
+        fprintf(f, "0\n");
+    }
 }
 
 /* writes the minimal portion of sudoku SAT clauses */
@@ -47,15 +110,14 @@ void dimacsExtended(ZChaff *z)
 }
 
 /* writes header of dimacs file, including mSudoku information */
-void dimacsHeader(ZChaff *z)
+void dimacsHeader(ZChaff *z, int numClauses)
 {
     Sudoku *s = z->s;
     FILE *f = z->dimacsInputFile;
     int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
-    int numVars, numClauses, n = s->n, idim;
+    int numVars, n = s->n, idim;
 
     numVars = sudokuSize * containerSize;
-    numClauses = getNumClausesMinimal(s);// + getNumClausesExtended(s);
 
     fprintf(f, "c mSudoku\n");
     fprintf(f, "c n: %d\n", n);
@@ -66,6 +128,21 @@ void dimacsHeader(ZChaff *z)
     fprintf(f, "\nc\n");
 
     fprintf(f, "p cnf %d %d\n", numVars, numClauses);
+}
+
+int getNumClausesPartial(Sudoku *s)
+{
+    int numClauses = 0, iSudoku;
+
+    for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
+    {
+        if(s->sudoku[iSudoku] == 0)
+            continue;
+        
+        numClauses++;
+    }
+
+    return numClauses;
 }
 
 /* calculates number of minimal clauses */
@@ -99,7 +176,7 @@ void dimacsAtLeastOneValuePerCell(ZChaff *z)
     for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
     {
         for(val = 0; val < containerSize; val++)
-            fprintf(f, "%d ", cellToVar(containerSize, iSudoku, val));
+            fprintf(f, "%ld ", cellToVar(containerSize, iSudoku, val));
         fprintf(f, "0\n");
     }
 }
@@ -117,7 +194,8 @@ void dimacsAtMostOneValuePerSpan(ZChaff *z, int idim)
         aSudoku & bSudoku are the sudoku indices of a & b
         aVar & bVar are the SAT vars of a & b
     */
-    int a, b, aSudoku, bSudoku, aVar, bVar;
+    int a, b, aSudoku, bSudoku;
+    long int aVar, bVar;
 
     /* number of span per sudoku, and iterator */
     int iSpan, numSpan = sudokuSize / containerSize;
@@ -143,7 +221,7 @@ void dimacsAtMostOneValuePerSpan(ZChaff *z, int idim)
                     bSudoku = b * cellSpace + partial;
                     aVar = -1*cellToVar(containerSize, aSudoku, val);
                     bVar = -1*cellToVar(containerSize, bSudoku, val);
-                    fprintf(f, "%d %d 0\n", aVar, bVar);
+                    fprintf(f, "%ld %ld 0\n", aVar, bVar);
                 }
             }
         }
@@ -164,7 +242,8 @@ void dimacsAtMostOneValuePerContainer(ZChaff *z)
         aSudoku & bSudoku are the sudoku indices of a & b
         aVar & bVar are the SAT vars of a & b
     */
-    int a, b, aSudoku, bSudoku, aVar, bVar;
+    int a, b, aSudoku, bSudoku;
+    long int aVar, bVar;
 
     /* number of span per sudoku, and iterator */
     int iContainer, numContainers = sudokuSize / containerSize;
@@ -186,7 +265,7 @@ void dimacsAtMostOneValuePerContainer(ZChaff *z)
                     bSudoku = iContainerToiSudoku2(partial, b, containerSize, dim, n);
                     aVar = -1*cellToVar(containerSize, aSudoku, val);
                     bVar = -1*cellToVar(containerSize, bSudoku, val);
-                    fprintf(f, "%d %d 0\n", aVar, bVar);
+                    fprintf(f, "%ld %ld 0\n", aVar, bVar);
                 }
             }
         }
@@ -201,7 +280,8 @@ void dimacsAtMostOneValuePerCell(ZChaff *z)
     FILE *f = z->dimacsInputFile;
     
     int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
-    int iSudoku, a, b, aVar, bVar;
+    int iSudoku, a, b;
+    long int aVar, bVar;
 
     for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
     {
@@ -211,7 +291,7 @@ void dimacsAtMostOneValuePerCell(ZChaff *z)
             {
                 aVar = -1*cellToVar(containerSize, iSudoku, a);
                 bVar = -1*cellToVar(containerSize, iSudoku, b);
-                fprintf(f, "%d %d 0\n", aVar, bVar);
+                fprintf(f, "%ld %ld 0\n", aVar, bVar);
             }
         }
     }
@@ -242,7 +322,7 @@ void dimacsAtLeastOneValuePerSpan(ZChaff *z, int idim)
             for(iCell = 0; iCell < containerSize; iCell++)
             {
                 iSudoku = iCell * cellSpace + partial;
-                fprintf(f, "%d ", cellToVar(containerSize, iSudoku, val));
+                fprintf(f, "%ld ", cellToVar(containerSize, iSudoku, val));
             }
             fprintf(f, "0\n");
         }
@@ -272,7 +352,7 @@ void dimacsAtLeastOneValuePerContainer(ZChaff *z)
             for(iCell = 0; iCell < containerSize; iCell++)
             {
                 iSudoku = iContainerToiSudoku2(partial, iCell, containerSize, dim, n);
-                fprintf(f, "%d ", cellToVar(containerSize, iSudoku, val));
+                fprintf(f, "%ld ", cellToVar(containerSize, iSudoku, val));
             }
             fprintf(f, "0\n");
         }

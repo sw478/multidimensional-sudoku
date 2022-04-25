@@ -10,7 +10,7 @@
 
 ## Program args
 
-./mSudoku s [SUDOKU_FILE] [SOLUTION_FILE]
+* ./mSudoku s [SUDOKU_FILE] [SOLUTION_FILE]
 
 ## Goals
 
@@ -25,7 +25,7 @@
 
 ## Program args
 
-./mSudoku g [SUDOKU_FILE] [SOLUTION_FILE] (dim)
+* ./mSudoku g [SUDOKU_FILE] [SOLUTION_FILE] (dim)
 
 ## Goals
 
@@ -40,7 +40,7 @@
 
 ## Program args
 
-./mSudoku e [SOLUTION_FILE] (dim)
+* ./mSudoku e [SOLUTION_FILE] (dim)
 
 ## Goals
 
@@ -55,7 +55,7 @@
 
 ## Program args
 
-./mSudoku zs0 [SUDOKU_FILE] [DIMACS_INPUT]
+* ./mSudoku zs0 [DIMACS_INPUT] [SUDOKU_FILE]
 
 ## Goals
 
@@ -65,7 +65,7 @@
 
 ## Program args
 
-./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
+* ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
 
 ## Goals
 
@@ -75,7 +75,7 @@
 
 ## Program args
 
-./mSudoku zs1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE]
+* ./mSudoku zs1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE]
 
 ## Goals
 
@@ -88,15 +88,15 @@
 
 ## Program args
 
-./mSudoku zs0 [SUDOKU_FILE] [DIMACS_INPUT]
-./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
-./mSudoku zs1 [SUDOKU_FILE] [SOLUTION_FILE] [DIMACS_OUTPUT]
+* ./mSudoku zs0 [DIMACS_INPUT] [SUDOKU_FILE]
+* ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
+* ./mSudoku zs1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE]
 
 # BSat Generate (Create Dimacs)
 
 ## Program args
 
-./mSudoku zg0 [DIMACS_INPUT] (dim)
+* ./mSudoku zg0 [DIMACS_INPUT] (dim)
 
 ## Goals
 
@@ -106,7 +106,7 @@
 
 ## Program args
 
-./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
+* ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
 
 ## Goals
 
@@ -116,7 +116,7 @@
 
 ## Program args
 
-./mSudoku zg1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE] (dim)
+* ./mSudoku zg1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE] (dim)
 
 ## Goals
 
@@ -128,6 +128,6 @@
 
 ## Program args
 
-./mSudoku zg0 [DIMACS_INPUT] (dim)
-./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
-./mSudoku zg1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE] (dim)
+* ./mSudoku zg0 [DIMACS_INPUT] (dim)
+* ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
+* ./mSudoku zg1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE] (dim)

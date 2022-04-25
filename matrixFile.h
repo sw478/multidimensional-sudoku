@@ -5,6 +5,6 @@
 void setMatrixDimensions_Sudoku(Dance *d, Sudoku *s);
 void findMatrixFile(Dance *d);
 char *getMatrixFileName(Dance *d);
-void initMatrixFile_Sudoku(Dance *d, char *matrixFileName);
+void initMatrixFile(Dance *d, char *matrixFileName);
 
 #endif

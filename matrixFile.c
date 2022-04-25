@@ -16,19 +16,12 @@ void findMatrixFile(Dance *d)
    char *matrixFileName = getMatrixFileName(d);
 
    // create if file doesn't exist
-   //if((access(matrixFileName, F_OK) != 0))
-   {
-      initMatrixFile_Sudoku(d, matrixFileName);
-   }
+   if((access(matrixFileName, F_OK) != 0))
+      initMatrixFile(d, matrixFileName);
 
    free(matrixFileName);
 }
 
-/*
-   fileName format:
-   dance/dm_d1_d2_d3_..._dn.txt
-   with dimensions sorted in increasing order
-*/
 char *getMatrixFileName(Dance *d)
 {
    char *matrixFileName = malloc(BUFSIZE*sizeof(char));
@@ -49,7 +42,7 @@ char *getMatrixFileName(Dance *d)
    return matrixFileName;
 }
 
-void initMatrixFile_Sudoku(Dance *d, char *matrixFileName)
+void initMatrixFile(Dance *d, char *matrixFileName)
 {
    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
    int n = d->s->n, *dim = d->s->dim, nConstraints, idim, iSudoku;

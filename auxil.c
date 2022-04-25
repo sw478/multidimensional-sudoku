@@ -307,7 +307,7 @@ void printHeur(Dance *d)
       {
          hcol = ((Doubly*)heur->hcol);
          if(hcol->drow - d->rmax != heur->num)
-            heurNumError();
+            error_heurNum();
          printf("%d ", hcol->dcol);
       }
       printf("\n");
@@ -322,14 +322,14 @@ void checkMatrix(Dance *d)
    for(hcol = d->root->right; hcol != d->root; hcol = hcol->right)
    {
       if(!(hcol->left->right == hcol && hcol->right->left == hcol))
-         checkDoublyError(hcol->drow, hcol->dcol);
+         error_doubly(hcol->drow, hcol->dcol);
       for(doub = hcol->down; doub != hcol; doub = doub->down)
          checkDoubly(doub);
    }
    for(hrow = d->root->down; hrow != d->root; hrow = hrow->down)
    {
       if(!(hrow->up->down == hrow && hrow->down->up == hrow))
-         checkDoublyError(hrow->drow, hrow->dcol);
+         error_doubly(hrow->drow, hrow->dcol);
    }
 }
 
@@ -339,5 +339,5 @@ void checkDoubly(Doubly *doub)
          doub->right->left == doub &&
          doub->up->down == doub &&
          doub->down->up == doub))
-      checkDoublyError(doub->drow, doub->dcol);
+      error_doubly(doub->drow, doub->dcol);
 }

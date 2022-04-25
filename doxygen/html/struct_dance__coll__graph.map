@@ -1,0 +1,8 @@
+<map id="Dance" name="Dance">
+<area shape="rect" id="node1" title=" " alt="" coords="165,369,223,396"/>
+<area shape="rect" id="node2" href="$structdoubly.html" title=" " alt="" coords="89,128,149,155"/>
+<area shape="rect" id="node5" href="$structsol_tree.html" title=" " alt="" coords="162,264,226,291"/>
+<area shape="rect" id="node6" href="$structhide.html" title=" " alt="" coords="328,264,375,291"/>
+<area shape="rect" id="node3" href="$structheur.html" title=" " alt="" coords="5,7,52,33"/>
+<area shape="rect" id="node4" href="$struct_sudoku.html" title=" " alt="" coords="453,264,519,291"/>
+</map>

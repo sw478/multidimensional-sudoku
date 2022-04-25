@@ -16,6 +16,7 @@
   * Container dimensions should be in decreasing order
   * Consequently, a matrix file will be the same for a [5, 3, 1] and a [3, 1, 5] sudoku as an example
   * Example: Matrix file name for a [2, 4, 3] will be "dm_4_3_2.txt"
+* File saved in /dance folder
 
 ## DIMACS_INPUT Format
 

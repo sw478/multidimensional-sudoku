@@ -32,6 +32,27 @@ void free_Enum(Enum *e)
    free(e);
 }
 
+void free_ZChaffSolve0(ZChaff *z)
+{
+   free_Sudoku(z->s);
+
+   fclose(z->sudokuFile);
+   fclose(z->dimacsInputFile);
+
+   free(z);
+}
+
+void free_ZChaffSolve1(ZChaff *z)
+{
+   free_Sudoku(z->s);
+
+   fclose(z->sudokuFile);
+   fclose(z->solutionFile);
+   fclose(z->dimacsOutputFile);
+
+   free(z);
+}
+
 void free_ZChaffGen0(ZChaff *z)
 {
    free_Sudoku(z->s);

@@ -1,0 +1,78 @@
+\hypertarget{config_8h_source}{}\doxysection{config.\+h}
+\mbox{\hyperlink{config_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef CONFIG\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define CONFIG\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{/*}}
+\DoxyCodeLine{5 \textcolor{comment}{    0: selecting first column}}
+\DoxyCodeLine{6 \textcolor{comment}{    1: using heur system}}
+\DoxyCodeLine{7 \textcolor{comment}{    2: finding minCol each time}}
+\DoxyCodeLine{8 \textcolor{comment}{*/}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#define USE\_HEUR 0}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#if USE\_HEUR == 1}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{    \#define HEUR\_HEURISTIC(d) heuristic((d));}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{    \#define HEUR\_INIT(d, heur\_max) initHeurList((d), (heur\_max));}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{    \#define HEUR\_DEC(d, heur, amount) decHeur((d), (heur), (amount));}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{    \#define HEUR\_INC(d, heur, amount) incHeur((d), (heur), (amount));}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{    \#define HEUR\_FREE(d) freeHeur((d));}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#elif USE\_HEUR == 2}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{    \#define HEUR\_HEURISTIC(d) heuristic2((d));}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{    \#define HEUR\_INIT(d, heur\_max)}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{    \#define HEUR\_DEC(d, heur, amount)}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{    \#define HEUR\_INC(d, heur, amount)}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{    \#define HEUR\_FREE(d)}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#elif USE\_HEUR == 0}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{    \#define HEUR\_HEURISTIC(d) ((d)-\/>root-\/>right);}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{    \#define HEUR\_INIT(d, heur\_max)}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{    \#define HEUR\_DEC(d, heur, amount)}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{    \#define HEUR\_INC(d, heur, amount)}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{    \#define HEUR\_FREE(d)}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{comment}{/*}}
+\DoxyCodeLine{32 \textcolor{comment}{    used for dynamic list growth}}
+\DoxyCodeLine{33 \textcolor{comment}{    starting capacity must be >= 1}}
+\DoxyCodeLine{34 \textcolor{comment}{    growth factor must be > 1}}
+\DoxyCodeLine{35 \textcolor{comment}{*/}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#define STARTING\_CAP 1}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#define GROWTH\_FACTOR 2}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{comment}{/*}}
+\DoxyCodeLine{40 \textcolor{comment}{    buffer size of strings for printing}}
+\DoxyCodeLine{41 \textcolor{comment}{*/}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#define BUFSIZE 1000}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{comment}{/*}}
+\DoxyCodeLine{45 \textcolor{comment}{    set to 2 to search for all solutions when solving}}
+\DoxyCodeLine{46 \textcolor{comment}{    set to 1 for normal settings (print and search all)}}
+\DoxyCodeLine{47 \textcolor{comment}{    set to 0 to stop at the first solution found}}
+\DoxyCodeLine{48 \textcolor{comment}{}}
+\DoxyCodeLine{49 \textcolor{comment}{    solutions will not be printed if searching for all solutions}}
+\DoxyCodeLine{50 \textcolor{comment}{*/}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#define SEARCH\_ALL\_SOLUTIONS 1}}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#if SEARCH\_ALL\_SOLUTIONS == 2}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{    \#define ALGX\_BREAK}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{    \#define PRINT\_ALL\_SUDOKU\_SOLS}}
+\DoxyCodeLine{56 \textcolor{preprocessor}{\#elif SEARCH\_ALL\_SOLUTIONS == 1}}
+\DoxyCodeLine{57 \textcolor{preprocessor}{    \#define ALGX\_BREAK}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{    \#define PRINT\_ALL\_SUDOKU\_SOLS printSolutions\_Sudoku(d);}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{\#elif SEARCH\_ALL\_SOLUTIONS == 0}}
+\DoxyCodeLine{60 \textcolor{preprocessor}{    \#define ALGX\_BREAK break;}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{    \#define PRINT\_ALL\_SUDOKU\_SOLS printSolutions\_Sudoku(d);}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{comment}{/* used to count calls to algX and generate */}}
+\DoxyCodeLine{65 \textcolor{comment}{/* TO DO: thresholds should be a factor of sudokuSize and dimensions */}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#define CALL\_TRACKING\_GEN           500}}
+\DoxyCodeLine{67 \textcolor{preprocessor}{\#define THRESHOLD\_TRY               1000 }\textcolor{comment}{// how many times gen will be called on the completed sudoku}}
+\DoxyCodeLine{68 \textcolor{preprocessor}{\#define THRESHOLD\_ALGX\_GEN\_1        10000000}}
+\DoxyCodeLine{69 \textcolor{preprocessor}{\#define THRESHOLD\_ALGX\_GEN\_2        1000000}}
+\DoxyCodeLine{70 \textcolor{preprocessor}{\#define THRESHOLD\_GEN\_FACTOR        10000}}
+\DoxyCodeLine{71 \textcolor{preprocessor}{\#define CALL\_TRACKING\_ALGX\_GEN\_1    5000000}}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

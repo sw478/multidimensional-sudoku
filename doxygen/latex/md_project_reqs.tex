@@ -1,0 +1,123 @@
+
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Solve
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Generate
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Enumerate
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Solve
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Generate
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md15}{}\doxysection{DLX Solve}\label{md_project_reqs_autotoc_md15}
+\hypertarget{md_project_reqs_autotoc_md16}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md16}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku s \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]} \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]}
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md17}{}\doxysubsection{Goals}\label{md_project_reqs_autotoc_md17}
+
+\begin{DoxyItemize}
+\item Reads in sudoku from SUDOKU\+\_\+\+FILE.
+\item Outputs solved sudoku to SOLUTION\+\_\+\+FILE.
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md18}{}\doxysubsection{Notes}\label{md_project_reqs_autotoc_md18}
+
+\begin{DoxyItemize}
+\item If SUDOKU\+\_\+\+FILE doesn\textquotesingle{}t exist, generate one first, or copy a sample puzzle from /samples into sudoku\+File.
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md19}{}\doxysection{DLX Generate}\label{md_project_reqs_autotoc_md19}
+\hypertarget{md_project_reqs_autotoc_md20}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md20}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku g \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]} \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]} (dim)
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md21}{}\doxysubsection{Goals}\label{md_project_reqs_autotoc_md21}
+
+\begin{DoxyItemize}
+\item Generate sudoku using container dimensions (dim).
+\item Outputs a single puzzle into SUDOKU\+\_\+\+FILE and its solution to SOLUTION\+\_\+\+FILE.
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md22}{}\doxysubsection{Notes}\label{md_project_reqs_autotoc_md22}
+
+\begin{DoxyItemize}
+\item (dim) is a list of integers of the desired container dimensions.
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md23}{}\doxysection{DLX Enumerate}\label{md_project_reqs_autotoc_md23}
+\hypertarget{md_project_reqs_autotoc_md24}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md24}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku e \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]} (dim)
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md25}{}\doxysubsection{Goals}\label{md_project_reqs_autotoc_md25}
+
+\begin{DoxyItemize}
+\item Enumerate all solution sudokus of a given container dimension.
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md26}{}\doxysubsection{Note}\label{md_project_reqs_autotoc_md26}
+
+\begin{DoxyItemize}
+\item Meant for analyzing all 288 \mbox{[}2, 2\mbox{]} sudokus.
+\item Not meant for any larger container dimensions.
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md27}{}\doxysection{BSat Solve (\+Create Dimacs)}\label{md_project_reqs_autotoc_md27}
+\hypertarget{md_project_reqs_autotoc_md28}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md28}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zs0 \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]}
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md29}{}\doxysubsection{Goals}\label{md_project_reqs_autotoc_md29}
+
+\begin{DoxyItemize}
+\item Convert sudoku from SUDOKU\+\_\+\+FILE to the dimacs input file.
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md30}{}\doxysection{BSat Solve (\+Zchaff)}\label{md_project_reqs_autotoc_md30}
+\hypertarget{md_project_reqs_autotoc_md31}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md31}
+
+\begin{DoxyItemize}
+\item ./zchaff \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} \texorpdfstring{$>$}{>} \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]}
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md32}{}\doxysubsection{Goals}\label{md_project_reqs_autotoc_md32}
+
+\begin{DoxyItemize}
+\item Run zchaff on the dimacs file
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md33}{}\doxysection{BSat Solve (\+Process Zchaff Results)}\label{md_project_reqs_autotoc_md33}
+\hypertarget{md_project_reqs_autotoc_md34}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md34}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zs1 \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]} \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]} \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]}
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md35}{}\doxysubsection{Goals}\label{md_project_reqs_autotoc_md35}
+
+\begin{DoxyItemize}
+\item Parse dimacs output file.
+\item Parse SUDOKU\+\_\+\+FILE for container dimensions.
+\item Convert results to solved sudoku
+\item Writes solution to solution file
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md36}{}\doxysection{BSat (\+Full Solve run)}\label{md_project_reqs_autotoc_md36}
+\hypertarget{md_project_reqs_autotoc_md37}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md37}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zs0 \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]}
+\item ./zchaff \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} \texorpdfstring{$>$}{>} \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]}
+\item ./m\+Sudoku zs1 \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]} \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]} \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]}
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md38}{}\doxysection{BSat Generate (\+Create Dimacs)}\label{md_project_reqs_autotoc_md38}
+\hypertarget{md_project_reqs_autotoc_md39}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md39}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zg0 \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} (dim)
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md40}{}\doxysubsection{Goals}\label{md_project_reqs_autotoc_md40}
+
+\begin{DoxyItemize}
+\item Write empty sudoku constraints to the dimacs input file using given container dimensions.
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md41}{}\doxysection{BSat Generate (\+Zchaff)}\label{md_project_reqs_autotoc_md41}
+\hypertarget{md_project_reqs_autotoc_md42}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md42}
+
+\begin{DoxyItemize}
+\item ./zchaff \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} \texorpdfstring{$>$}{>} \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]}
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md43}{}\doxysubsection{Goals}\label{md_project_reqs_autotoc_md43}
+
+\begin{DoxyItemize}
+\item Run zchaff on the dimacs file
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md44}{}\doxysection{BSat Generate (\+Process Zchaff Results)}\label{md_project_reqs_autotoc_md44}
+\hypertarget{md_project_reqs_autotoc_md45}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md45}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zg1 \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]} \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]} \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]} (dim)
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md46}{}\doxysubsection{Goals}\label{md_project_reqs_autotoc_md46}
+
+\begin{DoxyItemize}
+\item Parse dimacs output file.
+\item Convert results to solved sudoku
+\item Writes solution to solution file
+\end{DoxyItemize}\hypertarget{md_project_reqs_autotoc_md47}{}\doxysection{BSat (\+Full Generate run)}\label{md_project_reqs_autotoc_md47}
+\hypertarget{md_project_reqs_autotoc_md48}{}\doxysubsection{Program args}\label{md_project_reqs_autotoc_md48}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zg0 \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} (dim)
+\item ./zchaff \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} \texorpdfstring{$>$}{>} \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]}
+\item ./m\+Sudoku zg1 \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]} \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]} \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]} (dim) 
+\end{DoxyItemize}

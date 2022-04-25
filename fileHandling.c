@@ -29,46 +29,49 @@ void readInSudokuFile(Sudoku *s, FILE *f)
             s->sudoku[iSudoku] = 0;
             continue;
         }
+        
         test = sscanf(buf, "%d", &num);
         if(test != 1 || num < 0 || num > s->containerSize)
-            invalidSudokuBoard();
+            error_invalidSudokuBoard();
+
         s->sudoku[iSudoku] = num;
     }
+
     free(buf);
 }
 
-void writeToSudokuFile(Dance *d, FILE *f)
+void writeToSudokuFile(Sudoku *s, FILE *f)
 {
-    int iSudoku, idim, sudokuSize = d->s->sudokuSize, *sudoku = d->s->sudoku;
+    int iSudoku, idim;
 
-    fprintf(f, "%d\n", d->s->n);
-    for(idim = 0; idim < d->s->n; idim++)
-        fprintf(f, "%d\n", d->s->dim[idim]);
+    fprintf(f, "%d\n", s->n);
+    for(idim = 0; idim < s->n; idim++)
+        fprintf(f, "%d\n", s->dim[idim]);
 
-    for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
-        fprintf(f, "%d\n", sudoku[iSudoku]);
+    for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
+        fprintf(f, "%d\n", s->sudoku[iSudoku]);
 }
 
 void writeToEnumerateFile(Dance *d, FILE *f)
 {
-   SolTree *cur;
-   int iSol, idim, value, mrow, containerSize = d->s->containerSize;
-   
-   fprintf(f, "%d\n", d->numSols);
-   fprintf(f, "%d\n", d->s->n);
-   for(idim = 0; idim < d->s->n; idim++)
-      fprintf(f, "%d ", d->s->dim[idim]);
+    SolTree *cur;
+    int iSol, idim, value, mrow, containerSize = d->s->containerSize;
 
-   for(iSol = 0; iSol < d->numSols; iSol++)
-   {
-      fprintf(f, "\n");
+    fprintf(f, "%d\n", d->numSols);
+    fprintf(f, "%d\n", d->s->n);
+    for(idim = 0; idim < d->s->n; idim++)
+        fprintf(f, "%d ", d->s->dim[idim]);
 
-      for(cur = d->sols[iSol]; cur->parent != cur; cur = cur->parent)
-      {
-         mrow = cur->row->drow;
-         value = mrow % containerSize + 1;
+    for(iSol = 0; iSol < d->numSols; iSol++)
+    {
+        fprintf(f, "\n");
 
-         fprintf(f, "%d ", value);
-      }
-   }
+        for(cur = d->sols[iSol]; cur->parent != cur; cur = cur->parent)
+        {
+            mrow = cur->row->drow;
+            value = mrow % containerSize + 1;
+
+            fprintf(f, "%d ", value);
+        }
+    }
 }

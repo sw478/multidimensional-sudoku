@@ -5,7 +5,7 @@
 int parseFirstArg(int argc, char *argv[])
 {
     if(argc < 1)
-        numArgError();
+        error_numArg();
 
     if(!strcmp(argv[1], "s"))
         return DLX_SOLVE;
@@ -54,16 +54,16 @@ void parseArgs_DLXSolve(DLX *dlx, int argc, char *argv[])
     d->s = s;
 
     if(argc != 4)
-        numArgError();
+        error_numArg();
     
     dlx->sudokuFile = fopen(argv[2], "r+");
     if(!dlx->sudokuFile)
-        fileError(argv[2]);
+        error_file(argv[2]);
     assert(fseek(dlx->sudokuFile, 0, SEEK_SET) == 0);
 
     dlx->solutionFile = fopen(argv[3], "w+");
     if(!dlx->solutionFile)
-        fileError(argv[3]);
+        error_file(argv[3]);
     assert(fseek(dlx->solutionFile, 0, SEEK_SET) == 0);
 
     readInSudokuFile(s, dlx->sudokuFile);
@@ -79,16 +79,16 @@ void parseArgs_DLXGen(DLX *dlx, int argc, char *argv[])
     d->s = s;
 
     if(argc < argOffset + 1)
-        numArgError();
+        error_numArg();
 
     dlx->sudokuFile = fopen(argv[2], "w+");
     if(!dlx->sudokuFile)
-        fileError(argv[2]);
+        error_file(argv[2]);
     assert(fseek(dlx->sudokuFile, 0, SEEK_SET) == 0);
 
     dlx->solutionFile = fopen(argv[3], "w+");
     if(!dlx->solutionFile)
-        fileError(argv[3]);
+        error_file(argv[3]);
     assert(fseek(dlx->solutionFile, 0, SEEK_SET) == 0);
 
     parseArgs_readDims(s, argc, argv, argOffset);
@@ -104,14 +104,57 @@ void parseArgs_Enumerate(Enum *e, int argc, char *argv[])
     e->d->s = s;
     
     if(argc < argOffset + 1)
-        numArgError();
+        error_numArg();
 
     e->enumerateFile = fopen(argv[2], "w+");
     if(!e->enumerateFile)
-        fileError(argv[2]);
+        error_file(argv[2]);
     assert(fseek(e->enumerateFile, 0, SEEK_SET) == 0);
 
     parseArgs_readDims(s, argc, argv, argOffset);
+}
+
+void parseArgs_ZChaffSolve0(ZChaff *z, int argc, char *argv[])
+{
+    Sudoku *s = malloc(sizeof(Sudoku));
+    z->s = s;
+    
+    if(argc != 4)
+        error_numArg();
+
+    z->dimacsInputFile = fopen(argv[2], "w+");
+    if(!z->dimacsInputFile)
+        error_file(argv[2]);
+
+    z->sudokuFile = fopen(argv[3], "r+");
+    if(!z->sudokuFile)
+        error_file(argv[3]);
+
+    readInSudokuFile(s, z->sudokuFile);
+}
+
+void parseArgs_ZChaffSolve1(ZChaff *z, int argc, char *argv[])
+{
+    Sudoku *s = malloc(sizeof(Sudoku));
+    z->s = s;
+    
+    if(argc != 5)
+        error_numArg();
+
+    z->dimacsOutputFile = fopen(argv[2], "r+");
+    if(!z->dimacsOutputFile)
+        error_file(argv[2]);
+
+    z->sudokuFile = fopen(argv[3], "r+");
+    if(!z->sudokuFile)
+        error_file(argv[3]);
+
+    z->solutionFile = fopen(argv[4], "w+");
+    if(!z->solutionFile)
+        error_file(argv[4]);
+    assert(fseek(z->solutionFile, 0, SEEK_SET) == 0);
+    
+    readInSudokuFile(s, z->sudokuFile);
 }
 
 void parseArgs_ZChaffGen0(ZChaff *z, int argc, char *argv[])
@@ -121,11 +164,11 @@ void parseArgs_ZChaffGen0(ZChaff *z, int argc, char *argv[])
     z->s = s;
     
     if(argc < argOffset + 1)
-        numArgError();
+        error_numArg();
 
     z->dimacsInputFile = fopen(argv[2], "w+");
     if(!z->dimacsInputFile)
-        fileError(argv[2]);
+        error_file(argv[2]);
 
     parseArgs_readDims(s, argc, argv, argOffset);
 }
@@ -137,20 +180,20 @@ void parseArgs_ZChaffGen1(ZChaff *z, int argc, char *argv[])
     z->s = s;
     
     if(argc < argOffset + 1)
-        numArgError();
+        error_numArg();
 
     z->dimacsOutputFile = fopen(argv[2], "r+");
     if(!z->dimacsOutputFile)
-        fileError(argv[2]);
+        error_file(argv[2]);
 
     z->sudokuFile = fopen(argv[3], "w+");
     if(!z->sudokuFile)
-        fileError(argv[3]);
+        error_file(argv[3]);
     assert(fseek(z->sudokuFile, 0, SEEK_SET) == 0);
 
     z->solutionFile = fopen(argv[4], "w+");
     if(!z->solutionFile)
-        fileError(argv[4]);
+        error_file(argv[4]);
     assert(fseek(z->solutionFile, 0, SEEK_SET) == 0);
     
     parseArgs_readDims(s, argc, argv, argOffset);
