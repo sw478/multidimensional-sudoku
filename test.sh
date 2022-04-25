@@ -1,6 +1,7 @@
 #!/bin/bash
 USAGE="[ q:quit | m:make | b:basic | >:push | <:pull ]"
 OPTIONS="[ s:solve | g:generate | e:enumerate | zg: zchaff gen ]"
+EXECUTABLE="./mSudoku"
 SUDOKU_FILE="sudokuFile.txt"
 SOLUTION_FILE="solutionFile.txt"
 DIMACS_INPUT_FILE="dimacsInput.txt"
@@ -32,30 +33,32 @@ while true; do
       echo $OPTIONS
       read problem
 
-      make
-
       if [ "$problem" = "s" ]; then
-         ./a.out s $SUDOKU_FILE $SOLUTION_FILE
+         make
+         $EXECUTABLE s $SUDOKU_FILE $SOLUTION_FILE
       
       elif [ "$problem" = "g" ]; then
          echo "dimensions?"
          read dim
          
-         ./a.out g $SUDOKU_FILE $SOLUTION_FILE ${dim}
+         make
+         $EXECUTABLE g $SUDOKU_FILE $SOLUTION_FILE ${dim}
       
       elif [ "$problem" = "e" ]; then
          echo "dimensions?"
          read dim
          
-         ./a.out e $ENUMERATE_FILE ${dim}
+         make
+         $EXECUTABLE e $ENUMERATE_FILE ${dim}
       
       elif [ "$problem" = "zg" ]; then
          echo "dimensions?"
          read dim
 
-         ./a.out zg0 $DIMACS_INPUT_FILE ${dim}
+         make
+         $EXECUTABLE zg0 $DIMACS_INPUT_FILE ${dim}
          ./zchaff.64bit.2007.3.12/zchaff64/zchaff $DIMACS_INPUT_FILE > $DIMACS_OUTPUT_FILE
-         #./a.out zg1 $SOLUTION_FILE $DIMACS_OUTPUT_FILE
+         $EXECUTABLE zg1 $DIMACS_OUTPUT_FILE $SUDOKU_FILE $SOLUTION_FILE ${dim}
 
       fi
 

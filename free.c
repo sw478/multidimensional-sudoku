@@ -3,23 +3,23 @@
 #include "heuristic.h"
 #include "hide.h"
 
-void free_DLXSolve(Dance *d)
+void free_DLXSolve(DLX *dlx)
 {
-   fclose(d->s->boardFile);
-   fclose(d->s->solFile);
+   fclose(dlx->sudokuFile);
+   fclose(dlx->solutionFile);
 
-   free_Sudoku(d->s);
-   freeHide(d);
-   free_Dance(d);
+   free_Sudoku(dlx->d->s);
+   freeHide(dlx->d);
+   free_Dance(dlx->d);
 }
 
-void free_DLXGen(Dance *d)
+void free_DLXGen(DLX *dlx)
 {
-   fclose(d->s->boardFile);
-   fclose(d->s->solFile);
+   fclose(dlx->sudokuFile);
+   fclose(dlx->solutionFile);
 
-   free_Sudoku(d->s);
-   free_Dance(d);
+   free_Sudoku(dlx->d->s);
+   free_Dance(dlx->d);
 }
 
 void free_Enum(Enum *e)
@@ -32,12 +32,22 @@ void free_Enum(Enum *e)
    free(e);
 }
 
-void free_ZChaffGen(ZChaff *z)
+void free_ZChaffGen0(ZChaff *z)
 {
    free_Sudoku(z->s);
 
    fclose(z->dimacsInputFile);
+
+   free(z);
+}
+
+void free_ZChaffGen1(ZChaff *z)
+{
+   free_Sudoku(z->s);
+
    fclose(z->dimacsOutputFile);
+   fclose(z->sudokuFile);
+   fclose(z->solutionFile);
 
    free(z);
 }

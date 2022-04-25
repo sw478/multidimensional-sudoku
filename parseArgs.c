@@ -1,5 +1,6 @@
 #include "parseArgs.h"
 #include "error.h"
+#include "fileHandling.h"
 
 int parseFirstArg(int argc, char *argv[])
 {
@@ -42,76 +43,53 @@ void parseArgs_readDims(Sudoku *s, int argc, char *argv[], int argOffset)
     s->sudoku = calloc(s->sudokuSize, sizeof(int));
 }
 
-void parseArgs_DLXSolve(Dance *d, int argc, char *argv[])
+void parseArgs_DLXSolve(DLX *dlx, int argc, char *argv[])
 {
-    int iSudoku, num, test, idim;
+    Dance *d = malloc(sizeof(Dance));
     Sudoku *s = malloc(sizeof(Sudoku));
     char *buf = malloc(BUFSIZE*sizeof(char));
     memset(buf, 0, BUFSIZE*sizeof(char));
+    dlx->d = d;
+    dlx->s = s;
     d->s = s;
 
     if(argc != 4)
         numArgError();
     
-    s->boardFile = fopen(argv[2], "r+");
-    if(!s->boardFile)
+    dlx->sudokuFile = fopen(argv[2], "r+");
+    if(!dlx->sudokuFile)
         fileError(argv[2]);
-    assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
+    assert(fseek(dlx->sudokuFile, 0, SEEK_SET) == 0);
 
-    s->solFile = fopen(argv[3], "w+");
-    if(!s->solFile)
+    dlx->solutionFile = fopen(argv[3], "w+");
+    if(!dlx->solutionFile)
         fileError(argv[3]);
-    assert(fseek(s->solFile, 0, SEEK_SET) == 0);
+    assert(fseek(dlx->solutionFile, 0, SEEK_SET) == 0);
 
-    /* read sudokuFile */
-    fgets(buf, BUFSIZE*sizeof(char), s->boardFile);
-    assert(1 == sscanf(buf, "%d", &s->n));
-    assert(s->n >= 2);
-    s->dim = malloc(s->n*sizeof(int));
-
-    s->containerSize = 1;
-    for(idim = 0; idim < s->n; idim++)
-    {
-        fgets(buf, BUFSIZE*sizeof(char), s->boardFile);
-        assert(1 == sscanf(buf, "%d", &s->dim[idim]));
-        s->containerSize *= s->dim[idim];
-    }
-    s->sudokuSize = round(pow(s->containerSize, s->n));
-    s->sudoku = calloc(s->sudokuSize, sizeof(int));
-
-    for(iSudoku = 0; iSudoku < s->sudokuSize; iSudoku++)
-    {
-        if(!fgets(buf, BUFSIZE*sizeof(char), s->boardFile))
-        {
-            s->sudoku[iSudoku] = 0;
-            continue;
-        }
-        test = sscanf(buf, "%d", &num);
-        if(test != 1 || num < 0 || num > s->containerSize)
-            invalidSudokuBoard();
-        s->sudoku[iSudoku] = num;
-    }
-    free(buf);
+    readInSudokuFile(s, dlx->sudokuFile);
 }
 
-void parseArgs_DLXGen(Dance *d, int argc, char *argv[])
+void parseArgs_DLXGen(DLX *dlx, int argc, char *argv[])
 {
     const int argOffset = 4;
+    Dance *d = malloc(sizeof(Dance));
     Sudoku *s = malloc(sizeof(Sudoku));
+    dlx->d = d;
+    dlx->s = s;
     d->s = s;
 
     if(argc < argOffset + 1)
         numArgError();
 
-    s->boardFile = fopen(argv[2], "w+");
-    if(!s->boardFile)
+    dlx->sudokuFile = fopen(argv[2], "w+");
+    if(!dlx->sudokuFile)
         fileError(argv[2]);
-    assert(fseek(s->boardFile, 0, SEEK_SET) == 0);
+    assert(fseek(dlx->sudokuFile, 0, SEEK_SET) == 0);
 
-    s->solFile = fopen(argv[3], "w+");
-    if(!s->solFile)
+    dlx->solutionFile = fopen(argv[3], "w+");
+    if(!dlx->solutionFile)
         fileError(argv[3]);
-    assert(fseek(s->solFile, 0, SEEK_SET) == 0);
+    assert(fseek(dlx->solutionFile, 0, SEEK_SET) == 0);
 
     parseArgs_readDims(s, argc, argv, argOffset);
 }
@@ -149,5 +127,31 @@ void parseArgs_ZChaffGen0(ZChaff *z, int argc, char *argv[])
     if(!z->dimacsInputFile)
         fileError(argv[2]);
 
+    parseArgs_readDims(s, argc, argv, argOffset);
+}
+
+void parseArgs_ZChaffGen1(ZChaff *z, int argc, char *argv[])
+{
+    const int argOffset = 5;
+    Sudoku *s = malloc(sizeof(Sudoku));
+    z->s = s;
+    
+    if(argc < argOffset + 1)
+        numArgError();
+
+    z->dimacsOutputFile = fopen(argv[2], "r+");
+    if(!z->dimacsOutputFile)
+        fileError(argv[2]);
+
+    z->sudokuFile = fopen(argv[3], "w+");
+    if(!z->sudokuFile)
+        fileError(argv[3]);
+    assert(fseek(z->sudokuFile, 0, SEEK_SET) == 0);
+
+    z->solutionFile = fopen(argv[4], "w+");
+    if(!z->solutionFile)
+        fileError(argv[4]);
+    assert(fseek(z->solutionFile, 0, SEEK_SET) == 0);
+    
     parseArgs_readDims(s, argc, argv, argOffset);
 }

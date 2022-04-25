@@ -133,7 +133,6 @@ typedef struct
    int *dim, n, containerSize, sudokuSize;
 
    int numClues;
-   FILE *boardFile, *solFile;
 } Sudoku;
 
 typedef struct

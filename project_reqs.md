@@ -1,45 +1,8 @@
 # Project Requirements
 
-# Project Specific File Formatting
-
-## SUDOKU_FILE and SOLUTION_FILE Format
-
-* First line: [n: number of dimensions]
-* Next n lines: container dimensions
-* Next sudokuSize lines: number symbols for each cell in the n-dimensional board
-* Number Symbols are 1-indexed, 0 is reserved for an empty cell
-
-## MATRIX_FILE
-
-* findMatrixFile() will attempt to open the necessary matrix file
-* Each line in this file corresponds to a matrix coordinate: row then column
-* The filename should have a prefix of "dm", and the suffix should be the container dimensions
-  * The prefix and container dimensions should be separated with an underscore
-  * Container dimensions should be in decreasing order
-  * Consequently, a matrix file will be the same for a [5, 3, 1] and a [3, 1, 5] sudoku as an example
-  * Example: Matrix file name for a [2, 4, 3] will be "dm_4_3_2.txt"
-
-## DIMACS_INPUT Format
-
-* Conventional DIMACS file format
-  * p cnf (# variables) (# clauses)
-* Comment header will contain:
-  * "mSudoku" title
-  * (n)
-  * (dim)
-
-## ENUMERATE_FILE Format
-
-* First line: [ne: number of sudokus]
-* Second line: [n: number of dimensions]
-* Next n lines: container dimensions
-* Next ne lines: sudoku solution, one per line, number symbols separated by spaces
-
-# User Options 
-
 * DLX Solve
 * DLX Generate
-* Enumerate
+* DLX Enumerate
 * ZChaff Solve
 * ZChaff Generate
 
@@ -47,7 +10,7 @@
 
 ## Program args
 
-./a.out s [SUDOKU_FILE] [SOLUTION_FILE]
+./mSudoku s [SUDOKU_FILE] [SOLUTION_FILE]
 
 ## Goals
 
@@ -62,7 +25,7 @@
 
 ## Program args
 
-./a.out g [SUDOKU_FILE] [SOLUTION_FILE] (dim)
+./mSudoku g [SUDOKU_FILE] [SOLUTION_FILE] (dim)
 
 ## Goals
 
@@ -73,11 +36,11 @@
 
 * (dim) is a list of integers of the desired container dimensions.
 
-# Enumerate
+# DLX Enumerate
 
 ## Program args
 
-./a.out e [SOLUTION_FILE] (dim)
+./mSudoku e [SOLUTION_FILE] (dim)
 
 ## Goals
 
@@ -92,7 +55,7 @@
 
 ## Program args
 
-./a.out z0 [SUDOKU_FILE] [DIMACS_INPUT]
+./mSudoku zs0 [SUDOKU_FILE] [DIMACS_INPUT]
 
 ## Goals
 
@@ -112,7 +75,7 @@
 
 ## Program args
 
-./a.out z1 [SUDOKU_FILE] [SOLUTION_FILE] [DIMACS_OUTPUT]
+./mSudoku zs1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE]
 
 ## Goals
 
@@ -125,15 +88,15 @@
 
 ## Program args
 
-./a.out zs0 [SUDOKU_FILE] [DIMACS_INPUT]
+./mSudoku zs0 [SUDOKU_FILE] [DIMACS_INPUT]
 ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
-./a.out zs1 [SUDOKU_FILE] [SOLUTION_FILE] [DIMACS_OUTPUT]
+./mSudoku zs1 [SUDOKU_FILE] [SOLUTION_FILE] [DIMACS_OUTPUT]
 
 # BSat Generate (Create Dimacs)
 
 ## Program args
 
-./a.out zg0 [DIMACS_INPUT] (dim)
+./mSudoku zg0 [DIMACS_INPUT] (dim)
 
 ## Goals
 
@@ -153,7 +116,7 @@
 
 ## Program args
 
-./a.out zg1 [SOLUTION_FILE] [DIMACS_OUTPUT]
+./mSudoku zg1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE] (dim)
 
 ## Goals
 
@@ -165,6 +128,6 @@
 
 ## Program args
 
-./a.out zg0 [DIMACS_INPUT] (dim)
+./mSudoku zg0 [DIMACS_INPUT] (dim)
 ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
-./a.out zg1 [SOLUTION_FILE] [DIMACS_OUTPUT]
+./mSudoku zg1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE] (dim)

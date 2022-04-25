@@ -11,6 +11,7 @@
 #include "parseArgs.h"
 #include "generate.h"
 #include "dimacs.h"
+#include "fileHandling.h"
 
 int main(int argc, char *argv[])
 {
@@ -32,6 +33,9 @@ int main(int argc, char *argv[])
         case ZCHAFF_GEN_0:
             run_ZchaffGen0(argc, argv);
             break;
+        case ZCHAFF_GEN_1:
+            run_ZchaffGen1(argc, argv);
+            break;
         default: assert(0);
     }
 
@@ -49,8 +53,10 @@ void checkConfig()
 
 void run_DLXSolve(int argc, char *argv[])
 {
-    Dance *d = malloc(sizeof(Dance));
-    parseArgs_DLXSolve(d, argc, argv);
+    Dance *d;
+    DLX *dlx = malloc(sizeof(DLX));
+    parseArgs_DLXSolve(dlx, argc, argv);
+    d = dlx->d;
 
     printSudoku(d->s);
 
@@ -77,16 +83,19 @@ void run_DLXSolve(int argc, char *argv[])
     PRINT_ALL_SUDOKU_SOLS
 
     saveSolution_Sudoku(d);
-    writeToSudokuFile(d, d->s->solFile);
+    writeToSudokuFile(d, dlx->solutionFile);
 
-    free_DLXSolve(d);
+    free_DLXSolve(dlx);
 }
 
 void run_DLXGen(int argc, char *argv[])
 {
-    Dance *d = malloc(sizeof(Dance));
+    Dance *d;
     int res = NOT_FOUND, i;
-    parseArgs_DLXGen(d, argc, argv);
+
+    DLX *dlx = malloc(sizeof(DLX));
+    parseArgs_DLXGen(dlx, argc, argv);
+    d = dlx->d;
     
     findMatrixFile(d);
     setMatrixDimensions_Sudoku(d, d->s);
@@ -115,14 +124,14 @@ void run_DLXGen(int argc, char *argv[])
     uncoverRowHeaders(d);
     if(res == NOT_FOUND)
     {
-        free_DLXGen(d);
+        free_DLXGen(dlx);
         return;
     }
 
     saveSolution_Sudoku(d);
     printf("printing sudoku solved:\n");
     printSudoku(d->s);
-    writeToSudokuFile(d, d->s->solFile);
+    writeToSudokuFile(d, dlx->solutionFile);
 
     initHide(d);
 
@@ -143,12 +152,12 @@ void run_DLXGen(int argc, char *argv[])
 
     printf("printing sudoku puzzle:\n");
     printSudoku(d->s);
-    writeToSudokuFile(d, d->s->boardFile);
+    writeToSudokuFile(d, dlx->sudokuFile);
 
     unfillAllCells(d);
 
     freeHide(d);
-    free_DLXGen(d);
+    free_DLXGen(dlx);
 }
 
 void run_Enumerate(int argc, char *argv[])
@@ -188,10 +197,18 @@ void run_Enumerate(int argc, char *argv[])
 void run_ZchaffGen0(int argc, char *argv[])
 {
     ZChaff *z = malloc(sizeof(ZChaff));
-
     parseArgs_ZChaffGen0(z, argc, argv);
+
     //testConvertSat(z);
     writeToDimacs(z);
 
-    free_ZChaffGen(z);
+    free_ZChaffGen0(z);
+}
+
+void run_ZchaffGen1(int argc, char *argv[])
+{
+    ZChaff *z = malloc(sizeof(ZChaff));
+    parseArgs_ZChaffGen1(z, argc, argv);
+
+    free_ZChaffGen1(z);
 }
