@@ -2,7 +2,7 @@
 #define HIDE_H
 #include "struct.h"
 
-int initHide_Sudoku(Dance *d);
+int initHide(Dance *d);
 void fillAllCells(Dance *d);
 int fillSingleCell(Dance *d, Hide *h);
 void unfillAllCells(Dance *d);

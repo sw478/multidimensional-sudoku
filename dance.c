@@ -78,9 +78,7 @@ int algorithmX_Gen_Rand(Dance *d)
    
    //printMatrix2(d);
    
-   irand = hcol->heur->num;
-   //hitList = unshuffledList(d, hcol, irand);
-   hitList = shuffledList(d, hcol, irand);
+   hitList = shuffledList(d, hcol, &irand);
 
    for(irand--; irand >= 0; irand--)
    {
@@ -219,17 +217,21 @@ Doubly **unshuffledList(Dance *d, Doubly *hcol, int len)
    returns shuffled list of doubly
    uses the Fisher-Yates O(n) algorithm
 */
-Doubly **shuffledList(Dance *d, Doubly *hcol, int len)
+Doubly **shuffledList(Dance *d, Doubly *hcol, int *len)
 {
    int i, irand;
    Doubly *doub, *temp;
-   Doubly **hitList = malloc(len*sizeof(Doubly*));
+   Doubly **hitList;
+
+   for(irand = 0, doub = hcol->down; doub != hcol; doub = doub->down, irand++);
+   *len = irand;
+   hitList = malloc(*len*sizeof(Doubly*));
 
    /* initialize list */
-   for(i = 0, doub = hcol->down; i < len; i++, doub = doub->down)
+   for(i = 0, doub = hcol->down; i < *len; i++, doub = doub->down)
       hitList[i] = doub;
 
-   for(i = len - 1; i > 0; i--)
+   for(i = *len - 1; i > 0; i--)
    {
       irand = rand() % (i + 1);
 

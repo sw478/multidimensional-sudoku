@@ -1,10 +1,10 @@
 #include "initDance.h"
 #include "solTree.h"
 #include "dance.h"
-#include "heuristic.h"
-#include "hide.h"
 
-/* initialize values and structures in the dance struct */
+/*
+ * Initializes secondary values and structs in the dance struct
+ */
 int initDance(Dance *d)
 {
    d->numSols = 0;

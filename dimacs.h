@@ -2,29 +2,29 @@
 #define DIMACS_H
 #include "struct.h"
 
-void writeToDimacs(Dance *d);
+void writeToDimacs(ZChaff *z);
 int cellToVar(int containerSize, int iSudoku, int val);
 void varToCell(Sudoku *s, int containerSize, int var);
-int getNumClausesMinimal(Dance *d);
-int getNumClausesExtended(Dance *d);
-void dimacsHeader(Dance *d, FILE *dimacsFile);
+int getNumClausesMinimal(Sudoku *s);
+int getNumClausesExtended(Sudoku *s);
+void dimacsHeader(ZChaff *z);
 void testConvertSat(Dance *d);
 
 /* minimal */
-void dimacsMinimal(Dance *d, FILE *dimacsFile);
-void dimacsAtLeastOneValuePerCell(Dance *d, FILE *dimacsFile);
-void dimacsAtMostOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim);
-void dimacsAtMostOneValuePerContainer(Dance *d, FILE *dimacsFile);
+void dimacsMinimal(ZChaff *z);
+void dimacsAtLeastOneValuePerCell(ZChaff *z);
+void dimacsAtMostOneValuePerSpan(ZChaff *z, int idim);
+void dimacsAtMostOneValuePerContainer(ZChaff *z);
 
 /* extended */
-void dimacsExtended(Dance *d, FILE *dimacsFile);
-void dimacsAtMostOneValuePerCell(Dance *d, FILE *dimacsFile);
-void dimacsAtLeastOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim);
-void dimacsAtLeastOneValuePerContainer(Dance *d, FILE *dimacsFile);
+void dimacsExtended(ZChaff *z);
+void dimacsAtMostOneValuePerCell(ZChaff *z);
+void dimacsAtLeastOneValuePerSpan(ZChaff *z, int idim);
+void dimacsAtLeastOneValuePerContainer(ZChaff *z);
 
 /* helper functions */
 int iSpanToiSudoku(int iSpan, int idim, int n, int containerSize);
-int *inverseDim(Dance *d);
+int *inverseDim(Sudoku *s);
 int iContainerToiSudoku(int iContainer, int containerSize, int *dim, int *invDim, int n);
 int iContainerToiSudoku2(int offset, int iCell, int containerSize, int *dim, int n);
 

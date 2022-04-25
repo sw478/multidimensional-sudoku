@@ -1,5 +1,5 @@
 Z-Chaff Version: zChaff 2007.3.12
-Solving dimacs.txt ......
+Solving dimacsInput.txt ......
 
 c 8833 Clauses are true, Verify Solution successful.
 Instance Satisfiable

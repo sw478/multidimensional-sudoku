@@ -342,33 +342,38 @@ void checkDoubly(Doubly *doub)
       checkDoublyError(doub->drow, doub->dcol);
 }
 
-/*
-   print to output file all solutions
-   one solution per line
-   delimeter: space
+void writeToSudokuFile(Dance *d, FILE *f)
+{
+    int iSudoku, idim, sudokuSize = d->s->sudokuSize, *sudoku = d->s->sudoku;
 
-   0: 1, 2, 3, 4, ...
-   1: 1, 2, 4, 3, ...
-*/
-int outputToFile_Enumerate(Dance *d)
+    fprintf(f, "%d\n", d->s->n);
+    for(idim = 0; idim < d->s->n; idim++)
+        fprintf(f, "%d\n", d->s->dim[idim]);
+
+    for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
+        fprintf(f, "%d\n", sudoku[iSudoku]);
+}
+
+void writeToEnumerateFile(Dance *d, FILE *f)
 {
    SolTree *cur;
-   int iSol, value, mrow, cSize = d->s->containerSize;
+   int iSol, idim, value, mrow, containerSize = d->s->containerSize;
+   
+   fprintf(f, "%d\n", d->numSols);
+   fprintf(f, "%d\n", d->s->n);
+   for(idim = 0; idim < d->s->n; idim++)
+      fprintf(f, "%d ", d->s->dim[idim]);
 
    for(iSol = 0; iSol < d->numSols; iSol++)
    {
+      fprintf(f, "\n");
+
       for(cur = d->sols[iSol]; cur->parent != cur; cur = cur->parent)
       {
          mrow = cur->row->drow;
-         value = mrow % cSize + 1;
+         value = mrow % containerSize + 1;
 
-         fprintf(d->s->solFile, "%d ", value);
-
-         
+         fprintf(f, "%d ", value);
       }
-
-      fprintf(d->s->solFile, "\n");
    }
-
-   return 0;
 }

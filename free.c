@@ -3,64 +3,81 @@
 #include "heuristic.h"
 #include "hide.h"
 
-void freeSudoku(Dance *d)
-{
-   freeDance(d);
-}
-
-void freeSGen(Dance *d)
-{
-   freeDance(d);
-}
-
-void freeSudokuSat(Dance *d)
+void free_DLXSolve(Dance *d)
 {
    fclose(d->s->boardFile);
    fclose(d->s->solFile);
-   free(d->s->sudoku);
-   free(d->s->dim);
-   free(d->s);
 
-   free(d);
+   free_Sudoku(d->s);
+   freeHide(d);
+   free_Dance(d);
 }
 
-void freeDance(Dance *d)
+void free_DLXGen(Dance *d)
 {
-   freeMatrix(d);
+   fclose(d->s->boardFile);
+   fclose(d->s->solFile);
+
+   free_Sudoku(d->s);
+   free_Dance(d);
+}
+
+void free_Enum(Enum *e)
+{
+   fclose(e->enumerateFile);
+
+   free_Sudoku(e->d->s);
+   freeHide(e->d);
+   free_Dance(e->d);
+   free(e);
+}
+
+void free_ZChaffGen(ZChaff *z)
+{
+   free_Sudoku(z->s);
+
+   fclose(z->dimacsInputFile);
+   fclose(z->dimacsOutputFile);
+
+   free(z);
+}
+
+void free_Sudoku(Sudoku *s)
+{
+   free(s->sudoku);
+   free(s->dim);
+   free(s);
+}
+
+void free_Dance(Dance *d)
+{
+   free_Matrix(d);
 
    free(d->sols);
    if(d->numSols > 0)
       freeTree(d->csol);
 
-   freeHide(d);
-
    HEUR_FREE(d)
-
-   fclose(d->s->boardFile);
-   fclose(d->s->solFile);
-   free(d->s->sudoku);
-   free(d->s->dim);
-   free(d->s);
 
    free(d);
 }
 
-void freeMatrix(Dance *d)
+void free_Matrix(Dance *d)
 {
    Doubly *col, *temp;
 
    for(col = d->root->right; col != d->root;)
    {
-      freeColumn(col);
+      free_Column(col);
       temp = col;
       col = col->right;
       free(temp);
    }
-   freeColumn(col);
+   free_Column(col);
    free(d->root);
 }
 
-void freeColumn(Doubly *col)
+void free_Column(Doubly *col)
 {
    Doubly *row, *temp;
 

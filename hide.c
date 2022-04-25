@@ -23,7 +23,7 @@
  * 
  * all cells are initialized unfilled
  */
-int initHide_Sudoku(Dance *d)
+int initHide(Dance *d)
 {
    Doubly *xrow;
    int *sudoku = d->s->sudoku, iSudoku, containerSize = d->s->containerSize;

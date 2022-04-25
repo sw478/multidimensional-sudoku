@@ -17,115 +17,100 @@ void varToCell(Sudoku *s, int containerSize, int var)
 }
 
 /* writes header and clauses to file from existing sudoku information */
-void writeToDimacs(Dance *d)
+void writeToDimacs(ZChaff *z)
 {
-    FILE *dimacsFile = fopen("dimacs.txt", "w+");
-
-    if(!dimacsFile)
-        fileError("dimacs.txt");
-
-    dimacsHeader(d, dimacsFile);
-    dimacsMinimal(d, dimacsFile);
-    //dimacsExtended(d, dimacsFile);
-
-    fclose(dimacsFile);
-}
-
-void readOutput(Dance *d)
-{
-    FILE *dimacsFile = fopen("dimacs.txt", "w+");
-
-    if(!dimacsFile)
-        fileError("dimacs.txt");
-
-    dimacsHeader(d, dimacsFile);
-    dimacsMinimal(d, dimacsFile);
-    //dimacsExtended(d, dimacsFile);
-
-    fclose(dimacsFile);
+    dimacsHeader(z);
+    dimacsMinimal(z);
+    //dimacsExtended(z);
 }
 
 /* writes the minimal portion of sudoku SAT clauses */
-void dimacsMinimal(Dance *d, FILE *dimacsFile)
+void dimacsMinimal(ZChaff *z)
 {
-    int idim, n = d->s->n;
+    int idim;
 
-    dimacsAtLeastOneValuePerCell(d, dimacsFile);
-    for(idim = 0; idim < n; idim++)
-        dimacsAtMostOneValuePerSpan(d, dimacsFile, idim);
-    dimacsAtMostOneValuePerContainer(d, dimacsFile);
+    dimacsAtLeastOneValuePerCell(z);
+    for(idim = 0; idim < z->s->n; idim++)
+        dimacsAtMostOneValuePerSpan(z, idim);
+    dimacsAtMostOneValuePerContainer(z);
 }
 
 /* writes the extended portion of sudoku SAT clauses */
-void dimacsExtended(Dance *d, FILE *dimacsFile)
+void dimacsExtended(ZChaff *z)
 {
-    int idim, n = d->s->n;
+    int idim;
 
-    dimacsAtMostOneValuePerCell(d, dimacsFile);
-    for(idim = 0; idim < n; idim++)
-        dimacsAtLeastOneValuePerSpan(d, dimacsFile, idim);
-    dimacsAtLeastOneValuePerContainer(d, dimacsFile);
+    dimacsAtMostOneValuePerCell(z);
+    for(idim = 0; idim < z->s->n; idim++)
+        dimacsAtLeastOneValuePerSpan(z, idim);
+    dimacsAtLeastOneValuePerContainer(z);
 }
 
 /* writes header of dimacs file, including mSudoku information */
-void dimacsHeader(Dance *d, FILE *dimacsFile)
+void dimacsHeader(ZChaff *z)
 {
-    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
-    int numVars, numClauses, n = d->s->n, idim;
+    Sudoku *s = z->s;
+    FILE *f = z->dimacsInputFile;
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
+    int numVars, numClauses, n = s->n, idim;
 
     numVars = sudokuSize * containerSize;
-    numClauses = getNumClausesMinimal(d);// + getNumClausesExtended(d);
+    numClauses = getNumClausesMinimal(s);// + getNumClausesExtended(s);
 
-    fprintf(dimacsFile, "c mSudoku\n");
-    fprintf(dimacsFile, "c\n");
-    fprintf(dimacsFile, "c num dimensions: %d\n", n);
-    fprintf(dimacsFile, "c dimensions:");
+    fprintf(f, "c mSudoku\n");
+    fprintf(f, "c n: %d\n", n);
+    fprintf(f, "c dim:");
     
     for(idim = 0; idim < n; idim++)
-        fprintf(dimacsFile, " %d", d->s->dim[idim]);
-    fprintf(dimacsFile, "\n");
-    fprintf(dimacsFile, "c\n");
+        fprintf(f, " %d", s->dim[idim]);
+    fprintf(f, "\nc\n");
 
-    fprintf(dimacsFile, "p cnf %d %d\n", numVars, numClauses);
+    fprintf(f, "p cnf %d %d\n", numVars, numClauses);
 }
 
 /* calculates number of minimal clauses */
-int getNumClausesMinimal(Dance *d)
+int getNumClausesMinimal(Sudoku *s)
 {
-    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
-    int n = d->s->n;
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
+    int n = s->n;
 
     return sudokuSize +
         (n + 1) * (sudokuSize * (containerSize*(containerSize-1)/2));
 }
 
 /* calculates number of extended clauses */
-int getNumClausesExtended(Dance *d)
+int getNumClausesExtended(Sudoku *s)
 {
-    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
-    int n = d->s->n;
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
+    int n = s->n;
 
     return sudokuSize * (containerSize*(containerSize-1)/2) + 
         (n + 1) * sudokuSize;
 }
 
-void dimacsAtLeastOneValuePerCell(Dance *d, FILE *dimacsFile)
+void dimacsAtLeastOneValuePerCell(ZChaff *z)
 {
-    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
+    Sudoku *s = z->s;
+    FILE *f = z->dimacsInputFile;
+
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
     int iSudoku, val;
 
     for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
     {
         for(val = 0; val < containerSize; val++)
-            fprintf(dimacsFile, "%d ", cellToVar(containerSize, iSudoku, val));
-        fprintf(dimacsFile, "0\n");
+            fprintf(f, "%d ", cellToVar(containerSize, iSudoku, val));
+        fprintf(f, "0\n");
     }
 }
 
-void dimacsAtMostOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim)
+void dimacsAtMostOneValuePerSpan(ZChaff *z, int idim)
 {
-    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
-    int val, n = d->s->n, partial;
+    Sudoku *s = z->s;
+    FILE *f = z->dimacsInputFile;
+
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
+    int val, n = s->n, partial;
 
     /*
         a & b are the span indices of cells in the same span
@@ -158,18 +143,21 @@ void dimacsAtMostOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim)
                     bSudoku = b * cellSpace + partial;
                     aVar = -1*cellToVar(containerSize, aSudoku, val);
                     bVar = -1*cellToVar(containerSize, bSudoku, val);
-                    fprintf(dimacsFile, "%d %d 0\n", aVar, bVar);
+                    fprintf(f, "%d %d 0\n", aVar, bVar);
                 }
             }
         }
     }
 }
 
-void dimacsAtMostOneValuePerContainer(Dance *d, FILE *dimacsFile)
+void dimacsAtMostOneValuePerContainer(ZChaff *z)
 {
-    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
-    int *dim = d->s->dim, n = d->s->n, partial, val;
-    int *invDim = inverseDim(d);
+    Sudoku *s = z->s;
+    FILE *f = z->dimacsInputFile;
+
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
+    int *dim = s->dim, n = s->n, partial, val;
+    int *invDim = inverseDim(s);
 
     /*
         a & b are the container indices of cells in the same container
@@ -198,7 +186,7 @@ void dimacsAtMostOneValuePerContainer(Dance *d, FILE *dimacsFile)
                     bSudoku = iContainerToiSudoku2(partial, b, containerSize, dim, n);
                     aVar = -1*cellToVar(containerSize, aSudoku, val);
                     bVar = -1*cellToVar(containerSize, bSudoku, val);
-                    fprintf(dimacsFile, "%d %d 0\n", aVar, bVar);
+                    fprintf(f, "%d %d 0\n", aVar, bVar);
                 }
             }
         }
@@ -207,9 +195,12 @@ void dimacsAtMostOneValuePerContainer(Dance *d, FILE *dimacsFile)
     free(invDim);
 }
 
-void dimacsAtMostOneValuePerCell(Dance *d, FILE *dimacsFile)
+void dimacsAtMostOneValuePerCell(ZChaff *z)
 {
-    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
+    Sudoku *s = z->s;
+    FILE *f = z->dimacsInputFile;
+    
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
     int iSudoku, a, b, aVar, bVar;
 
     for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
@@ -220,16 +211,19 @@ void dimacsAtMostOneValuePerCell(Dance *d, FILE *dimacsFile)
             {
                 aVar = -1*cellToVar(containerSize, iSudoku, a);
                 bVar = -1*cellToVar(containerSize, iSudoku, b);
-                fprintf(dimacsFile, "%d %d 0\n", aVar, bVar);
+                fprintf(f, "%d %d 0\n", aVar, bVar);
             }
         }
     }
 }
 
-void dimacsAtLeastOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim)
+void dimacsAtLeastOneValuePerSpan(ZChaff *z, int idim)
 {
-    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
-    int val, n = d->s->n, partial, iSudoku, iCell;
+    Sudoku *s = z->s;
+    FILE *f = z->dimacsInputFile;
+    
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
+    int val, n = s->n, partial, iSudoku, iCell;
 
     /* number of span per sudoku, and iterator */
     int iSpan, numSpan = sudokuSize / containerSize;
@@ -248,18 +242,21 @@ void dimacsAtLeastOneValuePerSpan(Dance *d, FILE *dimacsFile, int idim)
             for(iCell = 0; iCell < containerSize; iCell++)
             {
                 iSudoku = iCell * cellSpace + partial;
-                fprintf(dimacsFile, "%d ", cellToVar(containerSize, iSudoku, val));
+                fprintf(f, "%d ", cellToVar(containerSize, iSudoku, val));
             }
-            fprintf(dimacsFile, "0\n");
+            fprintf(f, "0\n");
         }
     }
 }
 
-void dimacsAtLeastOneValuePerContainer(Dance *d, FILE *dimacsFile)
+void dimacsAtLeastOneValuePerContainer(ZChaff *z)
 {
-    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;
-    int *dim = d->s->dim, n = d->s->n, partial, val;
-    int *invDim = inverseDim(d), iSudoku, iCell;
+    Sudoku *s = z->s;
+    FILE *f = z->dimacsInputFile;
+    
+    int sudokuSize = s->sudokuSize, containerSize = s->containerSize;
+    int *dim = s->dim, n = s->n, partial, val;
+    int *invDim = inverseDim(s), iSudoku, iCell;
 
     /* number of span per sudoku, and iterator */
     int iContainer, numContainers = sudokuSize / containerSize;
@@ -275,9 +272,9 @@ void dimacsAtLeastOneValuePerContainer(Dance *d, FILE *dimacsFile)
             for(iCell = 0; iCell < containerSize; iCell++)
             {
                 iSudoku = iContainerToiSudoku2(partial, iCell, containerSize, dim, n);
-                fprintf(dimacsFile, "%d ", cellToVar(containerSize, iSudoku, val));
+                fprintf(f, "%d ", cellToVar(containerSize, iSudoku, val));
             }
-            fprintf(dimacsFile, "0\n");
+            fprintf(f, "0\n");
         }
     }
 
@@ -309,9 +306,9 @@ int iSpanToiSudoku(int iSpan, int idim, int n, int containerSize)
 
     used for calculating container indices
 */
-int *inverseDim(Dance *d)
+int *inverseDim(Sudoku *s)
 {
-    int n = d->s->n, *dim = d->s->dim, containerSize = d->s->containerSize;
+    int n = s->n, *dim = s->dim, containerSize = s->containerSize;
     int *invDim = malloc(n*sizeof(int));
 
     for(int i = 0; i < n; i++)
@@ -377,7 +374,7 @@ void testConvertSat(Dance *d)
     }
 
     /* verifies the calculated inverse dimensions */
-    invDim = inverseDim(d);
+    invDim = inverseDim(d->s);
     printf("\tinv dim\n");
     for(idim = 0; idim < n; idim++)
         printf("%d ", invDim[idim]);

@@ -3,9 +3,9 @@
 #include "struct.h"
 
 void checkConfig();
-void runSudoku(Dance *d, int argc, char *argv[]);
-void runSudokuGen(Dance *d, int argc, char *argv[]);
-void runSudokuSat(Dance *d, int argc, char *argv[]);
-void runSudokuEnumerate(Dance *d, int argc, char *argv[]);
+void run_DLXSolve(int argc, char *argv[]);
+void run_DLXGen(int argc, char *argv[]);
+void run_ZchaffGen0(int argc, char *argv[]);
+void run_Enumerate(int argc, char *argv[]);
 
 #endif

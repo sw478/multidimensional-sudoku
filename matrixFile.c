@@ -1,12 +1,10 @@
 #include "matrixFile.h"
 
 /* call after sudoku board is initialized */
-void setMatrixDimensions_Sudoku(Dance *d)
+void setMatrixDimensions_Sudoku(Dance *d, Sudoku *s)
 {
-   int sudokuSize = d->s->sudokuSize;
-
-   d->rmax = sudokuSize * d->s->containerSize;
-   d->cmax = sudokuSize * (2 + d->s->n);
+   d->rmax = s->sudokuSize * s->containerSize;
+   d->cmax = s->sudokuSize * (2 + s->n);
 }
 
 /*

@@ -120,21 +120,18 @@ typedef struct solTree
 } SolTree;
 
 /*
- * grid: numbers of the sudoku board, indexed on the board from left to right
- * x & y: dimensions of a single sudoku box
- * xy: x*y, max number on the sudoku board
- * z: in the future, planning on expanding the program's capacbilities to solve
- * boards of higher dimensions
- * gridSize: xy*xy, total size of sudoku board
- * mode: 0 - generating, 1 - solving
- * filled: number of cells filled, used for unhideRandom
- *
- * in: file pointer for sudoku text file, not to be confused with matrix text file
+ * sudoku: number symbols of the sudoku
+ * n: # of dimensions
+ * dim: container dimensions
+ * containerSize: total # of cells in a container, size of a container
+ * sudokuSize: total # of cells in sudoku, size of sudoku
+ * 
  */
 typedef struct
 {
    int *sudoku;
    int *dim, n, containerSize, sudokuSize;
+
    int numClues;
    FILE *boardFile, *solFile;
 } Sudoku;
@@ -179,7 +176,6 @@ typedef struct
 typedef struct
 {
     FILE *sudokuFile, *solutionFile;
-    FILE *matrixFile;
 
     Sudoku *s;
     Dance *d;
@@ -187,11 +183,19 @@ typedef struct
 
 typedef struct
 {
+    FILE *enumerateFile;
+
+    Sudoku *s;
+    Dance *d;
+} Enum;
+
+typedef struct
+{
     FILE *sudokuFile, *solutionFile;
     FILE *dimacsInputFile, *dimacsOutputFile;
 
     Sudoku *s;
-} Zchaff;
+} ZChaff;
 
 
 #endif
