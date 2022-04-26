@@ -1,21 +1,22 @@
 #include "matrixFile.h"
 
-/* call after sudoku board is initialized */
-void setMatrixDimensions_Sudoku(Dance *d, Sudoku *s)
+/**
+ * Must be called after sudoku board is initialized
+ */
+void setMatrixDimensions(Dance *d, Sudoku *s)
 {
    d->rmax = s->sudokuSize * s->containerSize;
    d->cmax = s->sudokuSize * (2 + s->n);
 }
 
-/*
-   open matrixFile based on dimensions
-   create matrixFile if it doesn't exist yet
-*/
+/**
+ * Open matrixFile based on dimensions
+ * Create matrixFile if it doesn't exist yet
+ */
 void findMatrixFile(Dance *d)
 {
    char *matrixFileName = getMatrixFileName(d);
 
-   // create if file doesn't exist
    if((access(matrixFileName, F_OK) != 0))
       initMatrixFile(d, matrixFileName);
 
@@ -42,6 +43,9 @@ char *getMatrixFileName(Dance *d)
    return matrixFileName;
 }
 
+/**
+ * Same as the other initMatrixFile in matrixFileCreator.py
+ */
 void initMatrixFile(Dance *d, char *matrixFileName)
 {
    int sudokuSize = d->s->sudokuSize, containerSize = d->s->containerSize;

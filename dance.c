@@ -42,15 +42,15 @@ int algorithmX(Dance *d)
          }
          addChild(sol, d->csol);
          d->csol = sol;
-
-         ALGX_BREAK
       }
    }
 
    return algXres;
 }
 
-/* stops after finding first random solution */
+/**
+ * Stops after finding first random solution
+ */
 int algorithmX_Gen_Rand(Dance *d)
 {
    Doubly *hcol, *crow, *root = d->root, **hitList;
@@ -107,7 +107,9 @@ int algorithmX_Gen_Rand(Dance *d)
    return NOT_FOUND;
 }
 
-/* checks if more than one solution exists */
+/**
+ * Checks if more than one solution exists
+ */
 int algorithmX_Gen_NumSol(Dance *d)
 {
    Doubly *hcol, *crow, *root = d->root;
@@ -151,11 +153,11 @@ int algorithmX_Gen_NumSol(Dance *d)
    return NOT_FOUND;
 }
 
-/*
-   returns all solutions, solTree is now actually a tree
-   ret: if singular recursive call finds at least one solution
-   res: if this function finds at least one solution
-*/
+/**
+ * Returns all solutions, solTree is now actually a tree
+ * ret: if singular recursive call finds at least one solution
+ * res: if this function finds at least one solution
+ */
 int algorithmX_Enumerate(Dance *d)
 {
    Doubly *hcol, *crow, *root = d->root;
@@ -200,7 +202,9 @@ int algorithmX_Enumerate(Dance *d)
    return res;
 }
 
-/* returns unshuffled list */
+/**
+ * Returns unshuffled list
+ */
 Doubly **unshuffledList(Dance *d, Doubly *hcol, int len)
 {
    int i;
@@ -213,9 +217,9 @@ Doubly **unshuffledList(Dance *d, Doubly *hcol, int len)
    return hitList;
 }
 
-/*
-   returns shuffled list of doubly
-   uses the Fisher-Yates O(n) algorithm
+/**
+ * Returns shuffled list of doubly
+ * Uses the Fisher-Yates O(n) algorithm
 */
 Doubly **shuffledList(Dance *d, Doubly *hcol, int *len)
 {

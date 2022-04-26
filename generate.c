@@ -4,10 +4,18 @@
 #include "auxil.h"
 #include "hrowCover.h"
 
+/**
+ * Recursive backtracking algorithm
+ * 
+ * On each run, "hides" a cell, then solves the altered
+ * sudoku and checks if there is still one solution
+ * 
+ * Keeps going until s->numClues is reached
+ */
 int generate(Dance *d)
 {
-    int res = NOT_FOUND, listSize;//, irand;
-    Hide *h;//, **hitList;
+    Hide *h;
+    int res = NOT_FOUND, listSize;
     int *hitList, sudokuSize = d->s->sudokuSize;
 
     if(d->hideRoot->num > d->s->numClues)
@@ -23,7 +31,7 @@ int generate(Dance *d)
     
     for(h = nextHideRand(d, &hitList); h != d->hideRoot; h = nextHideRand(d, &hitList))
     {
-        fillSingleCell(d, h);
+        hideSingleCell(d, h);
         //printSudokuBoard_Gen(d);
 
         d->numSols = 0;
@@ -43,13 +51,13 @@ int generate(Dance *d)
         }
         if(d->genNumCalls >= sudokuSize * THRESHOLD_GEN_FACTOR)
         {
-            unfillSingleCell(d, h);
+            unhideSingleCell(d, h);
             free(hitList);
             return NOT_FOUND;
         }
         res = generate(d);
 
-        unfillSingleCell(d, h);
+        unhideSingleCell(d, h);
         if(res == FOUND)
             break;
     }
@@ -58,7 +66,9 @@ int generate(Dance *d)
     return res;
 }
 
-/* returns a random iSudoku without hiding anything */
+/**
+ * Returns a random iSudoku without hiding anything
+ */
 Hide *nextHideRand(Dance *d, int **hitList)
 {
     Hide *h;
@@ -119,16 +129,18 @@ Hide **shuffledHide(Dance *d, int listSize)
     return hitList;
 }
 
-/*
-    if n == 1, maxNumClues will be ignored and be
-    replaced with dim[0] - 1
+/**
+ * If n == 1, maxNumClues will be ignored and be
+ * replaced with dim[0] - 1
 */
 void setNumClues(Sudoku *s, int maxNumClues)
 {
     s->numClues = s->n == 1 ? s->dim[0]-1 : maxNumClues;
 }
 
-/* translates filled status of cells to d->s */
+/**
+ * Translates filled status of cells to sudoku struct
+ */
 void saveGeneratedPuzzle(Dance *d)
 {
    int iSudoku;

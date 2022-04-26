@@ -1,9 +1,13 @@
 #include "sew.h"
 #include "matrixFile.h"
 
-/*
- * general matrix creator that reads in a text file of coordinates
- * file format: (irow, icol) on separate lines
+/**
+ * @file
+ * Named "sew" after how it connects doubly in the matrix
+ */
+
+/**
+ * General matrix creator that reads in a text file of coordinates
  */
 int initMatrix(Dance *d)
 {

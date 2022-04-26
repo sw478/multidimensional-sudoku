@@ -40,7 +40,7 @@ void readInSudokuFile(Sudoku *s, FILE *f)
     free(buf);
 }
 
-void writeToSudokuFile(Sudoku *s, FILE *f)
+void writeSudokuToFile(Sudoku *s, FILE *f)
 {
     int iSudoku, idim;
 
@@ -55,7 +55,7 @@ void writeToSudokuFile(Sudoku *s, FILE *f)
 void writeToEnumerateFile(Dance *d, FILE *f)
 {
     SolTree *cur;
-    int iSol, idim, value, mrow, containerSize = d->s->containerSize;
+    int iSol, idim, value, mrow;
 
     fprintf(f, "%d\n", d->numSols);
     fprintf(f, "%d\n", d->s->n);
@@ -69,7 +69,7 @@ void writeToEnumerateFile(Dance *d, FILE *f)
         for(cur = d->sols[iSol]; cur->parent != cur; cur = cur->parent)
         {
             mrow = cur->row->drow;
-            value = mrow % containerSize + 1;
+            value = mrow % d->s->containerSize + 1;
 
             fprintf(f, "%d ", value);
         }

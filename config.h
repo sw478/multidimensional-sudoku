@@ -8,7 +8,13 @@
 */
 #define USE_HEUR 0
 
-#if USE_HEUR == 1
+#if USE_HEUR == 0
+    #define HEUR_HEURISTIC(d) ((d)->root->right);
+    #define HEUR_INIT(d, heur_max)
+    #define HEUR_DEC(d, heur, amount)
+    #define HEUR_INC(d, heur, amount)
+    #define HEUR_FREE(d)
+#elif USE_HEUR == 1
     #define HEUR_HEURISTIC(d) heuristic((d));
     #define HEUR_INIT(d, heur_max) initHeurList((d), (heur_max));
     #define HEUR_DEC(d, heur, amount) decHeur((d), (heur), (amount));
@@ -16,12 +22,6 @@
     #define HEUR_FREE(d) freeHeur((d));
 #elif USE_HEUR == 2
     #define HEUR_HEURISTIC(d) heuristic2((d));
-    #define HEUR_INIT(d, heur_max)
-    #define HEUR_DEC(d, heur, amount)
-    #define HEUR_INC(d, heur, amount)
-    #define HEUR_FREE(d)
-#elif USE_HEUR == 0
-    #define HEUR_HEURISTIC(d) ((d)->root->right);
     #define HEUR_INIT(d, heur_max)
     #define HEUR_DEC(d, heur, amount)
     #define HEUR_INC(d, heur, amount)
@@ -41,30 +41,10 @@
 */
 #define BUFSIZE 1000
 
-/*
-    set to 2 to search for all solutions when solving
-    set to 1 for normal settings (print and search all)
-    set to 0 to stop at the first solution found
-
-    solutions will not be printed if searching for all solutions
-*/
-#define SEARCH_ALL_SOLUTIONS 1
-
-#if SEARCH_ALL_SOLUTIONS == 2
-    #define ALGX_BREAK
-    #define PRINT_ALL_SUDOKU_SOLS
-#elif SEARCH_ALL_SOLUTIONS == 1
-    #define ALGX_BREAK
-    #define PRINT_ALL_SUDOKU_SOLS printSolutions_Sudoku(d);
-#elif SEARCH_ALL_SOLUTIONS == 0
-    #define ALGX_BREAK break;
-    #define PRINT_ALL_SUDOKU_SOLS printSolutions_Sudoku(d);
-#endif
-
 /* used to count calls to algX and generate */
 /* TO DO: thresholds should be a factor of sudokuSize and dimensions */
 #define CALL_TRACKING_GEN           500
-#define THRESHOLD_TRY               1000 // how many times gen will be called on the completed sudoku
+#define THRESHOLD_TRY               1000
 #define THRESHOLD_ALGX_GEN_1        10000000
 #define THRESHOLD_ALGX_GEN_2        1000000
 #define THRESHOLD_GEN_FACTOR        10000

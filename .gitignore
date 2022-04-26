@@ -8,9 +8,11 @@ a.out
 CppProperties.json
 workspace.code-workspace
 .vscode/
-sudokuFile.txt
-/minisat-master
-/sat4j-master
 /dance
-solutionFile.txt
+
 sudokuFile.txt
+solutionFile.txt
+dimacsInput.txt
+dimacsOutput.txt
+enumerateFile.txt
+Doxyfile

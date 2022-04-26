@@ -1,7 +1,9 @@
 #include "solTree.h"
 #include "dance.h"
 
-/* add end node sol to list of solutions */
+/**
+ * Add end node sol to list of solutions
+ */
 void addLeaf(Dance *d, SolTree *sol)
 {
    if(d->numSols >= d->solCap)
@@ -12,10 +14,10 @@ void addLeaf(Dance *d, SolTree *sol)
    d->sols[d->numSols] = sol;
 }
 
-/*
-   initialize everything except for row,
-   set parent to itself
-*/
+/**
+ * Initialize everything except for row,
+ * set parent to itself
+ */
 SolTree* initTree()
 {
    SolTree *sol = malloc(sizeof(SolTree));
@@ -27,10 +29,10 @@ SolTree* initTree()
    return sol;
 }
 
-/*
-   add child to parent's childList,
-   sets child's parent to this parent
-*/
+/**
+ * Add child to parent's childList,
+ * Sets child's parent to this parent
+ */
 void addChild(SolTree *parent, SolTree *child)
 {
    if(parent->ichild >= parent->cap)
@@ -45,7 +47,9 @@ void addChild(SolTree *parent, SolTree *child)
    child->parent = parent;
 }
 
-/* recursively frees itself and its children */
+/**
+ * Recursively frees itself and its children
+ */
 void freeTree(SolTree *sol)
 {
    int i;
@@ -57,14 +61,9 @@ void freeTree(SolTree *sol)
    free(sol);
 }
 
-/*
-   translates solution matrix rows to a filled sudoku board
-
-   for custom exact cover:
-   modify/replace this function with your own
-   and make your own print fucntions to translate and
-   display the set of rows in the solutions found
-*/
+/**
+ * Translates solution matrix rows to a filled sudoku board
+ */
 int saveSolution_Sudoku(Dance *d)
 {
    SolTree *cur;

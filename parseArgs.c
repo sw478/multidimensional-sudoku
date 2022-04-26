@@ -2,6 +2,16 @@
 #include "error.h"
 #include "fileHandling.h"
 
+/**
+ * @file
+ * Parses command line arguments.
+ * Argument format can be found in project_reqs.md
+ * argOffset is the arg index of the first dim.
+ */
+
+/**
+ * First arg indicates user option
+ */
 int parseFirstArg(int argc, char *argv[])
 {
     if(argc < 1)
@@ -9,8 +19,10 @@ int parseFirstArg(int argc, char *argv[])
 
     if(!strcmp(argv[1], "s"))
         return DLX_SOLVE;
-    else if(!strcmp(argv[1], "g"))
-        return DLX_GEN;
+    else if(!strcmp(argv[1], "gf"))
+        return DLX_GEN_FULL;
+    else if(!strcmp(argv[1], "gp"))
+        return DLX_GEN_PARTIAL;
     else if(!strcmp(argv[1], "e"))
         return ENUMERATE;
     else if(!strcmp(argv[1], "zs0"))
@@ -25,6 +37,12 @@ int parseFirstArg(int argc, char *argv[])
         return -1;
 }
 
+/**
+ * Parses input dims
+ * 
+ * The dims should always be at the end of the argument
+ * list since they are of variable length
+ */
 void parseArgs_readDims(Sudoku *s, int argc, char *argv[], int argOffset)
 {
     int idim;
@@ -43,12 +61,26 @@ void parseArgs_readDims(Sudoku *s, int argc, char *argv[], int argOffset)
     s->sudoku = calloc(s->sudokuSize, sizeof(int));
 }
 
+/**
+ * Gets file handle
+ */
+void parseArgs_getFile(FILE **f, char *filename, int rw)
+{
+    if(rw == READ)
+        *f = fopen(filename, "r+");
+    else if(rw == WRITE)
+        *f = fopen(filename, "w+");
+    
+    if(!*f)
+        error_file(filename);
+
+    //assert(fseek(*f, 0, SEEK_SET) == 0);
+}
+
 void parseArgs_DLXSolve(DLX *dlx, int argc, char *argv[])
 {
     Dance *d = malloc(sizeof(Dance));
     Sudoku *s = malloc(sizeof(Sudoku));
-    char *buf = malloc(BUFSIZE*sizeof(char));
-    memset(buf, 0, BUFSIZE*sizeof(char));
     dlx->d = d;
     dlx->s = s;
     d->s = s;
@@ -56,22 +88,14 @@ void parseArgs_DLXSolve(DLX *dlx, int argc, char *argv[])
     if(argc != 4)
         error_numArg();
     
-    dlx->sudokuFile = fopen(argv[2], "r+");
-    if(!dlx->sudokuFile)
-        error_file(argv[2]);
-    assert(fseek(dlx->sudokuFile, 0, SEEK_SET) == 0);
-
-    dlx->solutionFile = fopen(argv[3], "w+");
-    if(!dlx->solutionFile)
-        error_file(argv[3]);
-    assert(fseek(dlx->solutionFile, 0, SEEK_SET) == 0);
-
+    parseArgs_getFile(&dlx->sudokuFile, argv[2], READ);
+    parseArgs_getFile(&dlx->solutionFile, argv[3], WRITE);
     readInSudokuFile(s, dlx->sudokuFile);
 }
 
-void parseArgs_DLXGen(DLX *dlx, int argc, char *argv[])
+void parseArgs_DLXGenFull(DLX *dlx, int argc, char *argv[])
 {
-    const int argOffset = 4;
+    const int argOffset = 3;
     Dance *d = malloc(sizeof(Dance));
     Sudoku *s = malloc(sizeof(Sudoku));
     dlx->d = d;
@@ -81,17 +105,24 @@ void parseArgs_DLXGen(DLX *dlx, int argc, char *argv[])
     if(argc < argOffset + 1)
         error_numArg();
 
-    dlx->sudokuFile = fopen(argv[2], "w+");
-    if(!dlx->sudokuFile)
-        error_file(argv[2]);
-    assert(fseek(dlx->sudokuFile, 0, SEEK_SET) == 0);
-
-    dlx->solutionFile = fopen(argv[3], "w+");
-    if(!dlx->solutionFile)
-        error_file(argv[3]);
-    assert(fseek(dlx->solutionFile, 0, SEEK_SET) == 0);
-
+    parseArgs_getFile(&dlx->solutionFile, argv[2], WRITE);
     parseArgs_readDims(s, argc, argv, argOffset);
+}
+
+void parseArgs_DLXGenPartial(DLX *dlx, int argc, char *argv[])
+{
+    Dance *d = malloc(sizeof(Dance));
+    Sudoku *s = malloc(sizeof(Sudoku));
+    dlx->d = d;
+    dlx->s = s;
+    d->s = s;
+
+    if(argc != 4)
+        error_numArg();
+
+    parseArgs_getFile(&dlx->solutionFile, argv[2], READ);
+    parseArgs_getFile(&dlx->sudokuFile, argv[3], WRITE);
+    readInSudokuFile(s, dlx->solutionFile);
 }
 
 void parseArgs_Enumerate(Enum *e, int argc, char *argv[])
@@ -101,16 +132,12 @@ void parseArgs_Enumerate(Enum *e, int argc, char *argv[])
     Dance *d = malloc(sizeof(Dance));
     e->s = s;
     e->d = d;
-    e->d->s = s;
+    d->s = s;
     
     if(argc < argOffset + 1)
         error_numArg();
 
-    e->enumerateFile = fopen(argv[2], "w+");
-    if(!e->enumerateFile)
-        error_file(argv[2]);
-    assert(fseek(e->enumerateFile, 0, SEEK_SET) == 0);
-
+    parseArgs_getFile(&e->enumerateFile, argv[2], WRITE);
     parseArgs_readDims(s, argc, argv, argOffset);
 }
 
@@ -122,14 +149,8 @@ void parseArgs_ZChaffSolve0(ZChaff *z, int argc, char *argv[])
     if(argc != 4)
         error_numArg();
 
-    z->dimacsInputFile = fopen(argv[2], "w+");
-    if(!z->dimacsInputFile)
-        error_file(argv[2]);
-
-    z->sudokuFile = fopen(argv[3], "r+");
-    if(!z->sudokuFile)
-        error_file(argv[3]);
-
+    parseArgs_getFile(&z->dimacsInputFile, argv[2], WRITE);
+    parseArgs_getFile(&z->sudokuFile, argv[3], READ);
     readInSudokuFile(s, z->sudokuFile);
 }
 
@@ -141,19 +162,9 @@ void parseArgs_ZChaffSolve1(ZChaff *z, int argc, char *argv[])
     if(argc != 5)
         error_numArg();
 
-    z->dimacsOutputFile = fopen(argv[2], "r+");
-    if(!z->dimacsOutputFile)
-        error_file(argv[2]);
-
-    z->sudokuFile = fopen(argv[3], "r+");
-    if(!z->sudokuFile)
-        error_file(argv[3]);
-
-    z->solutionFile = fopen(argv[4], "w+");
-    if(!z->solutionFile)
-        error_file(argv[4]);
-    assert(fseek(z->solutionFile, 0, SEEK_SET) == 0);
-    
+    parseArgs_getFile(&z->dimacsOutputFile, argv[2], READ);
+    parseArgs_getFile(&z->sudokuFile, argv[3], READ);
+    parseArgs_getFile(&z->solutionFile, argv[4], WRITE);
     readInSudokuFile(s, z->sudokuFile);
 }
 
@@ -166,35 +177,20 @@ void parseArgs_ZChaffGen0(ZChaff *z, int argc, char *argv[])
     if(argc < argOffset + 1)
         error_numArg();
 
-    z->dimacsInputFile = fopen(argv[2], "w+");
-    if(!z->dimacsInputFile)
-        error_file(argv[2]);
-
+    parseArgs_getFile(&z->dimacsInputFile, argv[2], WRITE);
     parseArgs_readDims(s, argc, argv, argOffset);
 }
 
 void parseArgs_ZChaffGen1(ZChaff *z, int argc, char *argv[])
 {
-    const int argOffset = 5;
+    const int argOffset = 4;
     Sudoku *s = malloc(sizeof(Sudoku));
     z->s = s;
     
     if(argc < argOffset + 1)
         error_numArg();
 
-    z->dimacsOutputFile = fopen(argv[2], "r+");
-    if(!z->dimacsOutputFile)
-        error_file(argv[2]);
-
-    z->sudokuFile = fopen(argv[3], "w+");
-    if(!z->sudokuFile)
-        error_file(argv[3]);
-    assert(fseek(z->sudokuFile, 0, SEEK_SET) == 0);
-
-    z->solutionFile = fopen(argv[4], "w+");
-    if(!z->solutionFile)
-        error_file(argv[4]);
-    assert(fseek(z->solutionFile, 0, SEEK_SET) == 0);
-    
+    parseArgs_getFile(&z->dimacsOutputFile, argv[2], READ);
+    parseArgs_getFile(&z->solutionFile, argv[3], WRITE);
     parseArgs_readDims(s, argc, argv, argOffset);
 }

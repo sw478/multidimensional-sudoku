@@ -9,17 +9,33 @@ void free_DLXSolve(DLX *dlx)
    fclose(dlx->solutionFile);
 
    free_Sudoku(dlx->d->s);
-   freeHide(dlx->d);
+   free_Hide(dlx->d);
+   if(dlx->d->numSols > 0)
+      freeTree(dlx->d->csol);
    free_Dance(dlx->d);
+   free(dlx);
 }
 
-void free_DLXGen(DLX *dlx)
+void free_DLXGenFull(DLX *dlx)
+{
+   fclose(dlx->solutionFile);
+
+   free_Sudoku(dlx->d->s);
+   if(dlx->d->numSols > 0)
+      freeTree(dlx->d->csol);
+   free_Dance(dlx->d);
+   free(dlx);
+}
+
+void free_DLXGenPartial(DLX *dlx)
 {
    fclose(dlx->sudokuFile);
    fclose(dlx->solutionFile);
 
    free_Sudoku(dlx->d->s);
+   free_Hide(dlx->d);
    free_Dance(dlx->d);
+   free(dlx);
 }
 
 void free_Enum(Enum *e)
@@ -27,50 +43,61 @@ void free_Enum(Enum *e)
    fclose(e->enumerateFile);
 
    free_Sudoku(e->d->s);
-   freeHide(e->d);
+   free_Hide(e->d);
+   if(e->d->numSols > 0)
+      freeTree(e->d->csol);
    free_Dance(e->d);
    free(e);
 }
 
 void free_ZChaffSolve0(ZChaff *z)
 {
-   free_Sudoku(z->s);
-
    fclose(z->sudokuFile);
    fclose(z->dimacsInputFile);
-
+   
+   free_Sudoku(z->s);
    free(z);
 }
 
 void free_ZChaffSolve1(ZChaff *z)
 {
-   free_Sudoku(z->s);
-
    fclose(z->sudokuFile);
    fclose(z->solutionFile);
    fclose(z->dimacsOutputFile);
-
+   
+   free_Sudoku(z->s);
    free(z);
 }
 
 void free_ZChaffGen0(ZChaff *z)
 {
-   free_Sudoku(z->s);
-
    fclose(z->dimacsInputFile);
 
+   free_Sudoku(z->s);
    free(z);
 }
 
 void free_ZChaffGen1(ZChaff *z)
 {
-   free_Sudoku(z->s);
-
    fclose(z->dimacsOutputFile);
-   fclose(z->sudokuFile);
    fclose(z->solutionFile);
 
+   free_Sudoku(z->s);
    free(z);
+}
+
+void free_Hide(Dance *d)
+{
+   int ihide;
+
+   for(ihide = 0; ihide < d->ihide; ihide++)
+   {
+      free(d->hideList[ihide]->hrows);
+      free(d->hideList[ihide]);
+   }
+
+   free(d->hideList);
+   free(d->hideRoot);
 }
 
 void free_Sudoku(Sudoku *s)
@@ -83,13 +110,8 @@ void free_Sudoku(Sudoku *s)
 void free_Dance(Dance *d)
 {
    free_Matrix(d);
-
    free(d->sols);
-   if(d->numSols > 0)
-      freeTree(d->csol);
-
    HEUR_FREE(d)
-
    free(d);
 }
 

@@ -3,9 +3,14 @@
 #define EQUALS_LINE "=================================================\n"
 #define LINE "---------------------------------------\n"
 
-/* this file contains functions useful for debugging and displaying data */
+/**
+ * @file
+ * Functions useful for debugging and displaying data
+ */
 
-// print by rows, shows hidden rows
+/**
+ * Print by rows, shows hidden rows
+ */
 void printMatrix(Dance *d)
 {
    int pcol = 0, irow, nrow;
@@ -31,7 +36,9 @@ void printMatrix(Dance *d)
    printf("\n");
 }
 
-// print by columns, doesn't show hidden rows
+/**
+ * Print by columns, doesn't show hidden rows
+ */
 void printMatrix2(Dance *d)
 {
    int irow, icol, cmax = d->cmax, rmax = d->rmax, status;
@@ -108,7 +115,9 @@ void printSolutions_Sudoku(Dance *d)
    }
 }
 
-/* translates single solution from matrix to a sudoku */
+/**
+ * Translates single solution from matrix to a sudoku
+ */
 void printSingleSol_Sudoku(Dance *d, SolTree *sol)
 {
    SolTree *cur;
@@ -125,14 +134,13 @@ void printSingleSol_Sudoku(Dance *d, SolTree *sol)
    printSudoku(s);
 }
 
-/*
-   currently treats dim0 and dim1 as the innermost dimensions
-   later should be able to print using any order of dimensions
-
-   iSudoku: index of cell in sudoku
-   iSub: outer index of 2D grid
-   iStart: index of first cell of this specific 2D grid in sudoku
-*/
+/**
+ * Treats dim0 and dim1 as the innermost dimensions
+ * 
+ * iSudoku: index of cell in sudoku
+ * iSub: outer index of 2D grid
+ * iStart: index of first cell of this specific 2D grid in sudoku
+ */
 void printSudoku(Sudoku *s)
 {
    if(s->containerSize == 0)
@@ -231,10 +239,10 @@ void printSudoku_1D(Sudoku *s)
    printf(EQUALS_LINE);
 }
 
-/*
-   prints numbers based on whether or not
-   d->hideList[iSudoku]->filled == 1
-*/
+/**
+ * Prints numbers based on whether or not
+ * d->hideList[iSudoku]->filled == 1
+ */
 void printSudokuBoard_Gen(Dance *d)
 {
    Sudoku *s = d->s;
@@ -280,6 +288,9 @@ void printSudokuBoard_Gen(Dance *d)
    printf(EQUALS_LINE);
 }
 
+/**
+ * Displays Heur data per matrix column
+ */
 void printHeur(Dance *d)
 {
    Heur *heur, *head;
@@ -315,7 +326,9 @@ void printHeur(Dance *d)
    printf("\n");
 }
 
-/* checks if matrix is stitched together properly */
+/**
+ * Checks if matrix is stitched together properly
+ */
 void checkMatrix(Dance *d)
 {
    Doubly *hcol, *hrow, *doub;
@@ -333,6 +346,9 @@ void checkMatrix(Dance *d)
    }
 }
 
+/**
+ * Checks if doubly is consistent with its neighbors
+ */
 void checkDoubly(Doubly *doub)
 {
    if(!(doub->left->right == doub &&

@@ -1,7 +1,9 @@
 #include "heuristic.h"
 #include "error.h"
 
-/* using heur */
+/**
+ * Only called if using heur in config.h
+ */
 Doubly *heuristic(Dance *d)
 {
    Heur *heurHeader;
@@ -17,7 +19,9 @@ Doubly *heuristic(Dance *d)
    return d->root;
 }
 
-/* original setup, O(cmax) time */
+/**
+ * Original setup, O(cmax) time
+ */
 Doubly *heuristic2(Dance *d)
 {
    Doubly *hcol, *minXs;
@@ -31,11 +35,11 @@ Doubly *heuristic2(Dance *d)
    return minXs;
 }
 
-/*
-   d->heurRoot acts as a header for hcols with 0 elements underneath
-
-   maxColElements is optional, set to 0 if unknown
-   maxColElements is just the maximum amount of elements underneath an hcol possible
+/**
+ * d->heurRoot acts as a header for hcols with 0 elements underneath
+ * 
+ * maxColElements is optional, set to 0 if unknown
+ * maxColElements is just the maximum amount of elements underneath an hcol possible
 */
 void initHeurList(Dance *d, int maxColElements)
 {
@@ -76,6 +80,9 @@ Heur *initHeur(int num)
    return heur;
 }
 
+/**
+ * Increment number of doubly under column
+ */
 void incHeur(Dance *d, Heur *heur, int amount)
 {
    Heur *head;
@@ -96,6 +103,9 @@ void incHeur(Dance *d, Heur *heur, int amount)
    head->prev = heur;
 }
 
+/**
+ * Decrement number of doubly under column
+ */
 void decHeur(Dance *d, Heur *heur, int amount)
 {
    Heur *head;

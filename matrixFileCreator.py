@@ -1,7 +1,13 @@
 import sys
 from numpy import prod
 
-def initMatrixFile_Sudoku(matrixFile, dim):
+"""
+    * Not used in project
+    * Same functionality as the other initMatrixFile() in matrixFile.c
+    * This is more readable for analyzing the function
+"""
+
+def initMatrixFile(matrixFile, dim):
     f = open(matrixFile, "w")
     n = len(dim)
 
@@ -64,7 +70,7 @@ def initMatrixFile_Sudoku(matrixFile, dim):
 def matrixFile():
     matrixFile = sys.argv[1]
     dim = [int(idim) for idim in sys.argv[2:]]
-    initMatrixFile_Sudoku(matrixFile, dim)
+    initMatrixFile(matrixFile, dim)
 
 if __name__ == "__main__":
     matrixFile()

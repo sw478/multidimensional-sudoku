@@ -1,9 +1,10 @@
-# multidimensional generalization
+# Multidimensional Sudoku Explanation
 
 A traditional sudoku is typically called a "9x9" sudoku, but could also be denoted as a [3, 3] sudoku. The [] notation describes the dimensions of a single "box" in the sudoku, and the entire sudoku's dimensions can be constrained by this alone. The length of the sudoku along each dimensions is the product of all of its box dimensions. In the "9x9" case, the length and width of one box is 3 and 3 respectively, and the length and width of the entire sudoku is 3x3 = 9. Since the box dimensions constrain the sudoku's dimensions, the process of defining the sudoku's dimensions can be said to start from the given box dimensions. The first box's shape is duplicated and stacked against each other in each dimension until the desired sudoku shape is reached.
 
-# terminology
-To make this easier to communicate, I have come up with some terminology that is specific to this project. In a traditional sudoku, you have rows, columns, and boxes. In a generalized multidimensional sudoku, the rows and columns are called "span" and boxes are called "containers". So for a traditional "9x9" sudoku, there are 2 types of span for the 2 dimensions (row, col) each 9 cells long, and the containers are also 9 cells in size.
+# Terminology
+
+To facilitate communication, I have come up with some terminology that is specific to this project. In a traditional sudoku, there are rows, columns, and boxes. In a generalized multidimensional sudoku, the rows and columns are called "span" and boxes are called "containers". So for a traditional "9x9" sudoku, there are 2 types of span for the 2 dimensions (row, col) each 9 cells long, and the containers are also 9 cells in size.
 
 # n
 This is the number of dimension of the sudoku. From the [] notation, this is the length of the list.

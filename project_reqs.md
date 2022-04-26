@@ -1,10 +1,30 @@
 # Project Requirements
 
+## Program Options
+
 * DLX Solve
-* DLX Generate
+* DLX Generate Full
+* DLX Generate Partial
 * DLX Enumerate
 * ZChaff Solve
 * ZChaff Generate
+
+## Bash Script Options
+
+* DLX Solve: s
+* DLX Generate: g
+  * DLX Generate Full
+  * DLX Generate Partial
+* DLX Enumerate: e
+* ZChaff Solve: zs
+  * ZChaff Solve 0
+  * ZChaff (external)
+  * ZChaff Solve 1
+* ZChaff Generate: zg
+  * ZChaff Generate 0
+  * ZChaff (external)
+  * ZChaff Generate 1
+  * DLX Generate Partial
 
 # DLX Solve
 
@@ -21,20 +41,27 @@
 
 * If SUDOKU_FILE doesn't exist, generate one first, or copy a sample puzzle from /samples into sudokuFile.
 
-# DLX Generate
+# DLX Generate Full
 
 ## Program args
 
-* ./mSudoku g [SUDOKU_FILE] [SOLUTION_FILE] (dim)
+* ./mSudoku gf [SOLUTION_FILE] (dim)
 
 ## Goals
 
-* Generate sudoku using container dimensions (dim).
-* Outputs a single puzzle into SUDOKU_FILE and its solution to SOLUTION_FILE.
+* Generate full sudoku using container dimensions (dim).
+* Outputs a single solution to SOLUTION_FILE.
 
-## Notes
+# DLX Generate Partial
 
-* (dim) is a list of integers of the desired container dimensions.
+## Program args
+
+* ./mSudoku gp [SOLUTION_FILE] [SUDOKU_FILE]
+
+## Goals
+
+* Generate partial sudoku using given SOLUTION_FILE.
+* Outputs a single puzzle to SUDOKU_FILE.
 
 # DLX Enumerate
 
@@ -51,6 +78,16 @@
 * Meant for analyzing all 288 [2, 2] sudokus.
 * Not meant for any larger container dimensions.
 
+# Zchaff
+
+## Program args
+
+* ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
+
+## Goals
+
+* Run zchaff on the dimacs file
+
 # BSat Solve (Create Dimacs)
 
 ## Program args
@@ -60,16 +97,6 @@
 ## Goals
 
 * Convert sudoku from SUDOKU_FILE to the dimacs input file.
-
-# BSat Solve (Zchaff)
-
-## Program args
-
-* ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
-
-## Goals
-
-* Run zchaff on the dimacs file
 
 # BSat Solve (Process Zchaff Results)
 
@@ -84,14 +111,6 @@
 * Convert results to solved sudoku
 * Writes solution to solution file
 
-# BSat (Full Solve run)
-
-## Program args
-
-* ./mSudoku zs0 [DIMACS_INPUT] [SUDOKU_FILE]
-* ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
-* ./mSudoku zs1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE]
-
 # BSat Generate (Create Dimacs)
 
 ## Program args
@@ -102,32 +121,15 @@
 
 * Write empty sudoku constraints to the dimacs input file using given container dimensions.
 
-# BSat Generate (Zchaff)
-
-## Program args
-
-* ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
-
-## Goals
-
-* Run zchaff on the dimacs file
-
 # BSat Generate (Process Zchaff Results)
 
 ## Program args
 
-* ./mSudoku zg1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE] (dim)
+* ./mSudoku zg1 [DIMACS_OUTPUT] [SOLUTION_FILE] (dim)
 
 ## Goals
 
 * Parse dimacs output file.
 * Convert results to solved sudoku
 * Writes solution to solution file
-
-# BSat (Full Generate run)
-
-## Program args
-
-* ./mSudoku zg0 [DIMACS_INPUT] (dim)
-* ./zchaff [DIMACS_INPUT] > [DIMACS_OUTPUT]
-* ./mSudoku zg1 [DIMACS_OUTPUT] [SUDOKU_FILE] [SOLUTION_FILE] (dim)
+* Use DLX to generate a puzzle

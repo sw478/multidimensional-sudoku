@@ -24,8 +24,11 @@ int main(int argc, char *argv[])
         case DLX_SOLVE:
             run_DLXSolve(argc, argv);
             break;
-        case DLX_GEN:
-            run_DLXGen(argc, argv);
+        case DLX_GEN_FULL:
+            run_DLXGenFull(argc, argv);
+            break;
+        case DLX_GEN_PARTIAL:
+            run_DLXGenPartial(argc, argv);
             break;
         case ENUMERATE:
             run_Enumerate(argc, argv);
@@ -67,7 +70,7 @@ void run_DLXSolve(int argc, char *argv[])
     printSudoku(d->s);
 
     findMatrixFile(d);
-    setMatrixDimensions_Sudoku(d, d->s);
+    setMatrixDimensions(d, d->s);
     initDance(d);
     initMatrix(d);
 
@@ -75,7 +78,7 @@ void run_DLXSolve(int argc, char *argv[])
 
     HEUR_INIT(d, d->s->containerSize)
     initHide(d);
-    fillAllCells(d);
+    hideAllCells(d);
     coverRowHeaders(d);
 
     printf("starting algX\n");
@@ -84,32 +87,28 @@ void run_DLXSolve(int argc, char *argv[])
     printf("numSols: %d\n", d->numSols);
 
     uncoverRowHeaders(d);
-    unfillAllCells(d);
+    unhideAllCells(d);
 
-    PRINT_ALL_SUDOKU_SOLS
+    printSolutions_Sudoku(d);
 
     saveSolution_Sudoku(d);
-    writeToSudokuFile(d->s, dlx->solutionFile);
+    writeSudokuToFile(d->s, dlx->solutionFile);
 
     free_DLXSolve(dlx);
 }
 
-void run_DLXGen(int argc, char *argv[])
+void run_DLXGenFull(int argc, char *argv[])
 {
-    Dance *d;
     int res = NOT_FOUND, i;
-
     DLX *dlx = malloc(sizeof(DLX));
-    parseArgs_DLXGen(dlx, argc, argv);
+    Dance *d;
+    parseArgs_DLXGenFull(dlx, argc, argv);
     d = dlx->d;
     
     findMatrixFile(d);
-    setMatrixDimensions_Sudoku(d, d->s);
+    setMatrixDimensions(d, d->s);
     initDance(d);
     initMatrix(d);
-
-    //printMatrix2(d);
-
     HEUR_INIT(d, d->s->containerSize)
 
     coverRowHeaders(d);
@@ -118,51 +117,58 @@ void run_DLXGen(int argc, char *argv[])
     for(i = 1; i < THRESHOLD_TRY+1; i++)
     {
         d->numCalls = 0;
-        //if(i % 10 == 0){ printf("algX try: %d\n", i); }
         res = algorithmX_Gen_Rand(d);
         if(res == FOUND)
             break;
     }
-    //printf("algX number of tries: %d\n", i);
-    //printf("number of calls: %lu\n", d->numCalls);
 
     uncoverRowHeaders(d);
-    if(res == NOT_FOUND)
+    if(res == FOUND)
     {
-        free_DLXGen(dlx);
-        return;
+        saveSolution_Sudoku(d);
+        printSudoku(d->s);
+        writeSudokuToFile(d->s, dlx->solutionFile);
     }
+    else if(res == NOT_FOUND)
+        printf("No solutions found");
 
-    saveSolution_Sudoku(d);
-    printf("printing sudoku solved:\n");
-    printSudoku(d->s);
-    writeToSudokuFile(d->s, dlx->solutionFile);
+    free_DLXGenFull(dlx);
+}
 
+void run_DLXGenPartial(int argc, char *argv[])
+{
+    int res = NOT_FOUND, i;
+    DLX *dlx = malloc(sizeof(DLX));
+    Dance *d;
+    parseArgs_DLXGenPartial(dlx, argc, argv);
+    d = dlx->d;
+    
+    findMatrixFile(d);
+    setMatrixDimensions(d, d->s);
+    initDance(d);
+    initMatrix(d);
+    HEUR_INIT(d, d->s->containerSize)
+    
     initHide(d);
-
     setNumClues(d->s, d->s->sudokuSize * (1.0/2));
-    //setNumClues(d->s, d->s->sudokuSize * (30.0/81));
     printf("starting generation\n");
     for(i = 1; i < THRESHOLD_TRY+1; i++)
     {
         d->genNumCalls = 0;
-        printf("gen try: %d\n", i);
+        //printf("gen try: %d\n", i);
         res = generate(d);
         if(res == FOUND)
             break;
     }
     if(res == NOT_FOUND)
         printf("No puzzles found\n");
-    printf("\nnumber of gen calls: %d\n", d->genNumCalls);
 
-    printf("printing sudoku puzzle:\n");
     printSudoku(d->s);
-    writeToSudokuFile(d->s, dlx->sudokuFile);
+    writeSudokuToFile(d->s, dlx->sudokuFile);
 
-    unfillAllCells(d);
+    unhideAllCells(d);
 
-    freeHide(d);
-    free_DLXGen(dlx);
+    free_DLXGenPartial(dlx);
 }
 
 void run_Enumerate(int argc, char *argv[])
@@ -171,29 +177,20 @@ void run_Enumerate(int argc, char *argv[])
 
     parseArgs_Enumerate(e, argc, argv);
 
-    //printSudoku(d->s);
     findMatrixFile(e->d);
-
-    setMatrixDimensions_Sudoku(e->d, e->d->s);
-
+    setMatrixDimensions(e->d, e->d->s);
     initDance(e->d);
     initMatrix(e->d);
-
-    //printMatrix(e->d);
-
     HEUR_INIT(e->d, e->d->s->containerSize)
     initHide(e->d);
-    fillAllCells(e->d);
+    hideAllCells(e->d);
     coverRowHeaders(e->d);
 
-    printf("starting algX\n");
     algorithmX_Enumerate(e->d);
-    printf("number of calls: %lu\n", e->d->numCalls);
     printf("numSols: %d\n", e->d->numSols);
 
     uncoverRowHeaders(e->d);
-    unfillAllCells(e->d);
-
+    unhideAllCells(e->d);
     writeToEnumerateFile(e->d, e->enumerateFile);
 
     free_Enum(e);
@@ -220,7 +217,7 @@ void run_ZchaffSolve1(int argc, char *argv[])
     readInDimacsOutput(z, z->dimacsOutputFile);
     printSudoku(z->s);
 
-    writeToSudokuFile(z->s, z->solutionFile);
+    writeSudokuToFile(z->s, z->solutionFile);
 
     free_ZChaffSolve1(z);
 }
@@ -243,11 +240,9 @@ void run_ZchaffGen1(int argc, char *argv[])
     parseArgs_ZChaffGen1(z, argc, argv);
 
     printf("finished zchaff\n");
-
     readInDimacsOutput(z, z->dimacsOutputFile);
     printSudoku(z->s);
-
-    writeToSudokuFile(z->s, z->solutionFile);
+    writeSudokuToFile(z->s, z->solutionFile);
 
     free_ZChaffGen1(z);
 }

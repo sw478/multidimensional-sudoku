@@ -23,12 +23,13 @@
 
 /* for d->problem */
 #define DLX_SOLVE 0
-#define DLX_GEN 1
-#define ENUMERATE 2
-#define ZCHAFF_SOLVE_0 3
-#define ZCHAFF_SOLVE_1 4
-#define ZCHAFF_GEN_0 5
-#define ZCHAFF_GEN_1 6
+#define DLX_GEN_FULL 1
+#define DLX_GEN_PARTIAL 2
+#define ENUMERATE 3
+#define ZCHAFF_SOLVE_0 4
+#define ZCHAFF_SOLVE_1 5
+#define ZCHAFF_GEN_0 6
+#define ZCHAFF_GEN_1 7
 
 /* for algX and generate */
 #define FOUND 1
@@ -194,6 +195,7 @@ typedef struct
     FILE *dimacsInputFile, *dimacsOutputFile;
 
     Sudoku *s;
+    Dance *d;
 } ZChaff;
 
 

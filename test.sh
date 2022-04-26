@@ -1,6 +1,7 @@
 #!/bin/bash
 USAGE="[ q:quit | m:make | b:basic | >:push | <:pull ]"
-OPTIONS="[ s:solve | g:generate | e:enumerate | zs:zchaff solve | zg:zchaff gen ]"
+OPTIONS0="[ s:dlx solve | g:dlx generate | e:dlx enumerate ]"
+OPTIONS1="[ zs:zchaff solve | zg:zchaff gen ]"
 EXECUTABLE="./mSudoku"
 SUDOKU_FILE="sudokuFile.txt"
 SOLUTION_FILE="solutionFile.txt"
@@ -29,29 +30,30 @@ while true; do
       git pull
 
    elif [ "$type" = "b" ]; then
-      echo "if sudokuFile does not exist yet, generate sudoku first"
-      echo $OPTIONS
-      read problem
+      echo $OPTIONS0
+      echo $OPTIONS1
+      read option
 
-      if [ "$problem" = "s" ]; then
+      if [ "$option" = "s" ]; then
          make
          $EXECUTABLE s $SUDOKU_FILE $SOLUTION_FILE
       
-      elif [ "$problem" = "g" ]; then
+      elif [ "$option" = "g" ]; then
          echo "dimensions?"
          read dim
          
          make
-         $EXECUTABLE g $SUDOKU_FILE $SOLUTION_FILE ${dim}
+         $EXECUTABLE gf $SOLUTION_FILE ${dim}
+         $EXECUTABLE gp $SOLUTION_FILE $SUDOKU_FILE
       
-      elif [ "$problem" = "e" ]; then
+      elif [ "$option" = "e" ]; then
          echo "dimensions?"
          read dim
          
          make
          $EXECUTABLE e $ENUMERATE_FILE ${dim}
       
-      elif [ "$problem" = "zg" ]; then
+      elif [ "$option" = "zg" ]; then
          echo "dimensions?"
          read dim
 
@@ -59,8 +61,9 @@ while true; do
          $EXECUTABLE zg0 $DIMACS_INPUT_FILE ${dim}
          ./zchaff.64bit.2007.3.12/zchaff64/zchaff $DIMACS_INPUT_FILE > $DIMACS_OUTPUT_FILE
          $EXECUTABLE zg1 $DIMACS_OUTPUT_FILE $SUDOKU_FILE $SOLUTION_FILE ${dim}
+         $EXECUTABLE gp $SOLUTION_FILE $SUDOKU_FILE
       
-      elif [ "$problem" = "zs" ]; then
+      elif [ "$option" = "zs" ]; then
          make
          $EXECUTABLE zs0 $DIMACS_INPUT_FILE $SUDOKU_FILE
          ./zchaff.64bit.2007.3.12/zchaff64/zchaff $DIMACS_INPUT_FILE > $DIMACS_OUTPUT_FILE

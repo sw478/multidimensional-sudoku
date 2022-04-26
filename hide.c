@@ -2,26 +2,25 @@
 #include "heuristic.h"
 #include "auxil.h"
 
-/* TODO */
-
-/*
- * initializes hide structure
+/**
+ * Initializes the hide struct
  *
- * for solving, should be done at the beginning of program
- * for generating, should be done at the end, when all the
+ * For solving, should be done at the beginning of program
+ * For generating, should be done at the end, when all the
  * cell values are known
  * 
- * cs1 is xy-1 since the number of row headers that can be covered
- * for a single cell is one less than the # of possible cell numbers
+ * cs1(containerSize 1) is containerSize-1 since the number of row
+ * headers that can be covered for a single cell is one less than
+ * the # of possible cell numbers
  *
- * uses the values from d->s->sudoku, so for generation must
+ * Uses the values from d->s->sudoku, so for generation must
  * be called after saveSolution
  *
- * doesn't hide any cell rows, just sets everything up
+ * Doesn't hide any cell rows, just sets everything up
  *
  * d->hideList is allocated memory in initDance
  * 
- * all cells are initialized unfilled
+ * All cells initialized unfilled
  */
 int initHide(Dance *d)
 {
@@ -74,7 +73,23 @@ int initHide(Dance *d)
    return 0;
 }
 
-int fillSingleCell(Dance *d, Hide *h)
+void hideAllCells(Dance *d)
+{
+   int iSudoku, sudokuSize = d->s->sudokuSize;
+
+   for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
+      hideSingleCell(d, d->hideList[iSudoku]);
+}
+
+void unhideAllCells(Dance *d)
+{
+   int iSudoku, sudokuSize = d->s->sudokuSize;
+
+   for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
+      unhideSingleCell(d, d->hideList[iSudoku]);
+}
+
+int hideSingleCell(Dance *d, Hide *h)
 {
    Doubly *hrow, *xrow;
    int ihide, cs1 = d->s->containerSize - 1;
@@ -110,7 +125,7 @@ int fillSingleCell(Dance *d, Hide *h)
    return 0;
 }
 
-int unfillSingleCell(Dance *d, Hide *h)
+int unhideSingleCell(Dance *d, Hide *h)
 {
    Doubly *hrow, *xrow;
    int ihide, cs1 = d->s->containerSize - 1;
@@ -144,34 +159,4 @@ int unfillSingleCell(Dance *d, Hide *h)
    h->filled = 0;
 
    return 0;
-}
-
-void fillAllCells(Dance *d)
-{
-   int iSudoku, sudokuSize = d->s->sudokuSize;
-
-   for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
-      fillSingleCell(d, d->hideList[iSudoku]);
-}
-
-void unfillAllCells(Dance *d)
-{
-   int iSudoku, sudokuSize = d->s->sudokuSize;
-
-   for(iSudoku = 0; iSudoku < sudokuSize; iSudoku++)
-      unfillSingleCell(d, d->hideList[iSudoku]);
-}
-
-void freeHide(Dance *d)
-{
-   int ihide;
-
-   for(ihide = 0; ihide < d->ihide; ihide++)
-   {
-      free(d->hideList[ihide]->hrows);
-      free(d->hideList[ihide]);
-   }
-
-   free(d->hideList);
-   free(d->hideRoot);
 }
