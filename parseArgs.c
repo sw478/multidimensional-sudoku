@@ -183,7 +183,7 @@ void parseArgs_ZChaffGen0(ZChaff *z, int argc, char *argv[])
 
 void parseArgs_ZChaffGen1(ZChaff *z, int argc, char *argv[])
 {
-    const int argOffset = 4;
+    const int argOffset = 5;
     Sudoku *s = malloc(sizeof(Sudoku));
     z->s = s;
     

@@ -59,14 +59,14 @@ while true; do
 
          make
          $EXECUTABLE zg0 $DIMACS_INPUT_FILE ${dim}
-         ./zchaff.64bit.2007.3.12/zchaff64/zchaff $DIMACS_INPUT_FILE > $DIMACS_OUTPUT_FILE
+         ./zchaff $DIMACS_INPUT_FILE > $DIMACS_OUTPUT_FILE
          $EXECUTABLE zg1 $DIMACS_OUTPUT_FILE $SUDOKU_FILE $SOLUTION_FILE ${dim}
          $EXECUTABLE gp $SOLUTION_FILE $SUDOKU_FILE
       
       elif [ "$option" = "zs" ]; then
          make
          $EXECUTABLE zs0 $DIMACS_INPUT_FILE $SUDOKU_FILE
-         ./zchaff.64bit.2007.3.12/zchaff64/zchaff $DIMACS_INPUT_FILE > $DIMACS_OUTPUT_FILE
+         ./zchaff $DIMACS_INPUT_FILE > $DIMACS_OUTPUT_FILE
          $EXECUTABLE zs1 $DIMACS_OUTPUT_FILE $SUDOKU_FILE $SOLUTION_FILE
 
       fi
