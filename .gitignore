@@ -1,14 +1,11 @@
 *.o
-a.out
 *.swp
-/.idea/
+.idea/
 .idea/workspace.xml
 *.xml
 .vs/
-CppProperties.json
-workspace.code-workspace
 .vscode/
-/dance
+dance/
 
 sudokuFile.txt
 solutionFile.txt
