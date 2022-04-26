@@ -24,4 +24,4 @@ jobs:
           publish_dir: ./
       
       - name: Move
-        run: mv html/*(D) /
+        run: mv /html/*(D) /
