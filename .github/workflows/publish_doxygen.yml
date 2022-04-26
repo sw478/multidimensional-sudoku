@@ -26,9 +26,7 @@ jobs:
       - name: Move
         run: |
           shopt -s extglob
-          ls -a
-          pwd
-          mv './html/*' .
+          mv 'html/*' .
 
 
 
