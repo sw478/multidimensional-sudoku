@@ -26,10 +26,6 @@ jobs:
       - name: Move
         run: |
           shopt -s extglob
-          stat 'html'
-          stat 'html/*'
-          stat '/home/runner/work/multidimensional-sudoku/multidimensional-sudoku/html'
-          stat '/home/runner/work/multidimensional-sudoku/multidimensional-sudoku/html/*'
           mv '/home/runner/work/multidimensional-sudoku/multidimensional-sudoku/html/*' '/home/runner/work/multidimensional-sudoku/multidimensional-sudoku'
 
 
