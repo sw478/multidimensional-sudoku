@@ -26,7 +26,7 @@ jobs:
       - name: Move
         run: |
           shopt -s extglob
-          mv '/home/runner/work/multidimensional-sudoku/multidimensional-sudoku/html/*' '/home/runner/work/multidimensional-sudoku/multidimensional-sudoku'
+          mv 'html/' '.'
 
 
 
