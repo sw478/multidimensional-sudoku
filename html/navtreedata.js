@@ -93,13 +93,6 @@ var NAVTREE =
       [ "general notes", "md__r_e_a_d_m_e.html#autotoc_md52", null ],
       [ "user options (test.sh)", "md__r_e_a_d_m_e.html#autotoc_md53", null ]
     ] ],
-    [ "Namespaces", "namespaces.html", [
-      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
-      [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ]
-      ] ]
-    ] ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
@@ -124,7 +117,7 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "heuristic_8h.html",
-"structdoubly.html#a1cfc780f715aa3f8156c6edb685d189b"
+"structdoubly.html#ae116ff7342a48de00c1d42c0775fe0c4"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

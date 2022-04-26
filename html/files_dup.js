@@ -27,7 +27,6 @@ var files_dup =
     [ "main.h", "main_8h.html", "main_8h" ],
     [ "matrixFile.c", "matrix_file_8c.html", "matrix_file_8c" ],
     [ "matrixFile.h", "matrix_file_8h.html", "matrix_file_8h" ],
-    [ "matrixFileCreator.py", "matrix_file_creator_8py.html", "matrix_file_creator_8py" ],
     [ "parseArgs.c", "parse_args_8c.html", "parse_args_8c" ],
     [ "parseArgs.h", "parse_args_8h.html", "parse_args_8h" ],
     [ "sew.c", "sew_8c.html", "sew_8c" ],
