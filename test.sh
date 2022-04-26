@@ -26,7 +26,7 @@ while true; do
       git commit -m "."
       git push
 
-   elif [ "$type" = ">" ]; then
+   elif [ "$type" = "<" ]; then
       git pull
 
    elif [ "$type" = "b" ]; then
