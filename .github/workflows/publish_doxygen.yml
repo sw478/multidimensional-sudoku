@@ -20,25 +20,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Doxygen
-        run: sudo apt-get update; sudo apt-get install -y doxygen graphviz texlive-full
-
-      - name: Run Doxygen
-        run: |
-          git clone https://github.com/sw478/multidimensional-sudoku.git
-          mkdir multidimensional-sudoku/build
-          cd multidimensional-sudoku/build
-          cmake -DOPTION_BUILD_DOCS=ON ..
-          make api-docs
-        
-      - name: Move
-        run: mv ./core/build/docs/api-docs ./api
+      - name: Create clean gh-pages branch
+        run:  git checkout -b gh-pages
       
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+      - name: Publish Doxygen
+        uses: mattnotmitt/doxygen-action@v1.9.2
       
       
       
