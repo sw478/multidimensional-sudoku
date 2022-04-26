@@ -1,0 +1,13 @@
+<map id="iSpanToiSudoku" name="iSpanToiSudoku">
+<area shape="rect" id="node1" title=" " alt="" coords="895,56,1011,83"/>
+<area shape="rect" id="node2" href="$dimacs_8c.html#a99b1a3059902fbe1a6c7408101268030" title=" " alt="" coords="631,5,847,32"/>
+<area shape="rect" id="node9" href="$dimacs_8c.html#afbd234d671442b2b1d0d8889e38ed4a3" title=" " alt="" coords="632,56,845,83"/>
+<area shape="rect" id="node11" href="$dimacs_8c.html#ab6746df997f192bb2f1766a99b2bb8ab" title=" " alt="" coords="685,107,792,133"/>
+<area shape="rect" id="node3" href="$dimacs_8c.html#a419d2ce76dd22223b187166406ef3686" title=" " alt="" coords="464,5,583,32"/>
+<area shape="rect" id="node4" href="$dimacs_8c.html#a465dc60fa39218b044b40091b1f95807" title=" " alt="" coords="274,5,413,32"/>
+<area shape="rect" id="node7" href="$dimacs_8c.html#aa7c16cd1abe81246fce9b40f80d3e0dd" title=" " alt="" coords="271,56,416,83"/>
+<area shape="rect" id="node5" href="$main_8c.html#aa5499c422adc96d1ffdeb09083982c85" title=" " alt="" coords="107,5,219,32"/>
+<area shape="rect" id="node6" href="$main_8c.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,31,56,57"/>
+<area shape="rect" id="node8" href="$main_8c.html#a50d418667f0688a4c00b3eb2e6681e04" title=" " alt="" coords="104,56,223,83"/>
+<area shape="rect" id="node10" href="$dimacs_8c.html#ade8812d840f8788af31e165a1f199939" title=" " alt="" coords="469,56,578,83"/>
+</map>

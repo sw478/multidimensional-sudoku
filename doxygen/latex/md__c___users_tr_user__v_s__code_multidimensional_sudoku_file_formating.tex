@@ -1,0 +1,41 @@
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_file_formating_autotoc_md6}{}\doxysection{SUDOKU\+\_\+\+FILE and SOLUTION\+\_\+\+FILE Format}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_file_formating_autotoc_md6}
+
+\begin{DoxyItemize}
+\item First line\+: \mbox{[}n\+: number of dimensions\mbox{]}
+\item Next n lines\+: container dimensions
+\item Next sudoku\+Size lines\+: number symbols for each cell in the n-\/dimensional board
+\item Number Symbols are 1-\/indexed, 0 is reserved for an empty cell
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_file_formating_autotoc_md7}{}\doxysection{MATRIX\+\_\+\+FILE}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_file_formating_autotoc_md7}
+
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{matrix_file_8c_af8b92b1d3c473a10cc8513337945d7d4}{find\+Matrix\+File()}} will attempt to open the necessary matrix file
+\item Each line in this file corresponds to a matrix coordinate\+: row then column
+\item The filename should have a prefix of \char`\"{}dm\char`\"{}, and the suffix should be the container dimensions
+\begin{DoxyItemize}
+\item The prefix and container dimensions should be separated with an underscore
+\item Container dimensions should be in decreasing order
+\item Consequently, a matrix file will be the same for a \mbox{[}5, 3, 1\mbox{]} and a \mbox{[}3, 1, 5\mbox{]} sudoku as an example
+\item Example\+: Matrix file name for a \mbox{[}2, 4, 3\mbox{]} will be \char`\"{}dm\+\_\+4\+\_\+3\+\_\+2.\+txt\char`\"{}
+\end{DoxyItemize}
+\item File saved in /dance folder
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_file_formating_autotoc_md8}{}\doxysection{DIMACS\+\_\+\+INPUT Format}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_file_formating_autotoc_md8}
+
+\begin{DoxyItemize}
+\item Conventional DIMACS file format
+\begin{DoxyItemize}
+\item p cnf (\# variables) (\# clauses)
+\end{DoxyItemize}
+\item Comment header will contain\+:
+\begin{DoxyItemize}
+\item \char`\"{}m\+Sudoku\char`\"{} title
+\item (n)
+\item (dim)
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_file_formating_autotoc_md9}{}\doxysection{ENUMERATE\+\_\+\+FILE Format}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_file_formating_autotoc_md9}
+
+\begin{DoxyItemize}
+\item First line\+: \mbox{[}ne\+: number of sudokus\mbox{]}
+\item Second line\+: \mbox{[}n\+: number of dimensions\mbox{]}
+\item Next n lines\+: container dimensions
+\item Next ne lines\+: sudoku solution, one per line, number symbols separated by spaces 
+\end{DoxyItemize}

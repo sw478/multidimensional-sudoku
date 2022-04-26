@@ -1,0 +1,44 @@
+Some of the files written and read from can be better implemented using a database. This has not been implemented yet.\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_database_autotoc_md1}{}\doxysection{sudoku\+File \& solution\+File}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_database_autotoc_md1}
+
+\begin{DoxyItemize}
+\item Ordered list of integers
+\item sudoku\+File is a partial sudoku, solution\+File is a full sudoku
+\item Might need metadata (n, dims)
+\begin{DoxyItemize}
+\item Could also use other symmetric relations to group solutions together
+\end{DoxyItemize}
+\item Could design a 2 layer tree since many sudokus can be generated from one solution\+:
+\begin{DoxyItemize}
+\item Primary level\+: solution\+Files
+\item Secordary level\+: sudoku\+Files under solution\+Files where the solutions correspond to the puzzle
+\item puzzles can also be graded by difficulty and sorted/partitioned as necessary
+\end{DoxyItemize}
+\item Should store sudokus of equivalent container dimensions together
+\begin{DoxyItemize}
+\item Since a \mbox{[}2, 3, 1\mbox{]} is symmetric to a \mbox{[}1, 2, 3\mbox{]}, they can be grouped together
+\item Use descending dim convention\+: so a \mbox{[}2, 3, 1\mbox{]} and a \mbox{[}1, 2, 3\mbox{]} would be stored under \mbox{[}3, 2, 1\mbox{]}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_database_autotoc_md2}{}\doxysection{matrix\+File}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_database_autotoc_md2}
+
+\begin{DoxyItemize}
+\item Unordered list of 2D integer coordinates
+\item Won\textquotesingle{}t be many of these\+: one per ordered container dimensions
+\item Accessed frequently\+: once per \mbox{\hyperlink{struct_d_l_x}{DLX}} solve and \mbox{\hyperlink{struct_d_l_x}{DLX}} gen
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_database_autotoc_md3}{}\doxysection{dimacs\+File}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_database_autotoc_md3}
+
+\begin{DoxyItemize}
+\item Unordered list of clauses (unordered list of signed integers)
+\item Minimal and extended version for a container dimension
+\item Shouldn\textquotesingle{}t store the partial clauses with them
+\begin{DoxyItemize}
+\item Information already available in sudoku\+File and doesn\textquotesingle{}t take long to append clauses to the end
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_database_autotoc_md4}{}\doxysection{enum\+File}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_database_autotoc_md4}
+
+\begin{DoxyItemize}
+\item Unordered list of ordered lists of integers
+\item Might need metadata (n, dims, num\+Sols)
+\item Won\textquotesingle{}t be many of these
+\item Accessed infrequently
+\item Could just be a set of sudoku\+Files 
+\end{DoxyItemize}

@@ -1,0 +1,58 @@
+\hypertarget{config_8h_source}{}\doxysection{C\+:/\+Users/tr\+User/\+VS\+\_\+\+Code/multidimensional-\/sudoku/config.h}
+\mbox{\hyperlink{config_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef CONFIG\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define CONFIG\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{/*}}
+\DoxyCodeLine{5 \textcolor{comment}{    0: selecting first column}}
+\DoxyCodeLine{6 \textcolor{comment}{    1: using heur system}}
+\DoxyCodeLine{7 \textcolor{comment}{    2: finding minCol each time}}
+\DoxyCodeLine{8 \textcolor{comment}{*/}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#define USE\_HEUR 0}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#if USE\_HEUR == 0}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{    \#define HEUR\_HEURISTIC(d) ((d)-\/>root-\/>right);}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{    \#define HEUR\_INIT(d, heur\_max)}}
+\DoxyCodeLine{14 \textcolor{preprocessor}{    \#define HEUR\_DEC(d, heur, amount)}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{    \#define HEUR\_INC(d, heur, amount)}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{    \#define HEUR\_FREE(d)}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#elif USE\_HEUR == 1}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{    \#define HEUR\_HEURISTIC(d) heuristic((d));}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{    \#define HEUR\_INIT(d, heur\_max) initHeurList((d), (heur\_max));}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{    \#define HEUR\_DEC(d, heur, amount) decHeur((d), (heur), (amount));}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{    \#define HEUR\_INC(d, heur, amount) incHeur((d), (heur), (amount));}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{    \#define HEUR\_FREE(d) freeHeur((d));}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#elif USE\_HEUR == 2}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{    \#define HEUR\_HEURISTIC(d) heuristic2((d));}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{    \#define HEUR\_INIT(d, heur\_max)}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{    \#define HEUR\_DEC(d, heur, amount)}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{    \#define HEUR\_INC(d, heur, amount)}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{    \#define HEUR\_FREE(d)}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 \textcolor{comment}{/*}}
+\DoxyCodeLine{32 \textcolor{comment}{    used for dynamic list growth}}
+\DoxyCodeLine{33 \textcolor{comment}{    starting capacity must be >= 1}}
+\DoxyCodeLine{34 \textcolor{comment}{    growth factor must be > 1}}
+\DoxyCodeLine{35 \textcolor{comment}{*/}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#define STARTING\_CAP 1}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#define GROWTH\_FACTOR 2}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{comment}{/*}}
+\DoxyCodeLine{40 \textcolor{comment}{    buffer size of strings for printing}}
+\DoxyCodeLine{41 \textcolor{comment}{*/}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#define BUFSIZE 1000}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{comment}{/* used to count calls to algX and generate */}}
+\DoxyCodeLine{45 \textcolor{comment}{/* TO DO: thresholds should be a factor of sudokuSize and dimensions */}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#define CALL\_TRACKING\_GEN           500}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#define THRESHOLD\_TRY               1000}}
+\DoxyCodeLine{48 \textcolor{preprocessor}{\#define THRESHOLD\_ALGX\_GEN\_1        10000000}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define THRESHOLD\_ALGX\_GEN\_2        1000000}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{\#define THRESHOLD\_GEN\_FACTOR        10000}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#define CALL\_TRACKING\_ALGX\_GEN\_1    5000000}}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,269 @@
+\hypertarget{dance_8c}{}\doxysection{C\+:/\+Users/tr\+User/\+VS\+\_\+\+Code/multidimensional-\/sudoku/dance.c File Reference}
+\label{dance_8c}\index{C:/Users/trUser/VS\_Code/multidimensional-\/sudoku/dance.c@{C:/Users/trUser/VS\_Code/multidimensional-\/sudoku/dance.c}}
+{\ttfamily \#include \char`\"{}dance.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sol\+Tree.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}auxil.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}heuristic.\+h\char`\"{}}\newline
+Include dependency graph for dance.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{dance_8c_aacb7ad472eebe14f0f26a87ba74962c5}{algorithmX}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d)
+\item 
+int \mbox{\hyperlink{dance_8c_a270795114891b298b5c70ba7f1334ba7}{algorithm\+X\+\_\+\+Gen\+\_\+\+Rand}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d)
+\item 
+int \mbox{\hyperlink{dance_8c_afc327ec41ecac611ab2a0d01c10e6a8d}{algorithm\+X\+\_\+\+Gen\+\_\+\+Num\+Sol}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d)
+\item 
+int \mbox{\hyperlink{dance_8c_ae78812b28780b2e5010fe6e4b616fa71}{algorithm\+X\+\_\+\+Enumerate}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d)
+\item 
+\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$$\ast$ \mbox{\hyperlink{dance_8c_a5057a28562fb0ff4e435ed682c3e2110}{unshuffled\+List}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d, \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$hcol, int len)
+\item 
+\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$$\ast$ \mbox{\hyperlink{dance_8c_a6e3e718c946112079aa672c522e87c1e}{shuffled\+List}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d, \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$hcol, int $\ast$len)
+\item 
+void \mbox{\hyperlink{dance_8c_af7e0fc4aad8f8e420944c0b47b8ab5a0}{select\+Candidate\+Row}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d, \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$candidate\+Row)
+\item 
+void \mbox{\hyperlink{dance_8c_aee7d04cee8e9147835202d2b8b393cd1}{cover\+Col\+Rows}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d, \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$crow)
+\item 
+void \mbox{\hyperlink{dance_8c_a96fed6794fa0ebce18d41508f165f386}{cover\+Rows}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d, \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$doub)
+\item 
+void \mbox{\hyperlink{dance_8c_aa05a641e86484ec1a8bf77687d376c43}{unselect\+Candidate\+Row}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d, \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$candidate\+Row)
+\item 
+void \mbox{\hyperlink{dance_8c_a8879eac2e9944ac4fc8faafb9c1b59b8}{uncover\+Col\+Rows}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d, \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$crow)
+\item 
+void \mbox{\hyperlink{dance_8c_a475085a480887938132ad70da2df65cb}{uncover\+Rows}} (\mbox{\hyperlink{struct_dance}{Dance}} $\ast$d, \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$doub)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{dance_8c_aacb7ad472eebe14f0f26a87ba74962c5}\label{dance_8c_aacb7ad472eebe14f0f26a87ba74962c5}} 
+\index{dance.c@{dance.c}!algorithmX@{algorithmX}}
+\index{algorithmX@{algorithmX}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{algorithmX()}{algorithmX()}}
+{\footnotesize\ttfamily int algorithmX (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_aacb7ad472eebe14f0f26a87ba74962c5_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=328pt]{dance_8c_aacb7ad472eebe14f0f26a87ba74962c5_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_ae78812b28780b2e5010fe6e4b616fa71}\label{dance_8c_ae78812b28780b2e5010fe6e4b616fa71}} 
+\index{dance.c@{dance.c}!algorithmX\_Enumerate@{algorithmX\_Enumerate}}
+\index{algorithmX\_Enumerate@{algorithmX\_Enumerate}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{algorithmX\_Enumerate()}{algorithmX\_Enumerate()}}
+{\footnotesize\ttfamily int algorithm\+X\+\_\+\+Enumerate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d }\end{DoxyParamCaption})}
+
+Returns all solutions, \mbox{\hyperlink{structsol_tree}{sol\+Tree}} is now actually a tree ret\+: if singular recursive call finds at least one solution res\+: if this function finds at least one solution Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_ae78812b28780b2e5010fe6e4b616fa71_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_ae78812b28780b2e5010fe6e4b616fa71_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_afc327ec41ecac611ab2a0d01c10e6a8d}\label{dance_8c_afc327ec41ecac611ab2a0d01c10e6a8d}} 
+\index{dance.c@{dance.c}!algorithmX\_Gen\_NumSol@{algorithmX\_Gen\_NumSol}}
+\index{algorithmX\_Gen\_NumSol@{algorithmX\_Gen\_NumSol}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{algorithmX\_Gen\_NumSol()}{algorithmX\_Gen\_NumSol()}}
+{\footnotesize\ttfamily int algorithm\+X\+\_\+\+Gen\+\_\+\+Num\+Sol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d }\end{DoxyParamCaption})}
+
+Checks if more than one solution exists Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_afc327ec41ecac611ab2a0d01c10e6a8d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_afc327ec41ecac611ab2a0d01c10e6a8d_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_a270795114891b298b5c70ba7f1334ba7}\label{dance_8c_a270795114891b298b5c70ba7f1334ba7}} 
+\index{dance.c@{dance.c}!algorithmX\_Gen\_Rand@{algorithmX\_Gen\_Rand}}
+\index{algorithmX\_Gen\_Rand@{algorithmX\_Gen\_Rand}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{algorithmX\_Gen\_Rand()}{algorithmX\_Gen\_Rand()}}
+{\footnotesize\ttfamily int algorithm\+X\+\_\+\+Gen\+\_\+\+Rand (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d }\end{DoxyParamCaption})}
+
+Stops after finding first random solution Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_a270795114891b298b5c70ba7f1334ba7_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_a270795114891b298b5c70ba7f1334ba7_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_aee7d04cee8e9147835202d2b8b393cd1}\label{dance_8c_aee7d04cee8e9147835202d2b8b393cd1}} 
+\index{dance.c@{dance.c}!coverColRows@{coverColRows}}
+\index{coverColRows@{coverColRows}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{coverColRows()}{coverColRows()}}
+{\footnotesize\ttfamily void cover\+Col\+Rows (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d,  }\item[{\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$}]{crow }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=256pt]{dance_8c_aee7d04cee8e9147835202d2b8b393cd1_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_aee7d04cee8e9147835202d2b8b393cd1_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_a96fed6794fa0ebce18d41508f165f386}\label{dance_8c_a96fed6794fa0ebce18d41508f165f386}} 
+\index{dance.c@{dance.c}!coverRows@{coverRows}}
+\index{coverRows@{coverRows}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{coverRows()}{coverRows()}}
+{\footnotesize\ttfamily void cover\+Rows (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d,  }\item[{\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$}]{doub }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_a96fed6794fa0ebce18d41508f165f386_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_af7e0fc4aad8f8e420944c0b47b8ab5a0}\label{dance_8c_af7e0fc4aad8f8e420944c0b47b8ab5a0}} 
+\index{dance.c@{dance.c}!selectCandidateRow@{selectCandidateRow}}
+\index{selectCandidateRow@{selectCandidateRow}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{selectCandidateRow()}{selectCandidateRow()}}
+{\footnotesize\ttfamily void select\+Candidate\+Row (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d,  }\item[{\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$}]{candidate\+Row }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_af7e0fc4aad8f8e420944c0b47b8ab5a0_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_af7e0fc4aad8f8e420944c0b47b8ab5a0_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_a6e3e718c946112079aa672c522e87c1e}\label{dance_8c_a6e3e718c946112079aa672c522e87c1e}} 
+\index{dance.c@{dance.c}!shuffledList@{shuffledList}}
+\index{shuffledList@{shuffledList}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{shuffledList()}{shuffledList()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$$\ast$ shuffled\+List (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d,  }\item[{\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$}]{hcol,  }\item[{int $\ast$}]{len }\end{DoxyParamCaption})}
+
+Returns shuffled list of doubly Uses the Fisher-\/\+Yates O(n) algorithm Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_a6e3e718c946112079aa672c522e87c1e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_a8879eac2e9944ac4fc8faafb9c1b59b8}\label{dance_8c_a8879eac2e9944ac4fc8faafb9c1b59b8}} 
+\index{dance.c@{dance.c}!uncoverColRows@{uncoverColRows}}
+\index{uncoverColRows@{uncoverColRows}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{uncoverColRows()}{uncoverColRows()}}
+{\footnotesize\ttfamily void uncover\+Col\+Rows (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d,  }\item[{\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$}]{crow }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=278pt]{dance_8c_a8879eac2e9944ac4fc8faafb9c1b59b8_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_a8879eac2e9944ac4fc8faafb9c1b59b8_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_a475085a480887938132ad70da2df65cb}\label{dance_8c_a475085a480887938132ad70da2df65cb}} 
+\index{dance.c@{dance.c}!uncoverRows@{uncoverRows}}
+\index{uncoverRows@{uncoverRows}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{uncoverRows()}{uncoverRows()}}
+{\footnotesize\ttfamily void uncover\+Rows (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d,  }\item[{\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$}]{doub }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_a475085a480887938132ad70da2df65cb_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_aa05a641e86484ec1a8bf77687d376c43}\label{dance_8c_aa05a641e86484ec1a8bf77687d376c43}} 
+\index{dance.c@{dance.c}!unselectCandidateRow@{unselectCandidateRow}}
+\index{unselectCandidateRow@{unselectCandidateRow}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{unselectCandidateRow()}{unselectCandidateRow()}}
+{\footnotesize\ttfamily void unselect\+Candidate\+Row (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d,  }\item[{\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$}]{candidate\+Row }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_aa05a641e86484ec1a8bf77687d376c43_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{dance_8c_aa05a641e86484ec1a8bf77687d376c43_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{dance_8c_a5057a28562fb0ff4e435ed682c3e2110}\label{dance_8c_a5057a28562fb0ff4e435ed682c3e2110}} 
+\index{dance.c@{dance.c}!unshuffledList@{unshuffledList}}
+\index{unshuffledList@{unshuffledList}!dance.c@{dance.c}}
+\doxysubsubsection{\texorpdfstring{unshuffledList()}{unshuffledList()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$$\ast$ unshuffled\+List (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_dance}{Dance}} $\ast$}]{d,  }\item[{\mbox{\hyperlink{struct_8h_ac5f1181946beb3d09306bf4965fc531d}{Doubly}} $\ast$}]{hcol,  }\item[{int}]{len }\end{DoxyParamCaption})}
+
+Returns unshuffled list 

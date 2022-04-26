@@ -1,0 +1,132 @@
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md20}{}\doxysection{Program Options}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md20}
+
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Solve
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Generate Full
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Generate Partial
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Enumerate
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Solve
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Generate
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md21}{}\doxysection{Bash Script Options}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md21}
+
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Solve\+: s
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Generate\+: g
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Generate Full
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Generate Partial
+\end{DoxyItemize}
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Enumerate\+: e
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Solve\+: zs
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Solve 0
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} (external)
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Solve 1
+\end{DoxyItemize}
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Generate\+: zg
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Generate 0
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} (external)
+\item \mbox{\hyperlink{struct_z_chaff}{ZChaff}} Generate 1
+\item \mbox{\hyperlink{struct_d_l_x}{DLX}} Generate Partial
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md22}{}\doxysection{DLX Solve}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md22}
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md23}{}\doxysubsection{Program args}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md23}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku s \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]} \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]}
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md24}{}\doxysubsection{Goals}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md24}
+
+\begin{DoxyItemize}
+\item Reads in sudoku from SUDOKU\+\_\+\+FILE.
+\item Outputs solved sudoku to SOLUTION\+\_\+\+FILE.
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md25}{}\doxysubsection{Notes}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md25}
+
+\begin{DoxyItemize}
+\item If SUDOKU\+\_\+\+FILE doesn\textquotesingle{}t exist, generate one first, or copy a sample puzzle from /samples into sudoku\+File.
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md26}{}\doxysection{DLX Generate Full}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md26}
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md27}{}\doxysubsection{Program args}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md27}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku gf \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]} (dim)
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md28}{}\doxysubsection{Goals}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md28}
+
+\begin{DoxyItemize}
+\item Generate full sudoku using container dimensions (dim).
+\item Outputs a single solution to SOLUTION\+\_\+\+FILE.
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md29}{}\doxysection{DLX Generate Partial}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md29}
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md30}{}\doxysubsection{Program args}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md30}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku gp \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]} \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]}
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md31}{}\doxysubsection{Goals}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md31}
+
+\begin{DoxyItemize}
+\item Generate partial sudoku using given SOLUTION\+\_\+\+FILE.
+\item Outputs a single puzzle to SUDOKU\+\_\+\+FILE.
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md32}{}\doxysection{DLX Enumerate}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md32}
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md33}{}\doxysubsection{Program args}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md33}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku e \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]} (dim)
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md34}{}\doxysubsection{Goals}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md34}
+
+\begin{DoxyItemize}
+\item Enumerate all solution sudokus of a given container dimension.
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md35}{}\doxysubsection{Note}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md35}
+
+\begin{DoxyItemize}
+\item Meant for analyzing all 288 \mbox{[}2, 2\mbox{]} sudokus.
+\item Not meant for any larger container dimensions.
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md36}{}\doxysection{Zchaff}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md36}
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md37}{}\doxysubsection{Program args}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md37}
+
+\begin{DoxyItemize}
+\item ./zchaff \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} \texorpdfstring{$>$}{>} \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]}
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md38}{}\doxysubsection{Goals}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md38}
+
+\begin{DoxyItemize}
+\item Run zchaff on the dimacs file
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md39}{}\doxysection{BSat Solve (\+Create Dimacs)}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md39}
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md40}{}\doxysubsection{Program args}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md40}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zs0 \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]}
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md41}{}\doxysubsection{Goals}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md41}
+
+\begin{DoxyItemize}
+\item Convert sudoku from SUDOKU\+\_\+\+FILE to the dimacs input file.
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md42}{}\doxysection{BSat Solve (\+Process Zchaff Results)}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md42}
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md43}{}\doxysubsection{Program args}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md43}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zs1 \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]} \mbox{[}SUDOKU\+\_\+\+FILE\mbox{]} \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]}
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md44}{}\doxysubsection{Goals}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md44}
+
+\begin{DoxyItemize}
+\item Parse dimacs output file.
+\item Parse SUDOKU\+\_\+\+FILE for container dimensions.
+\item Convert results to solved sudoku
+\item Writes solution to solution file
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md45}{}\doxysection{BSat Generate (\+Create Dimacs)}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md45}
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md46}{}\doxysubsection{Program args}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md46}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zg0 \mbox{[}DIMACS\+\_\+\+INPUT\mbox{]} (dim)
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md47}{}\doxysubsection{Goals}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md47}
+
+\begin{DoxyItemize}
+\item Write empty sudoku constraints to the dimacs input file using given container dimensions.
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md48}{}\doxysection{BSat Generate (\+Process Zchaff Results)}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md48}
+\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md49}{}\doxysubsection{Program args}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md49}
+
+\begin{DoxyItemize}
+\item ./m\+Sudoku zg1 \mbox{[}DIMACS\+\_\+\+OUTPUT\mbox{]} \mbox{[}SOLUTION\+\_\+\+FILE\mbox{]} (dim)
+\end{DoxyItemize}\hypertarget{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md50}{}\doxysubsection{Goals}\label{md__c___users_tr_user__v_s__code_multidimensional_sudoku_project_reqs_autotoc_md50}
+
+\begin{DoxyItemize}
+\item Parse dimacs output file.
+\item Convert results to solved sudoku
+\item Writes solution to solution file
+\item Use \mbox{\hyperlink{struct_d_l_x}{DLX}} to generate a puzzle 
+\end{DoxyItemize}
