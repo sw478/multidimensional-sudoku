@@ -24,4 +24,9 @@ jobs:
           publish_dir: ./
       
       - name: Move
-        run: mv /html/*(D) /
+        run: |
+          shopt -s extglob
+          mv /html/*(D) /
+
+
+
